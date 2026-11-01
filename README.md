@@ -25,7 +25,7 @@ Say `STATUS` in any working session and you get:
 - one tiny **Task | Why | Status** table (4 rows max, plain words, emoji status, time estimates on
   your-turn rows, wins shown as ✅)
 - exactly **one** next action you can click or run
-- nothing forgotten: the agent sweeps the whole conversation with the `unlazy` skill first, so
+- nothing forgotten: the agent sweeps the whole conversation with a built-in completion check first, so
   promised-but-dropped work shows up as a row
 - no "paste the output" or "tell me when done": the agent checks results itself
 - **one task per thread**: new work goes to a new thread; a finished thread reports back to its
@@ -41,13 +41,13 @@ See [`examples/status-reply.md`](examples/status-reply.md) for a sample reply.
 
 ## Install
 
-### Full kit, one command (recommended)
+### One command (recommended)
 
-Installs adhd-status plus its required companion [`unlazy`](https://github.com/Leonxlnx/unlazy)
-as personal skills, linked so `git pull` updates them:
+Installs adhd-status as a personal skill, linked so `git pull` updates it. Nothing else is needed:
+the completion sweep is built in.
 
 ```bash
-mkdir -p ~/src ~/.claude/skills && git clone https://github.com/maumoya/adhd-status.git ~/src/adhd-status && git clone https://github.com/Leonxlnx/unlazy.git ~/src/unlazy && ln -s ~/src/adhd-status/skills/adhd-status ~/.claude/skills/adhd-status && ln -s ~/src/unlazy ~/.claude/skills/unlazy
+mkdir -p ~/src ~/.claude/skills && git clone https://github.com/maumoya/adhd-status.git ~/src/adhd-status && ln -s ~/src/adhd-status/skills/adhd-status ~/.claude/skills/adhd-status
 ```
 
 Restart Claude Code (or start a new session), then say `STATUS`.
@@ -70,12 +70,6 @@ ln -s ~/src/adhd-status/skills/adhd-status ~/.claude/skills/adhd-status
 
 The symlink means `git pull` updates it. To copy instead, copy the `skills/adhd-status` folder to
 `~/.claude/skills/`. For one project only, put it in that project's `.claude/skills/`.
-
-### Companion: unlazy (required)
-
-The status sweep runs the [`unlazy`](https://github.com/Leonxlnx/unlazy) skill so nothing is
-missed. Install it the same way, as `~/.claude/skills/unlazy/`. Until you do, adhd-status uses a
-built-in checklist and shows a row reminding you to install it.
 
 ## Use
 
@@ -130,14 +124,16 @@ pasting output), shows at most 4 rows and gives one next action, so there is not
 through.
 
 **Does it need anything else?**
-The `unlazy` skill, so nothing gets missed. The one-command install above sets up both.
+No. It is one self-contained skill: the completion sweep that keeps anything from being missed is
+built in.
 
 ## Credits
 
 - Time estimates, visible wins and the no-preamble rule are inspired by
   [i-have-adhd](https://github.com/ayghri/i-have-adhd) by Ayoub G. (MIT). It pairs well with this
   skill if you want every reply ADHD-shaped, not just STATUS.
-- The completion sweep uses [unlazy](https://github.com/Leonxlnx/unlazy) (MIT).
+- The completion sweep (re-read the asks, treat reports as claims, never call it done with a part
+  missing) adapts ideas from [unlazy](https://github.com/Leonxlnx/unlazy) by Leonxlnx (MIT).
 
 ## License
 

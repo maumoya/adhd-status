@@ -6,7 +6,7 @@ Author and owner: Mauricio Alonso Moya Tapia. License: MIT (OSI-approved).
 
 ## What it does
 
-- Sweeps the whole conversation (with the companion `unlazy` skill) so no task, pending command or promise is dropped.
+- Sweeps the whole conversation (built-in completion check, nothing else to install) so no task, pending command or promise is dropped.
 - Checks results itself: reads the terminal or verifies the effect; never asks the user to paste output.
 - One task per thread; finished threads report to their parent, archive, and offer a "Back to parent" button.
 - Hub mode: a ROADMAP.md file summarizes every task in flight.
@@ -20,7 +20,7 @@ Author and owner: Mauricio Alonso Moya Tapia. License: MIT (OSI-approved).
 
 ## Install
 
-- Full kit: clone github.com/maumoya/adhd-status and github.com/Leonxlnx/unlazy, link both into ~/.claude/skills/
+- Plain skill: clone github.com/maumoya/adhd-status and link skills/adhd-status into ~/.claude/skills/
 - Plugin: this repository is a Claude Code plugin marketplace (.claude-plugin/)
 
 ## Keywords
