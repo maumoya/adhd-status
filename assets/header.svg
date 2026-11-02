@@ -25,7 +25,7 @@
     <circle cx="104" cy="117" r="5" fill="#22C55E"/><rect x="113" y="114" width="19" height="6" rx="3" fill="#E4E1F7"/>
     <circle cx="104" cy="128" r="5" fill="#3B82F6"/><rect x="113" y="125" width="15" height="6" rx="3" fill="#E4E1F7"/>
     <circle cx="104" cy="139" r="5" fill="#F59E0B"/><rect x="113" y="136" width="17" height="6" rx="3" fill="#F7C873"/>
-    <text x="172" y="143" font-size="40" font-weight="700" fill="#FFFFFF">adhd-status</text>
+    <text x="172" y="143" font-size="40" font-weight="700" fill="#FFFFFF"><tspan fill="#C4B5FD" font-weight="500">maumoya/</tspan>adhd-status</text>
 
     <text x="80" y="262" font-size="66" font-weight="800" fill="#FFFFFF">Say STATUS.</text>
     <text x="80" y="340" font-size="66" font-weight="800" fill="#C9B8FF">Get one next step.</text>
