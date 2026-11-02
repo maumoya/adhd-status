@@ -162,6 +162,14 @@ built in.
 - The completion sweep (re-read the asks, treat reports as claims, never call it done with a part
   missing) adapts ideas from [unlazy](https://github.com/Leonxlnx/unlazy) by Leonxlnx (MIT).
 
+## About the author
+
+Hi, I'm **Mauricio Alonso Moya Tapia** ([@maumoya](https://github.com/maumoya)). I built adhd-status
+because I wanted AI coding sessions that tell me in one glance what is done and what is next, so
+nothing gets lost.
+
+Say hi or follow my work on [LinkedIn](https://www.linkedin.com/in/mba-mmoyat/).
+
 ## License
 
 MIT. Copyright (c) 2026 Mauricio Alonso Moya Tapia.
