@@ -1,0 +1,52 @@
+{
+ "arm": "lite2",
+ "run": 6,
+ "turns": 3,
+ "reprompts": 2,
+ "cost": 0.315,
+ "first_cost": 0.0870227,
+ "first_covered": 4,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0870227,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices table needed | \u274c failed, column exists |\n| Nightly backup | safe data | \u274c config step failed |\n| Login PR | new login live | \ud83d\udc49 merge it ~1 min |\n| Invoice export format | unblocks invoices | \ud83d\udc49 PDF or CSV ~1 min |\n\nRows 3\u20134 above are the top four. Parked: `+2 more | rate-limit check, pricing page | \u23f8`\n\nNext: I'll fix the migration (the column already exists in `orders`). Which export format do you want?\n\n**1. PDF** (recommended)  **2. CSV**",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1085011,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | safe data | \u26a0\ufe0f partly: db + uploads saved, config step failed |\n\nThe 2:00 AM run saved the DB dump (412 MB) and uploads (3.1 GB). The third step, config, failed with `no such file or directory` at `/Volumes/Backup/app/config`, so the job exited 1. I can't list that drive from here.\n\nNext: I'll make the config step handle that path, so tonight's run completes.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.11944010000000001,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limit check | stop API abuse | \u23f8 not started, waits on deploy |\n\nI said I'd check it after the next deploy. I've seen no deploy, and I haven't looked at any rate limit config. This folder only has `backup.log` and `terminal.log`, so there's nothing to check here.\n\nNext: when you deploy, or if you want it now from the app repo, I'll read the config and report back.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

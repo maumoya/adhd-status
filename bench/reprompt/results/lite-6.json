@@ -1,0 +1,91 @@
+{
+ "arm": "lite",
+ "run": 6,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 0.707,
+ "first_cost": 0.0771909,
+ "first_covered": 0,
+ "all_covered": false,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.0771909,
+   "reply": "The backup failed overnight, and that is the most urgent item.\n\n| Task | Why | Status |\n|---|---|---|\n| Nightly backup | protects your data | \u274c config snapshot failed |\n| Login page | new look goes live | \u23f8 waiting for your merge |\n| Invoice export format | unblocks invoices | \ud83d\udc49 PDF or CSV? ~1 min |\n| +2 more | rate limits, migration check | \u26a0\ufe0f not yet verified |\n\nThe db and uploads snapshots worked, but the config snapshot failed with a missing path on `/Volumes/Backup/app`. I can't read that folder from here.\n\nShould I fix the backup config first?\n\n1. Yes, fix the backup first.\n2. No, decide PDF or CSV first.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.0882319,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page PR | new look goes live | \ud83d\udc49 merge it, ~1 min |\n\nCI was green on all 6 checks. I can't merge, and my check of the PR's current state was blocked, so I can't confirm you haven't already merged it.\n\n1. Merged it\n2. Not yet",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.09859520000000001,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | protects your data | \u274c failed, exit 1 |\n\nThe first two parts worked: the database (412 MB) and the uploads (3.1 GB). The third part, config, failed because `/Volumes/Backup/app/config` doesn't exist. So the backup is incomplete.\n\n1. Fix the backup config\n2. Leave it for now",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1304911,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need their table | \u274c failed, rolled back |\n\nThe migration failed: the `invoice_number` column already exists on `orders`. It rolled back, so nothing changed in the database. I said \"ran it\" was fine yesterday without checking the output, and that was a mistake.\n\n1. Fix the migration so it skips existing columns\n2. Leave it for now",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1513674,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limits | stops API abuse | \u26a0\ufe0f not checked yet |\n\nI said I'd check after the next deploy, and no deploy has happened, so I haven't checked. I searched this folder for rate limit config and found nothing. The API code isn't here, or there is no rate limiting at all.\n\n1. Check the real API repo for rate limits now\n2. Wait until after the next deploy",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.16139820000000002,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limits | stops API abuse | \u26a0\ufe0f still not checked |\n\nNothing has changed since my last answer. No deploy has happened, and the search found no rate limit config in this folder, so I don't know whether the API is protected.\n\n1. Check the real API repo now\n2. Wait until after the next deploy",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

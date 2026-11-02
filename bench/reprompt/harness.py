@@ -32,6 +32,7 @@ def episode(arm,i):
     first=("Here is our session so far (you are the ASSISTANT; files are in the current folder):\n\n"+thread)
     common=["--disable-slash-commands","--output-format","json","--max-budget-usd","1.5","--allowedTools","Read","Glob","Grep","Bash(cat:*)","Bash(ls:*)"]
     if arm=="with": common+=["--append-system-prompt-file",skill_body()]
+    elif arm!="without": common+=["--append-system-prompt-file",os.path.abspath(f"candidates/{arm}.md")]  # e.g. "lite"
     turns=[];sid=None;prompt=first;covered=set();paste=0
     for t in range(6):
         args=["claude","-p",prompt]+common+(["--resume",sid] if sid else [])

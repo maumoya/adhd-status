@@ -1,0 +1,39 @@
+{
+ "arm": "ladder",
+ "run": 6,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.156,
+ "first_cost": 0.07316299999999999,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.07316299999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config step failed |\n| Login page | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n| Invoice export | PDF or CSV | \ud83d\udc49 you: pick one |\n| +2 more | migration, rate limit | \u23f8 |\n\nPick for invoices (recommended first):\n1. PDF\n2. CSV",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.08283019999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Pricing page | clearer pricing | \u23f8 parked, not now |\n\nNothing for you here. I'll leave it until you ask.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

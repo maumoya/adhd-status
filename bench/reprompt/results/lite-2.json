@@ -1,0 +1,78 @@
+{
+ "arm": "lite",
+ "run": 2,
+ "turns": 5,
+ "reprompts": 4,
+ "cost": 1.903,
+ "first_cost": 0.323515,
+ "first_covered": 4,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.323515,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | keeps your data safe | \u274c failed at config step |\n| Login page | new look goes live | \ud83d\udc49 merge it, ~1 min |\n| Invoice export | pick the file type | \ud83d\udc49 decide, ~1 min |\n| +3 more | migration, rate limits, pricing | \u23f8 parked |\n\n**Pick one:** [PDF (recommended)] [CSV]",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.363852,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need their table | \u274c failed, rolled back |\n\nNo. The `orders` table already has an `invoice_number` column, so the migration stopped and rolled back. Nothing was changed in the database.\n\nI'll look for the migration file and make it skip a column that already exists.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.38536810000000005,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need their table | \u274c failed, rolled back |\n\nNo. I re-checked the log and it still shows the failure. The `orders` table already has an `invoice_number` column, so the migration rolled back and changed nothing. I haven't fixed it yet.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.40515920000000005,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limits | stops abuse and overload | \u26a0\ufe0f not checked, none found |\n\nI said I'd check after the next deploy, and no deploy has happened yet. I searched this folder just now and found no rate-limit setting in any file. Either the API has no limit, or the config lives somewhere outside this folder. I can't tell which yet.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.42522440000000006,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limits | stops abuse and overload | \u26a0\ufe0f none found |\n\nI searched again, this time for \"throttle\", \"limiter\" and \"429\" as well. I found nothing, so this folder has no rate limiting. The API may be unprotected, or the limit may be set outside this folder, for example at a proxy or host. I haven't changed anything.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

@@ -29,7 +29,36 @@ python3 harness.py without 0
 ```
 
 Each episode writes `runs/<arm>-<i>.json`. The 20 episodes behind the main README numbers are in
-`results/`.
+`results/` (`with-*`, `without-*`).
+
+Any other arm name loads `candidates/<arm>.md` as the skill text, so a new version can be tested
+with `python3 harness.py <name> 0`.
+
+## Experiments: can the skill text be made cheaper? (2026-11-01)
+
+Three cheaper versions, 10 episodes each, same thread, same judge. All three lost to the current
+skill, so it ships unchanged.
+
+| Version | Spend per STATUS | First reply | Re-asks | Runs that never covered all items |
+|---|---|---|---|---|
+| Current skill (`with`) | $0.70 | $0.235 | 1.7 | 0/10 |
+| `lite`: compressed to 31% of the size, caveman style | $1.23 | $0.199 | 4.2 | 7/10 |
+| `lite2`: `lite` plus a proof ladder and no tool narration | $0.79 | $0.123 | 3.4 | 2/10 |
+| `ladder`: full skill plus only the proof ladder | $0.89 | $0.146 | 3.5 | 4/10 |
+| No skill (`without`) | $1.08 | $0.228 | 3.1 | 4/10 |
+
+What this shows:
+
+- **Compressing the instructions costs more, not less.** The explanations are what make the model
+  sweep carefully. Cut them, and the first reply misses items, the user re-asks, and every re-ask
+  re-reads the whole thread.
+- **Trusting what is "already in context" is the expensive mistake.** The proof ladder skipped
+  re-checking things the thread had mentioned, so it missed the failed backup and migration that
+  only the files showed. The first reply got cheaper; the whole conversation got dearer.
+- The savings come from fewer re-asks, not from a shorter prompt. Measure the whole conversation,
+  not the first reply.
+
+Episodes are in `results/` (`lite-*`, `lite2-*`, `ladder-*`); the texts are in `candidates/`.
 
 ## Limits
 

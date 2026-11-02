@@ -1,0 +1,39 @@
+{
+ "arm": "ladder",
+ "run": 5,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.152,
+ "first_cost": 0.0713705,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0713705,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Login page | users can sign in | \ud83d\udc49 you: merge it, ~1 min |\n| Invoice export | PDF or CSV? | \ud83d\udc49 your pick pending |\n| +2 more | rate limit, DB migration | \u23f8 |\n\nPick the invoice export format:\n1. PDF (recommended)\n2. CSV",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.0810927,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Pricing page | better conversions | \u23f8 parked, your \"not now\" |\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Login page | users can sign in | \ud83d\udc49 you: merge PR, ~1 min |\n\nNothing to do on pricing. It stays parked until you say go.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

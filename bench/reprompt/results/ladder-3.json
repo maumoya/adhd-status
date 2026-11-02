@@ -1,0 +1,78 @@
+{
+ "arm": "ladder",
+ "run": 3,
+ "turns": 5,
+ "reprompts": 4,
+ "cost": 1.349,
+ "first_cost": 0.2237479,
+ "first_covered": 3,
+ "all_covered": true,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.2237479,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed at config step |\n| Login page | new look goes live | \ud83d\udc49 you: merge PR, ~1 min |\n| Invoice export | PDF or CSV | \ud83d\udc49 your call |\n| +3 more | migration, rate limit, pricing | \u23f8 |\n\n```bash\nls /Volumes/Backup/app\n```",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.2575092,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices can be stored | \u274c failed, rolled back |\n| Nightly backup | don't lose data | \u274c failed at config step |\n| Login page | new look goes live | \ud83d\udc49 merge PR, ~1 min |\n| +3 more | invoice format, rate limit, pricing | \u23f8 |\n\nThe migration failed because `orders.invoice_number` already exists. Next I'd edit the migration to skip that column.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2790675,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Rate limit check | protect the API | \u26a0\ufe0f not started, no deploy yet |\n| Invoices migration | invoices can be stored | \u274c failed, rolled back |\n| Nightly backup | don't lose data | \u274c failed at config step |\n| +2 more | login PR merge, invoice format | \ud83d\udc49 |\n\nI found no rate-limit config in this folder, so there's nothing to review. Should I add a basic limit to the API now?\n\n1. Yes, add it\n2. Not yet",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2893044,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Rate limit | protect the API | \ud83d\udc49 your call, ~1 min |\n\nNothing is started: I found no rate-limit config here, and no deploy has happened yet.\n\n1. Add a basic limit now (recommended)\n2. Not yet",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.29896100000000003,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Pricing page | better conversions | \u23f8 parked, \"one day\" |\n\nNothing is started, as you asked. It stays parked until you say go.\n\nStill waiting on you: the rate limit (1 = add it now, 2 = not yet).",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

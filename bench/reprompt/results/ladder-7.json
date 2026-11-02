@@ -1,0 +1,52 @@
+{
+ "arm": "ladder",
+ "run": 7,
+ "turns": 3,
+ "reprompts": 2,
+ "cost": 0.26,
+ "first_cost": 0.0683507,
+ "first_covered": 4,
+ "all_covered": true,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.0683507,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, drive not found |\n| Login page | new look goes live | \ud83d\udc49 you: merge, ~1 min |\n| Invoices DB | invoices can save | \u26a0\ufe0f migration not confirmed |\n| +4 more | parked | \u23f8 |\n\nConnect the backup drive so `/Volumes/Backup` appears, then tell me and I'll rerun the backup.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.0907336,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Rate limit | protect the API | \u26a0\ufe0f not started, no config found |\n\nI promised to check it after the next deploy, and it hasn't happened. I searched the project and found no rate limit code or config, so there may be no limit at all.\n\n1. Add a basic rate limit now (recommended)\n2. Keep it parked until after the deploy",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1005091,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoice export | users can download invoices | \ud83d\udc49 you: pick format, ~1 min |\n\nI said I'd come back to this and never answered it.\n\n1. PDF (recommended): invoices are usually sent or printed, so a fixed layout fits.\n2. CSV: better if the data goes into spreadsheets or accounting tools.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}
