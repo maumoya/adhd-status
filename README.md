@@ -136,6 +136,16 @@ threads, where forgetting is likely.
 Small sample, one synthetic thread, an LLM judge: a direction, not a guarantee. The harness and all
 20 episode logs are in [`bench/reprompt/`](bench/reprompt/).
 
+**Since then** (each tested against the previous version on the same day, 10 episodes per arm):
+
+| Version | What changed | Measured vs the version before |
+|---|---|---|
+| 1.5.0 | row 4 names every hidden item; failures always get their own row | **28% less** spend per STATUS, 4.2 vs 2.9 items right on the first reply |
+| 1.6.0 | reads log files before saying "can't verify" | **half** the re-asks (1.7 vs 3.6), runs that never covered everything 2 vs 4 of 10 |
+
+The numbers above the table were measured on 1.4.x; 1.6.0 was not re-run against "no skill". Details
+in [`bench/reprompt/README.md`](bench/reprompt/README.md).
+
 ## Security at a glance
 
 The [OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/maumoya/adhd-status) badge
@@ -159,7 +169,7 @@ Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as
 [slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
 
 ```bash
-slsa-verifier verify-artifact adhd-status-v1.4.0.zip --provenance-path adhd-status-v1.4.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v1.4.0
+slsa-verifier verify-artifact adhd-status-v1.6.0.zip --provenance-path adhd-status-v1.6.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v1.6.0
 ```
 
 ## FAQ
