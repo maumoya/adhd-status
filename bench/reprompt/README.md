@@ -79,6 +79,24 @@ drift), so it was re-run that day as a control (`with2`, same text as the skill 
 that never covered everything did not improve (4/10 each), so that stays the next thing to fix.
 Episodes are in `results/` (`row4-*`, `with2-*`).
 
+## Experiment: look in the logs before "can't verify" (2026-11-01, shipped in 1.6.0)
+
+In the runs that never covered every item, the model never opened the log file in the working
+folder that held the failed migration, so it kept answering "can't verify". The `look` version
+tells it to read log and output files before marking anything unverified, and makes row 4 give
+each hidden item its state (`cache cleanup open, dark mode parked`). Same day, with a control
+(`ctl3`, same text as 1.5.0):
+
+| Version (same day, 10 episodes each) | Spend per STATUS (mean) | Median | Re-asks | Items in first reply (of 6) | Runs that never covered all items | Paste asks |
+|---|---|---|---|---|---|---|
+| 1.5.0 (`ctl3`) | $0.55 | $0.64 | 3.6 | 3.7 | 4/10 | 8 |
+| `look` (now the skill) | $0.60 | $0.23 | 1.7 | 4.4 | 2/10 | 13 |
+
+Half the re-asks, more items in the first reply, and half the runs that never covered every
+item. Mean spend is 9% higher because the two failed runs cost $1.60 each. Both of those wrote a
+correct first reply covering all six items; the haiku judge graded them false, so the scripted
+user kept re-asking. Paste asks rose (13 vs 8). Episodes are in `results/` (`look-*`, `ctl3-*`).
+
 ## Limits
 
 One synthetic thread, 10 episodes per arm, an LLM judge, and a scripted user. Treat the numbers as

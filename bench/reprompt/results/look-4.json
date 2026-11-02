@@ -1,0 +1,26 @@
+{
+ "arm": "look",
+ "run": 4,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.225,
+ "first_cost": 0.22537839999999998,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.22537839999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page | new look goes live | \ud83d\udc49 you: merge PR, ~1 min |\n| Invoices DB | invoices need it | \u274c migration failed, rolled back |\n| Nightly backup | don't lose data | \u274c failed, config step |\n| +4 more: invoice PDF/CSV open, rate-limit check open, README fix done, pricing page parked | see list | \u23f8 |\n\nClick **Merge** on PR #212 (login page).",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

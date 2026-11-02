@@ -1,0 +1,91 @@
+{
+ "arm": "ctl3",
+ "run": 6,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 0.728,
+ "first_cost": 0.07000329999999999,
+ "first_covered": 3,
+ "all_covered": true,
+ "paste_asks": 2,
+ "log": [
+  {
+   "cost": 0.07000329999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed 2 AM, config snapshot |\n| Login page PR | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n| Invoice export | PDF or CSV | \ud83d\udc49 your pick, still open |\n| +3 more: migration check, rate limit, pricing page | | \u23f8 unverified / parked |\n\nMerge the login page PR (#212) when you can. CI was green, and I can't merge it.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.09098549999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page PR | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n\nI couldn't re-check it live because the `gh` call needs approval. The last CI report I have says all 6 checks were green, and I have no sign that it's merged. Open PR #212 and click Merge. If it already shows Merged, tell me and I'll mark it done.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.11201429999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page PR | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n\nThis folder's git log has no login-page commit, and I can't query GitHub from here. I still can't confirm it's merged. The last CI report says all 6 checks were green. Open PR #212 and click Merge. If it already says Merged, tell me and I'll mark it done.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.12272639999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page PR | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n\nNothing has changed since my last answer. I still can't see GitHub from here. The last report I have is CI green, and I have no sign it's merged.\n\n1. Merged it\n2. Not yet",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.15562839999999997,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need DB table | \u274c failed, rolled back |\n\nIt didn't work. The terminal log shows `column \"invoice_number\" of relation \"orders\" already exists`. The migration rolled back, so nothing changed. The `orders` table already has that column. I'll rewrite the migration to skip it if it's already there, then you rerun it.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1769951,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Rate limit check | protect the API | \u26a0\ufe0f not started |\n\nI haven't checked it. I said I'd look after the next deploy, and I've seen no deploy. I also found no rate limit config in this folder to read.\n\nI'll check it as soon as a deploy happens, or sooner if you point me to the API config.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

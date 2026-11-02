@@ -1,0 +1,91 @@
+{
+ "arm": "ctl3",
+ "run": 9,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 0.719,
+ "first_cost": 0.0676837,
+ "first_covered": 0,
+ "all_covered": false,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0676837,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Login page | users can sign in | \ud83d\udc49 you: merge, ~1 min |\n| Invoice export | PDF or CSV | \ud83d\udc49 your pick |\n| +3 more: invoices migration, API rate limit, pricing page | unverified / parked | \u23f8 |\n\nMerge PR #212 (CI was green). I'll fix the backup next.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.0886121,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page | users can sign in | \ud83d\udc49 you: merge PR #212, ~1 min |\n\nI couldn't check it live, because `gh` needs approval here. Last known state, from earlier in this session: all 6 checks green, not merged. I can't merge it myself.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.10919709999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed at 2:08 AM |\n\nOnly partly. In `backup.log`, the db dump (412 MB) and uploads (3.1 GB) were saved. The config step failed because `/Volumes/Backup/app/config` wasn't found, so the job exited with an error.\n\nI can't look at that drive from here, so I don't know why the file is missing. Let me look into the cause and fix it.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.12825519999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoice storage ready | \u26a0\ufe0f unverified |\n\nI can't confirm it. You said you ran it, but I never saw the output, and I found no migration files or logs in this folder to check.\n\nTo check, I'd query the database for the `invoices` table. That needs the DB connection details.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.15729849999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoice storage ready | \u274c failed, rolled back |\n\nNo. `terminal.log` shows `column \"invoice_number\" of relation \"orders\" already exists`, so the migration was rolled back and nothing was applied. I should have caught this when you said \"ran it\". My earlier \"unverified\" answer was wrong because I hadn't read this log.\n\nThe likely cause is that the column was added by hand or by an earlier attempt. I'll make the migration skip the column if it already exists. Say if you'd rather I do something else.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.16801419999999997,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limit | stop API abuse | \u23f8 waiting on next deploy |\n\nI haven't checked it. I said I'd look after the next deploy, and I have no sign that a deploy has happened. The login PR isn't merged yet. This folder also has no API or rate-limit config to read, so I can't do a pre-deploy check from here.\n\nI'll check it once the login page deploys.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

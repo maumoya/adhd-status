@@ -1,0 +1,39 @@
+{
+ "arm": "ctl3",
+ "run": 2,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.162,
+ "first_cost": 0.07520429999999999,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.07520429999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need the table | \u274c column already exists, rolled back |\n| Nightly backup | don't lose data | \u274c config snapshot failed, drive path missing |\n| Login page | new sign-in look | \ud83d\udc49 you: merge PR, ~1 min (CI green; merge not re-checked) |\n| +3 more: invoice format, rate limit check, pricing page | | \u23f8 |\n\nMerge the login page PR (#212) on GitHub, then press Done.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.08661569999999999,
+   "reply": "Partly. The database dump (412 MB) and the uploads (3.1 GB) were backed up. The config snapshot failed, so the run ended as FAILED.\n\n| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config not backed up, 2 of 3 saved |\n\nNext: I fix the config snapshot step. The log shows `/Volumes/Backup/app/config` is missing from the backup repo.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

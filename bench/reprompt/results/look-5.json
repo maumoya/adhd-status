@@ -1,0 +1,91 @@
+{
+ "arm": "look",
+ "run": 5,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 1.554,
+ "first_cost": 0.2244334,
+ "first_covered": 0,
+ "all_covered": false,
+ "paste_asks": 4,
+ "log": [
+  {
+   "cost": 0.2244334,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a DB | \u274c failed, column already exists |\n| Nightly backup | don't lose data | \u274c config step failed |\n| Login page | new look live | \u26a0\ufe0f merge not confirmed |\n| +4 more | see list | rate-limit check open, PDF vs CSV undecided, pricing page parked, README typo \u2705 |\n\n1. Let me fix the migration (I check the schema, ~2 min of your time)\n2. Fix the backup first",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.2456561,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page (PR #212) | new look live | \ud83d\udc49 you: merge it, ~1 min |\n\nCI was green (6/6, per my earlier check). I couldn't confirm a merge, and I can't merge it myself.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.2559185,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page (PR #212) | new look live | \ud83d\udc49 you: merge it, ~1 min |\n\nSame as before: CI was green (6/6), and I have no record of a merge. My live check needs an approval I didn't get, so this is unverified. If you already merged it, tell me and I'll mark it \u2705.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.2661803,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c partly failed |\n\nNo. The 2 AM run saved the db dump (412 MB) and uploads (3.1 GB). The third step, config, failed because `/Volumes/Backup/app/config` doesn't exist. So you have no complete backup. Per `backup.log`.\n\n1. Fix the config step (I check the backup script and repo path)\n2. Skip it for now",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2761203,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a DB | \u274c failed, rolled back |\n\nNo. `orders.invoice_number` already exists, so the migration stopped and rolled back. Nothing changed in the DB. Per your terminal log.\n\n1. Fix the migration (I check the schema and adjust it)\n2. Leave it for now",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2859792,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limit | stop API abuse | \u26a0\ufe0f not checked yet |\n\nI promised to check it after the next deploy. No deploy has happened, so I haven't looked at the config. I can read the rate-limit config now without waiting for a deploy.\n\n1. Check the config now (I read it and report back)\n2. Wait for the deploy",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "arm": "ctl3",
+ "run": 5,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 0.769,
+ "first_cost": 0.0668443,
+ "first_covered": 4,
+ "all_covered": false,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.0668443,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed 2 AM, backup drive not found |\n| Login page PR | new sign-in ships | \ud83d\udc49 you: merge, ~1 min (CI green) |\n| Invoice export | PDF or CSV | \u23f8 needs your pick |\n| +3 more: rate limit check, invoices migration (unverified), pricing page | parked | \u23f8 |\n\nPlug in or mount the backup drive, then press **Done** and I'll re-run the backup and check it.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.09918549999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c not yet: log still shows the 2 AM failure |\n| Login page PR | new sign-in ships | \ud83d\udc49 you: merge, ~1 min (CI green) |\n| Invoice export | PDF or CSV | \u23f8 needs your pick |\n| +3 more: rate limit check, invoices migration (unverified), pricing page | parked | \u23f8 |\n\nMount the backup drive, then press **Done** and I'll re-run the backup.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.12006059999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c no: log unchanged, still the 2 AM failure |\n| Login page PR | new sign-in ships | \ud83d\udc49 you: merge, ~1 min (CI green) |\n| Invoice export | PDF or CSV | \u23f8 needs your pick |\n| +3 more: rate limit check, invoices migration (unverified), pricing page | parked | \u23f8 |\n\nMount the backup drive, then press **Done** and I'll re-run the backup.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.14052869999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c no: log unchanged since the 2 AM failure |\n| Login page PR | new sign-in ships | \ud83d\udc49 you: merge, ~1 min (CI green) |\n| Invoice export | PDF or CSV | \u23f8 needs your pick |\n| +3 more: rate limit check, invoices migration (unverified), pricing page | parked | \u23f8 |\n\nMount the backup drive, then press **Done** and I'll re-run the backup.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.16089119999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c no: log unchanged, last run failed |\n| Login page PR | new sign-in ships | \ud83d\udc49 you: merge, ~1 min (CI green) |\n| Invoice export | PDF or CSV | \u23f8 needs your pick |\n| +3 more: rate limit check, invoices migration (unverified), pricing page | parked | \u23f8 |\n\nMount the backup drive, then press **Done** and I'll re-run the backup.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.18133549999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c no: log unchanged, last run failed |\n| Login page PR | new sign-in ships | \ud83d\udc49 you: merge, ~1 min (CI green) |\n| Invoice export | PDF or CSV | \u23f8 needs your pick |\n| +3 more: rate limit check, invoices migration (unverified), pricing page | parked | \u23f8 |\n\nMount the backup drive, then press **Done** and I'll re-run the backup.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  }
+ ]
+}

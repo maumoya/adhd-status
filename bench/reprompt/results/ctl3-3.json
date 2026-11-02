@@ -1,0 +1,39 @@
+{
+ "arm": "ctl3",
+ "run": 3,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.183,
+ "first_cost": 0.07332179999999999,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.07332179999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config snapshot missing |\n| Login page | new sign-in look | \ud83d\udc49 you: merge, ~1 min (CI green, not re-checked) |\n| Rate limit | API stays safe | \u26a0\ufe0f never checked |\n| +3 more: invoice PDF or CSV, invoice migration check, pricing page | | \ud83d\udc49 / \u26a0\ufe0f / \u23f8 parked |\n\n```bash\nls /Volumes/Backup/app\n```",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1092257,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a table | \u274c failed, rolled back (`invoice_number` already exists on `orders`) |\n| Nightly backup | don't lose data | \u274c failed, config snapshot missing |\n| Login page | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n| +3 more: rate limit, invoice PDF or CSV, pricing page | | \u26a0\ufe0f / \ud83d\udc49 / \u23f8 |\n\nNext: I'll make the migration skip a column that already exists. It's a small fix, so I'll start it unless you object.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

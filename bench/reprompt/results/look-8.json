@@ -1,0 +1,26 @@
+{
+ "arm": "look",
+ "run": 8,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.087,
+ "first_cost": 0.0868273,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0868273,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Invoices DB | invoices need a table | \u274c migration rolled back |\n| Login page | new look live | \ud83d\udc49 you: merge, ~1 min |\n| +3 more: invoice export choice open, rate-limit check open, pricing page parked | see list | \u23f8 |\n\nFixing the backup first. The config snapshot can't find its folder on the backup drive. I'll patch the script next.\n\n1. Fix backup now\n2. Fix migration first",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

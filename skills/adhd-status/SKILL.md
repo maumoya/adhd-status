@@ -57,6 +57,9 @@ The user should never have to report back to you.
   the service answers, the log line is there). Do this every turn after a command, also when the
   user only says "done", "ran it" or "STATUS". Never wait for them to copy and paste output. Only
   if nothing can be checked, ask with a button ("Ran it" / "Not yet").
+- **Look before you say "can't verify".** Results often sit in files, not in the chat: list the
+  working folder and read any log or output file that could hold a result (terminal logs, job
+  logs, CI output). Show ⚠️ unverified only after you looked and found nothing.
 - Verify live state with one cheap call each when it matters (CI status, a job's last line, a
   thread's last report). Read only the lines you need. Do not re-read what is already in context;
   that wastes tokens.
@@ -76,10 +79,11 @@ The user should never have to report back to you.
   motivating). Older done items are noise; leave them out.
 - More than 4 rows to show? Count all of them (wins and parked tasks included).
   Rows 1–3 go to the most urgent: ❌ and ⚠️ items and 👉 rows always win a visible row and are
-  never folded away. Row 4 names **every** hidden item, in 2–3 words each:
-  `+2 more: invoice format, pricing page | parked | ⏸` (in the hub thread:
+  never folded away. Row 4 names **every** hidden item with its state, in 2–4 words each:
+  `+2 more: cache cleanup open, dark mode parked | see list | ⏸` (in the hub thread:
   `… | in ROADMAP.md | ⏸`). A bare count ("+2 more") is not enough: the user can't see
-  what was hidden. Never drop items silently to fit.
+  what was hidden. A promise you made and have not kept is open, never "parked". Never drop
+  items silently to fit.
 - The table is always there, even when the next action is a decision or pick list.
 - **Task**: 2–4 plain words. No links, ticket or PR numbers, branch names, hashes or file paths.
 - **Why**: up to 6 plain words, the benefit to the user, not the mechanism.
