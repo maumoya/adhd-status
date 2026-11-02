@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="250" viewBox="0 0 240 250" role="img" aria-label="35% less spend per STATUS">
+  <title>35% less spend per STATUS</title>
+  <style>
+    .big{font:800 84px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#2da44e}
+    .lbl{font:600 17px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#2da44e}
+    .sub{font:400 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#8b949e}
+  </style>
+  <rect x="2" y="2" width="236" height="246" rx="16" fill="none" stroke="#2da44e" stroke-width="2" stroke-opacity=".5"/>
+  <text x="120" y="110" text-anchor="middle" class="big">−35%</text>
+  <text x="120" y="146" text-anchor="middle" class="lbl">spend per STATUS</text>
+  <text x="120" y="186" text-anchor="middle" class="sub">$0.70 vs $1.08</text>
+  <text x="120" y="210" text-anchor="middle" class="sub">long thread, 10 runs per arm</text>
+</svg>

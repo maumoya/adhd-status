@@ -115,6 +115,8 @@ caught **83% of the time with the skill vs 25% without**.
 **Re-prompt cost** ([`bench/reprompt/`](bench/reprompt/), 10 episodes per arm, one ~13k-token
 thread with 6 open items, the user asks again about each item the reply misses):
 
+<img src="assets/savings.svg" align="right" width="240" alt="35% less spend per STATUS: $0.70 vs $1.08">
+
 | Per STATUS, until every item is covered | With skill | Without |
 |---|---|---|
 | Average cost | **$0.70** | $1.08 |
