@@ -1,0 +1,78 @@
+{
+ "arm": "nopaste",
+ "run": 0,
+ "turns": 5,
+ "reprompts": 4,
+ "cost": 1.299,
+ "first_cost": 0.22476360000000004,
+ "first_covered": 2,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.22476360000000004,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need the DB | \u274c failed, column already exists |\n| Nightly backup | don't lose data | \u274c config step failed, backup dir missing |\n| Login redesign | new sign-in page | \ud83d\udc49 you: merge PR #212, ~1 min |\n| +4 more: invoice PDF/CSV pick open, rate-limit check open, pricing page parked, README \u2705 | | \u23f8 |\n\nMerge PR #212 on GitHub (CI is green).",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.24599380000000004,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login redesign | new sign-in page | \ud83d\udc49 you: merge PR #212, ~1 min |\n\nCI was green on all 6 checks (per the earlier CI report). I couldn't check whether it's merged, because the GitHub check needs approval here. Merge it on GitHub and I'll check on your next message.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.26644080000000003,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limit | stop API abuse | \u26a0\ufe0f not started, no config found |\n\nI promised to check this after the next deploy, and no deploy has happened. I searched the project and found no rate-limit config at all. The API is probably unprotected.\n\n**Add a basic rate limit?** (recommended: I'd add a per-IP limit on the API and show you the diff.) Reply 1 for yes, or 2 to leave it for later.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.27639250000000004,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoice export format | decide what users get | \ud83d\udc49 you: pick one, ~10 sec |\n\nMy recommendation is **PDF**. Invoices are sent to customers and need to look fixed and official. CSV suits accountants who import data, and it's cheap to add later.\n\n1. PDF (recommended)\n2. CSV",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2857641,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Pricing page redesign | clearer plans for buyers | \u23f8 parked, you said not now |\n\nNothing for you. It's saved for later, and I won't start it until you say so.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "arm": "ctl4",
+ "run": 1,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.078,
+ "first_cost": 0.0781307,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0781307,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config missing |\n| Invoices migration | invoices DB | \u274c column already exists |\n| Login page | new look live | \ud83d\udc49 you: merge PR, ~1 min (merge unconfirmed) |\n| +3 more: invoice PDF/CSV open, rate-limit check open, pricing parked | see list | \u23f8 |\n\n```bash\nls -la /Volumes/Backup/app\n```",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "arm": "ctl4",
+ "run": 6,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.079,
+ "first_cost": 0.0785558,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0785558,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Invoices DB | invoices can be saved | \u274c migration rolled back |\n| Login page | new look goes live | \ud83d\udc49 you: merge PR, ~1 min |\n| +3 more: invoice format open, rate-limit check open, pricing page parked | | \u23f8 |\n\nMerge PR #212 in GitHub (CI is green). I'll look into the two failures next.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

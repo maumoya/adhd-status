@@ -1,0 +1,26 @@
+{
+ "arm": "ctl4",
+ "run": 5,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.087,
+ "first_cost": 0.0867614,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0867614,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need the DB | \u274c failed, rolled back (column exists) |\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Login page | new sign-in look | \u23f8 CI green per earlier report, needs your merge |\n| +3 more: invoice PDF/CSV open, rate-limit check open, pricing page parked | see list | \u23f8 |\n\nI can't run `gh` here, so the login page row comes from the earlier CI report.\n\n1. Fix migration (recommended)\n2. Fix backup",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "arm": "nopaste",
+ "run": 9,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.17,
+ "first_cost": 0.06554689999999999,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.06554689999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices database | invoices need storing | \u274c migration failed, column exists |\n| Nightly backup | don't lose data | \u274c config step failed, 2 of 3 saved |\n| Login page | new look live | \ud83d\udc49 you: merge PR #212, ~1 min |\n| +3 more: rate limit check open, PDF vs CSV open, pricing page parked | | \u23f8 |\n\n\ud83d\udc49 Open PR #212 on GitHub and click Merge (CI is green).",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.10414469999999999,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c partly: db and uploads saved, config not |\n\nThe backup repo at `/Volumes/Backup/app` has no config file. Do you want me to fix it?\n\n1. **Yes, fix it (recommended):** I check the drive and repo, then re-run the backup.\n2. **Later.**",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

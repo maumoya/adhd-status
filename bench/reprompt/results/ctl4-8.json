@@ -1,0 +1,26 @@
+{
+ "arm": "ctl4",
+ "run": 8,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.075,
+ "first_cost": 0.0745404,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0745404,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config step failed |\n| Invoices migration | invoices need the DB | \u274c column already exists |\n| Login page | new look goes live | \ud83d\udc49 you: merge PR, ~1 min |\n| +3 more: invoice PDF/CSV open, rate-limit check open, pricing page parked | see list | \u23f8 |\n\nMerge PR #212 on GitHub (CI was green).",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

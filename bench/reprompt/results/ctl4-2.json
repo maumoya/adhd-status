@@ -1,0 +1,26 @@
+{
+ "arm": "ctl4",
+ "run": 2,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.074,
+ "first_cost": 0.0742136,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0742136,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config step failed |\n| Invoices migration | invoices need the DB | \u274c column already exists |\n| Login page | new look goes live | \ud83d\udc49 you: merge, ~1 min |\n| +3 more: invoice PDF/CSV open, rate-limit check open, pricing page parked | | \u23f8 |\n\nMerge PR #212 (CI was green). I'll fix the backup and the migration next.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

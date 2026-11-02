@@ -97,6 +97,21 @@ item. Mean spend is 9% higher because the two failed runs cost $1.60 each. Both 
 correct first reply covering all six items; the haiku judge graded them false, so the scripted
 user kept re-asking. Paste asks rose (13 vs 8). Episodes are in `results/` (`look-*`, `ctl3-*`).
 
+## Experiment: forbid "tell me when it's done" (2026-11-02, lost, not shipped)
+
+The paste asks in 1.6.0 were mostly "tell me when it's merged" about things the model could not
+see. The `nopaste` version adds an explicit rule: name the action, never ask for a report, check
+again next turn. Same day, with a control (`ctl4`, same text as 1.6.0):
+
+| Version (same day, 10 episodes each) | Spend per STATUS | Re-asks | Items in first reply (of 6) | Runs that never covered all items | Paste asks |
+|---|---|---|---|---|---|
+| 1.6.0 (`ctl4`) | $0.23 | 0.7 | 5.2 | 1/10 | 3 |
+| `nopaste` | $0.80 | 3.0 | 3.3 | 2/10 | 8 |
+
+It lost on every measure, so 1.6.0 stays. Another rule about the reply's tail pulled attention
+away from the sweep; the existing "Never" line already covers paste asks. Episodes are in
+`results/` (`nopaste-*`, `ctl4-*`).
+
 ## Limits
 
 One synthetic thread, 10 episodes per arm, an LLM judge, and a scripted user. Treat the numbers as

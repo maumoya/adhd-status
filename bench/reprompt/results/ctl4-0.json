@@ -1,0 +1,91 @@
+{
+ "arm": "ctl4",
+ "run": 0,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 1.381,
+ "first_cost": 0.18812279999999998,
+ "first_covered": 0,
+ "all_covered": false,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.18812279999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a database | \u274c failed: column exists |\n| Nightly backup | don't lose data | \u274c config step failed |\n| Invoice export format | pick PDF or CSV | \u26a0\ufe0f unanswered |\n| +3 more: login PR #212 CI green, needs your merge; API rate limit check open (not started); pricing redesign parked | see list | \u23f8 |\n\n1. Fix the migration (I'll check the existing column)\n2. Fix the backup",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.2086245,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page PR | new sign-in design live | \ud83d\udc49 you: merge it, ~1 min |\n\nCI was all green (6 of 6, per the earlier CI report). I couldn't check GitHub live here, so I can't confirm it's still unmerged.\n\n1. Merge PR #212 (I can't merge)\n2. Fix the migration",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2219662,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed at 2:08 AM |\n\nThe database dump and uploads saved. The config step failed because `/Volumes/Backup/app/config` doesn't exist, so the run exited with an error (per `backup.log`).\n\n1. Fix the backup (I'll check the backup drive's config path)\n2. Fix the migration",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2442733,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a database | \u274c failed, rolled back |\n\nThe `orders` table already has an `invoice_number` column, so the migration stopped and nothing changed (per `terminal.log`).\n\n1. Fix the migration (I'll check the existing column)\n2. Fix the backup",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.25409,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limit | stop API abuse | \u26a0\ufe0f not started |\n\nI said I'd check the rate limit config after the next deploy. No deploy has happened and I haven't looked at it. I can check it now without waiting for a deploy.\n\n1. Check the rate limit config now\n2. Fix the migration",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2640341,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoice export format | pick PDF or CSV | \ud83d\udc49 you: choose, ~1 min |\n\nIt's still open. I said I'd come back to it after the login page, and you haven't decided. My pick is PDF: invoices go to customers, and CSV suits accounting imports.\n\n1. PDF (recommended)\n2. CSV",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

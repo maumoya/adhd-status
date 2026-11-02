@@ -1,0 +1,39 @@
+{
+ "arm": "nopaste",
+ "run": 4,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.467,
+ "first_cost": 0.2230903,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.2230903,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Invoices migration | invoices need a table | \u274c failed, column exists |\n| Invoice export | pick the format | \ud83d\udc49 you: pick, ~10 sec |\n| +3 more: login PR #212 merge waiting on you, rate limit check open, pricing page parked | see list | \u23f8 |\n\n1. PDF (recommended)\n2. CSV",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.2437764,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page PR | new login goes live | \ud83d\udc49 you: merge it, ~1 min |\n\nCI was green (6/6) when last checked. I can't check the merge state from here, so I'm going by that.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}
