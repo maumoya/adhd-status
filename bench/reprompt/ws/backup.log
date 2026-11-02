@@ -1,0 +1,5 @@
+[02:00:01] nightly-backup start (restic, repo=/Volumes/Backup/app)
+[02:00:04] snapshot 1/3 db dump ok (412 MB)
+[02:07:55] snapshot 2/3 uploads ok (3.1 GB)
+[02:08:02] snapshot 3/3 config: Fatal: unable to open config file: Stat: stat /Volumes/Backup/app/config: no such file or directory
+[02:08:02] nightly-backup FAILED exit=1

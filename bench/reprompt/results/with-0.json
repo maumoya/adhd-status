@@ -1,0 +1,39 @@
+{
+ "arm": "with",
+ "run": 0,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.706,
+ "first_cost": 0.3459583,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.3459583,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need the DB | \u274c failed, column already exists |\n| Nightly backup | don't lose data | \u274c failed, config step missing |\n| Login redesign | new sign-in page | \ud83d\udc49 you: merge it, ~1 min |\n| +2 more | PDF/CSV pick, rate limit check | \u23f8 parked |\n\nMerge PR #212 (CI was green per the earlier report). I'll look into the two failures next.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.3603001,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Pricing page redesign | clearer pricing | \u23f8 parked, your \"someday\" |\n| Login redesign | new sign-in page | \ud83d\udc49 you: merge PR, ~1 min |\n| Migration + backup | invoices, safe data | \u274c both failed, I'm on it |\n| +2 more | PDF/CSV pick, rate limit | \u23f8 parked |\n\nThe pricing page isn't started and nothing is blocking it. It stays parked until you say go.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

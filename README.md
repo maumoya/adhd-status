@@ -102,6 +102,32 @@ claude plugin eval . --scaffold --allow-tools Edit,Write,Bash
 It runs each case with and without the skill and reports the score difference. These are real
 model runs and are billed to your account.
 
+### Results (measured 2026-11-01)
+
+**Plugin eval** (6 cases, 2 runs each, `claude plugin eval`): overall score **0.95 with the skill vs
+0.65 without**. The "forgotten item" case, where one promised task is buried in a long thread, was
+caught **83% of the time with the skill vs 25% without**.
+
+**Re-prompt cost** ([`bench/reprompt/`](bench/reprompt/), 10 episodes per arm, one ~13k-token
+thread with 6 open items, the user asks again about each item the reply misses):
+
+| Per STATUS, until every item is covered | With skill | Without |
+|---|---|---|
+| Average cost | **$0.70** | $1.08 |
+| Median cost | $0.59 | $1.08 |
+| Times the user had to ask again | **1.7** | 3.1 |
+| Items right on the first reply | 4.5 of 6 | 3.9 of 6 |
+| Episodes that never covered all 6 (6 turns) | **0 of 10** | 4 of 10 |
+| Times it asked the user to paste or report | **2** | 23 |
+
+The first reply costs about the same in both arms (~$0.23). The saving comes from fewer follow-up
+turns: about **35% less spend per STATUS** in this test. In short, tiny eval threads with nothing to
+forget, the skill's extra instructions make a single reply cost more; the payoff shows up in long
+threads, where forgetting is likely.
+
+Small sample, one synthetic thread, an LLM judge: a direction, not a guarantee. The harness and all
+20 episode logs are in [`bench/reprompt/`](bench/reprompt/).
+
 ## Security at a glance
 
 The [OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/maumoya/adhd-status) badge

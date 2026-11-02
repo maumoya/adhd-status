@@ -1,0 +1,9 @@
+owner@mac app % npm run migrate
+
+> app@2.3.0 migrate
+> node scripts/migrate.js
+
+Applying 20261101_add_invoices ...
+error: column "invoice_number" of relation "orders" already exists
+Migration 20261101_add_invoices FAILED, rolled back.
+owner@mac app %

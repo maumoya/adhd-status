@@ -1,0 +1,65 @@
+{
+ "arm": "with",
+ "run": 2,
+ "turns": 4,
+ "reprompts": 3,
+ "cost": 0.963,
+ "first_cost": 0.2147307,
+ "first_covered": 4,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.2147307,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a database | \u274c failed, column already exists |\n| Nightly backup | don't lose data | \u274c config snapshot failed |\n| PR #212 login page | new sign-in screen | \ud83d\udc49 you: merge, ~1 min |\n| +2 more | export format, rate limit | \u23f8 parked |\n\nThe migration failed when you ran it. It rolled back and changed nothing. The error says `orders.invoice_number` already exists. Last night's backup failed at the config step because `/Volumes/Backup/app/config` is missing. The db dump and uploads did back up.\n\nI'm fixing the migration first. I'll check whether the existing column is a leftover or already correct.\n\n1. Fix the migration (recommended)\n2. Merge #212 first\n\nThe README typo fix is done and merged. The parked rows are the PDF vs CSV choice for invoice export, and checking the API rate limit after the next deploy.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.23074519999999998,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| PR #212 login page | new sign-in screen | \ud83d\udc49 you: merge, ~1 min |\n\nAll 6 CI checks were green when I last saw them. That came from the earlier CI report, and I can't re-check it live from this folder. You have to merge it, because I can't. Nothing blocks it, and it doesn't depend on the failed migration.\n\n1. Merge #212 now\n2. Fix the migration first",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2540386,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| PR #212 login page | new sign-in screen | \ud83d\udc49 you: merge, ~1 min |\n\nI couldn't re-check it live because the GitHub lookup needs approval. It was last seen with all 6 checks green, and only you can merge it.\n\n1. Merge #212 now\n2. Fix the migration first",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2636607,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Pricing page redesign | better pricing page | \u23f8 parked, you said not now |\n\nNothing has been started on it. I'll pick it up when you say so.\n\n1. Merge #212 now\n2. Fix the migration first",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

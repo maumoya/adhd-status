@@ -1,0 +1,39 @@
+{
+ "arm": "with",
+ "run": 5,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.463,
+ "first_cost": 0.2259043,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.2259043,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a database | \u274c failed, \"invoice_number\" already exists |\n| Nightly backup | don't lose data | \u274c failed, config step can't find repo |\n| Login page | new look goes live | \ud83d\udc49 you: merge PR, ~1 min |\n| +2 more | PDF/CSV pick, rate limits, pricing | \u23f8 |\n\nNext: I fix the migration so it skips the existing column. You don't need to do anything for that.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2375907,
+   "reply": "No, only partly. The log shows:\n\n- Database dump: worked (412 MB).\n- Uploads: worked (3.1 GB).\n- Config: failed. restic couldn't find `/Volumes/Backup/app/config`, so the job exited with an error.\n\nThe first two snapshots are saved, but the config isn't backed up. The error also looks like the repo path or its `config` file is wrong. `/Volumes/Backup` may not have been mounted, or the repo was never initialized.\n\n| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \ud83d\udc49 you: check drive, ~1 min |\n\n```bash\nls /Volumes/Backup/app\n```",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "arm": "with",
+ "run": 3,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.215,
+ "first_cost": 0.2152763,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.2152763,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a table | \u274c failed: column already exists |\n| Nightly backup | don't lose data | \u274c failed: config snapshot missing |\n| Login page | new sign-in screen | \ud83d\udc49 you: merge PR, ~1 min |\n| +4 more | rate limit, invoice export, pricing | \u26a0\ufe0f parked |\n\nRow 4 covers three items:\n- **Rate limit check:** I said I'd check it after the next deploy and haven't started.\n- **Invoice export:** PDF or CSV is still undecided.\n- **Pricing page redesign:** parked for later.\n\nREADME typo is \u2705 merged.\n\nPick which failure I fix first:\n1. Migration (recommended): invoices are blocked on it.\n2. Backup.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}
