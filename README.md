@@ -154,6 +154,15 @@ through.
 No. It is one self-contained skill: the completion sweep that keeps anything from being missed is
 built in.
 
+## How this skill was launched
+
+The whole publishing journey is public, with real numbers: OpenSSF Scorecard 5.9 → 7.4, Best
+Practices passing, what is still open, and the measure → fix → re-measure loop to launch any skill.
+
+- [Publishing playbook](docs/PUBLISHING_PLAYBOOK.md) (reads on GitHub)
+- [Interactive progress page](docs/progress.html) with tick boxes (download and open, or view on the
+  project site once it is live)
+
 ## Credits
 
 - Time estimates, visible wins and the no-preamble rule are inspired by

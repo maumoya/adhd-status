@@ -2,7 +2,7 @@
 
 A playbook for publishing any Claude Code skill so people can find it, trust it and install it.
 Measured on 2026-11-01/02 against `git log`, the GitHub API, the OpenSSF Scorecard API and bestpractices.dev.
-Interactive version with tick boxes (private): https://claude.ai/code/artifact/a5f9ec76-594a-4e98-894c-cce4510c6ede
+Interactive version with tick boxes: [`docs/progress.html`](progress.html).
 
 **Next action:** record a 10-second demo GIF (type `STATUS`, get the table) and put it at the top of the README. See "Apply to adhd-status next", item 1.
 
