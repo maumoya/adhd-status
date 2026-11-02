@@ -18,6 +18,10 @@
 `STATUS`, get one tiny table and one next step. Built for focus, executive function and context
 management. MIT licensed.
 
+**Measured:** catches a forgotten task **83% of the time vs 25%** without it, and spends **35% less
+per STATUS** in a long thread because you rarely have to ask again
+([results](#results-measured-2026-11-01)).
+
 An open source skill for Claude Code (and other agents that read `SKILL.md` skills, the open Agent
 Skills format) that turns **STATUS** into a zero-reading status board.
 
