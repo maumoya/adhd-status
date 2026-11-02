@@ -29,6 +29,9 @@ to prevent. Nothing else needs to be installed; the sweep is built in.
    file or line exists, the service answers, the merge is there). A report from a subagent or
    another thread, a ticked box or your own earlier "done" is a claim, not proof: re-check it
    cheaply before you show ✅. Re-measure any number you are about to show.
+   If a live re-check cannot run here (no network, not logged in), the freshest saved evidence
+   you can read (a CI log, a merge record, command output) counts: show ✅ and say where it came
+   from ("per CI log"). Never hand the user an access fix just to confirm a win.
 4. **Mark each one**: **done**, **running**, **waiting on the user**, **waiting on something
    else**, **dropped** or **forgotten**. Forgotten items become rows. A dropped item (impossible
    or no longer wanted) also gets a row with its reason; never remove one quietly.
@@ -145,7 +148,8 @@ Below, "hub thread" means whichever of the two it is.
 Long conversations get slow, expensive and forgetful. Check this on every STATUS.
 
 - **Task finished, or the topic is about to change**: prefer a fresh start (hand back and close, or
-  `/clear` in Claude Code) over compacting; it is cheaper.
+  `/clear` in Claude Code) over compacting; it is cheaper. This is a tip, never the next action on
+  its own: when nothing else needs the user, give no command block (Step 6).
 - **Same task, thread is long** (many steps done, big tool outputs, or the host reports high context
   use): add the row `Context | save tokens | ⚠️ big → compact` and make compacting the next action.
   Do it at a milestone (after a merge, after a bug is fixed), never in the middle of a fix.

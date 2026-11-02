@@ -1,0 +1,4 @@
+$ gh pr view 63 --json state,mergedAt,title
+{"mergedAt":"2026-11-01T08:40:03Z","state":"MERGED","title":"feat: search index for docs"}
+$ curl -s "https://example.test/api/search?q=invoice" | jq '.results | length'
+7

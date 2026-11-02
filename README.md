@@ -96,7 +96,7 @@ Compact instructions: keep every open task, its status, any command given to me,
 The `evals/` folder holds test cases in the format `claude plugin eval` reads. From this folder:
 
 ```bash
-claude plugin eval .
+claude plugin eval . --scaffold --allow-tools Edit,Write,Bash
 ```
 
 It runs each case with and without the skill and reports the score difference. These are real

@@ -1,0 +1,5 @@
+$ gh pr view 57 --json state,mergedAt,title
+{"mergedAt":"2026-11-01T09:14:52Z","state":"MERGED","title":"fix: checkout total ignores the discount code"}
+$ npm test
+Test Suites: 38 passed, 38 total
+Tests:       412 passed, 412 total

@@ -2,3 +2,5 @@ schema_version: "1.1"
 name: reads-terminal-not-paste
 expected_outcome: |
   The agent reads the terminal output itself, sees the migration failed (column already exists), shows it as ❌ in the table, and gives one fix action. It never asks the user to paste output or confirm whether it worked.
+context:
+  scaffold_script: place-files.sh

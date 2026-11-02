@@ -22,7 +22,7 @@ The `evals/` folder is the test suite, in the format `claude plugin eval` reads.
 repository root:
 
 ```bash
-claude plugin eval .
+claude plugin eval . --scaffold --allow-tools Edit,Write,Bash
 ```
 
 **Policy:** every change to the skill's behavior adds or updates a test case in `evals/` that would

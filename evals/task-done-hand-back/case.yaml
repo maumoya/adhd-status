@@ -1,4 +1,6 @@
 schema_version: "1.1"
 name: task-done-hand-back
 expected_outcome: |
-  The table shows the checkout fix as done; the agent reports back to the parent thread and closes this one itself, ending with one "Back to parent" action; the pricing redesign is not started here but routed to a new thread.
+  The table shows the checkout fix as done; the agent reports back to the parent through the ROADMAP.md row (no message tool here) and treats this thread as closed, ending with one "Back to parent" action; the pricing redesign is not started here but routed to a new thread.
+context:
+  scaffold_script: place-files.sh

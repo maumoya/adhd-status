@@ -1,0 +1,6 @@
+$ gh pr view 41 --json state,mergedAt,title
+{"mergedAt":"2026-10-31T17:02:11Z","state":"MERGED","title":"fix: header overlaps the menu on small screens"}
+$ gh run list --workflow deploy --limit 1
+completed  success  fix: header overlaps the menu on small screens  deploy  main  push  2026-10-31T17:05:40Z
+$ curl -s -o /dev/null -w "%{http_code}\n" https://example.test/
+200
