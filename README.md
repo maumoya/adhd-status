@@ -101,6 +101,32 @@ claude plugin eval .
 It runs each case with and without the skill and reports the score difference. These are real
 model runs and are billed to your account.
 
+## Security at a glance
+
+The [OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/maumoya/adhd-status) badge
+at the top is an automated, independent check of how this repository is run. The skill itself is
+one Markdown file: no code, no network calls, no data collected (see [PRIVACY.md](PRIVACY.md)).
+
+| Check | Score | What it means here |
+|---|---|---|
+| Dangerous workflows, token permissions, pinned actions, vulnerabilities, binaries | 10 | CI cannot be hijacked by a pull request, tokens are read-only by default, every action is pinned to a commit |
+| Code scanning (CodeQL), CI on pull requests | 10 | every change is scanned before it reaches `main` |
+| Branch protection | 8 | `main` blocks force-push and deletion; changes need a pull request and a passing CodeQL check |
+| Signed releases | 10 | each release ships with signed SLSA provenance (see below) |
+| Code review | 0 | one maintainer, so no second person approves changes yet |
+| Maintained | 0 | new repository; this check starts counting after 90 days |
+| Fuzzing | 0 | there is no code to fuzz |
+
+### Verify a release
+
+Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as a zip plus a
+`*.intoto.jsonl` provenance file signed with Sigstore. Check it with
+[slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
+
+```bash
+slsa-verifier verify-artifact adhd-status-v1.4.0.zip --provenance-path adhd-status-v1.4.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v1.4.0
+```
+
 ## FAQ
 
 **What is adhd-status?**
