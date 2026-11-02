@@ -5,6 +5,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Claude%20Code-skill%20%2B%20plugin-7c5cfc" alt="Claude Code skill and plugin">
   <img src="https://img.shields.io/badge/ADHD-friendly-22c55e" alt="ADHD friendly">
+  <a href="#results-measured-2026-11-01"><img src="https://img.shields.io/badge/forgotten%20tasks%20caught-83%25%20vs%2025%25-2da44e" alt="Forgotten tasks caught: 83% vs 25%"></a>
+  <a href="#results-measured-2026-11-01"><img src="https://img.shields.io/badge/spend%20per%20STATUS-%E2%88%9235%25-2da44e" alt="Spend per STATUS: 35% less"></a>
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license">
   <a href="https://opensource.org/license/mit"><img src="https://img.shields.io/badge/Open%20Source-OSI%20approved%20license-3DA639?logo=opensourceinitiative&logoColor=white" alt="Open Source: OSI-approved MIT license"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-no%20tracking%20%C2%B7%20no%20data%20collected-7c5cfc" alt="Privacy: no tracking, no data collected"></a>
