@@ -1,0 +1,91 @@
+{
+ "arm": "with2",
+ "run": 8,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 0.651,
+ "first_cost": 0.0767786,
+ "first_covered": 1,
+ "all_covered": false,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.0767786,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Login page | new design goes live | \ud83d\udc49 you: merge it, ~1 min |\n| Invoices DB | invoices can save | \u274c migration failed, rolled back |\n| Nightly backup | don't lose data | \u274c config step failed |\n| +4 more | rate limit, PDF/CSV, pricing, README \u2705 | \u23f8 |\n\nMerge PR #212 on GitHub (it's green), then reply \"merged\". I'll start on the migration and backup failures.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.0885885,
+   "reply": "Only partly. The database dump (412 MB) and the uploads (3.1 GB) both saved. The third step, the config snapshot, failed because `/Volumes/Backup/app/config` doesn't exist, so the job exited with an error.\n\n| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config step failed |\n\nI'll fix the config step next unless you tell me otherwise.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.0988214,
+   "reply": "No. It failed and rolled back, so nothing changed in the database. The error was `column \"invoice_number\" of relation \"orders\" already exists`. A column with that name is already in the `orders` table, probably left over from an earlier attempt or added by hand.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoices DB | invoices can save | \u274c migration failed, rolled back |\n\nI'll check whether that existing column matches what the migration expects, then fix the migration.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1188313,
+   "reply": "No. I re-checked the log just now and nothing has changed since the first run. The migration failed on `column \"invoice_number\" of relation \"orders\" already exists` and rolled back. The database is untouched.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoices DB | invoices can save | \u274c failed, rolled back |\n\nI'll check whether the existing column matches what the migration expects, then fix the migration.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1288636,
+   "reply": "I haven't done it. I said I'd check the API rate limit config after the next deploy, and no deploy has happened yet. The login page PR #212 isn't merged, so nothing has shipped.\n\n| Task | Why | Status |\n|---|---|---|\n| Rate limit | API abuse protection | \u23f8 waiting on next deploy |\n\nI can read the current rate limit config now instead of waiting. I'd do that after the migration and backup fixes.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.1395292,
+   "reply": "Nothing has been checked yet. I promised to look after the next deploy, and no deploy has happened, because PR #212 isn't merged.\n\n| Task | Why | Status |\n|---|---|---|\n| Rate limit | API abuse protection | \u23f8 not started, waits on deploy |\n\nThis folder holds only the two log files, so there is no API config here to read early. I'll check it after the deploy.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

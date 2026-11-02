@@ -1,0 +1,39 @@
+{
+ "arm": "row4",
+ "run": 4,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.454,
+ "first_cost": 0.2183853,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.2183853,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed: config snapshot missing |\n| Invoices migration | invoices table exists | \u26a0\ufe0f can't confirm it ran |\n| Login page | new sign-in look | \ud83d\udc49 you: merge PR, ~1 min |\n| +4 more: invoice format, rate-limit check, pricing page, README typo \u2705 | parked/done | \u23f8 |\n\nMerge PR #212 on GitHub (CI was green), then say \"merged\".",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.235325,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed: config snapshot missing |\n| Invoices migration | invoices table exists | \u26a0\ufe0f can't confirm it ran |\n| Login page | new sign-in look | \ud83d\udc49 you: merge PR, ~1 min |\n| +4 more: pricing page (parked, \"not now\"), invoice format, rate-limit check, README typo \u2705 | parked/done | \u23f8 |\n\nMerge PR #212 on GitHub, then say \"merged\".",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

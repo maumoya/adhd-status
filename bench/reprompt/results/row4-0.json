@@ -1,0 +1,91 @@
+{
+ "arm": "row4",
+ "run": 0,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 1.526,
+ "first_cost": 0.22396280000000002,
+ "first_covered": 4,
+ "all_covered": false,
+ "paste_asks": 4,
+ "log": [
+  {
+   "cost": 0.22396280000000002,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config snapshot failed |\n| Login page | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n| Invoice export | PDF or CSV | \ud83d\udc49 your pick |\n| +3 more: invoice migration, rate-limit check, pricing page | parked | \u23f8 |\n\n```bash\nls /Volumes/Backup/app\n```",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.23427900000000002,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoice migration | invoices table exists | \u26a0\ufe0f unverified, no output seen |\n\n```bash\nnpm run migrate\n```",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.24514970000000003,
+   "reply": "Unknown. The output after \"ran it\" was lint results, not migration output. The migration file isn't in this folder, and I can't reach your database from here, so I have no evidence either way.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoice migration | invoices table exists | \u26a0\ufe0f unverified |\n\nRe-running is the quickest check. It shows \"already applied\" or applies it.\n\n```bash\nnpm run migrate\n```",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.2567513,
+   "reply": "Still unverified. I can't see your terminal or database from here, and your \"ran it\" was followed by lint output, not migration output. I won't mark it \u2705 without evidence.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoice migration | invoices table exists | \ud83d\udc49 you: run, ~1 min |\n\n```bash\nnpm run migrate\n```\n\nIf it prints an error, that error is the answer. If it says nothing to apply, the migration worked.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.26729030000000004,
+   "reply": "I can't tell yet. I still have no migration output to check, and I can't reach your database from here.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoice migration | invoices table exists | \ud83d\udc49 you: run, ~1 min |\n\n```bash\nnpm run migrate\n```",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.29830450000000003,
+   "reply": "No, it failed and rolled back, so the invoices table doesn't exist yet. I found this in `terminal.log`. The error is `column \"invoice_number\" of relation \"orders\" already exists`.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoice migration | invoices table exists | \u274c failed, rolled back |\n\nI'll fix the migration so it skips a column that already exists. Then you re-run it.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "arm": "row4",
+ "run": 3,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.482,
+ "first_cost": 0.2252122,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.2252122,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Login page | new look goes live | \ud83d\udc49 you: merge, ~1 min |\n| Invoices DB | invoices can be stored | \u26a0\ufe0f migration unverified |\n| +3 more: invoice PDF/CSV pick, rate-limit check, pricing page | open / parked | \u23f8 |\n\nBackup stopped at 02:08 because the repo has no `config` file, so the drive is probably unmounted or the repo was never initialized. Check it with this:\n\n```bash\nls /Volumes/Backup/app\n```",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2572196,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices DB | invoices can be stored | \u274c migration failed, rolled back |\n| Nightly backup | don't lose data | \u274c failed, config step |\n| Login page | new look goes live | \ud83d\udc49 you: merge, ~1 min |\n| +3 more: invoice PDF/CSV pick, rate-limit check, pricing page | open / parked | \u23f8 |\n\nNo, the migration failed. `invoice_number` already exists on `orders`, so it rolled back and nothing changed. I'll fix the migration so it skips that column. Say \"go\" and I'll do it.",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

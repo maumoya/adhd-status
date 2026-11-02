@@ -1,0 +1,52 @@
+{
+ "arm": "with2",
+ "run": 7,
+ "turns": 3,
+ "reprompts": 2,
+ "cost": 0.253,
+ "first_cost": 0.0730524,
+ "first_covered": 4,
+ "all_covered": true,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.0730524,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need the new column | \u274c failed, column already exists |\n| Nightly backup | don't lose data | \u274c failed, config snapshot missing |\n| Login page | users can sign in | \ud83d\udc49 you: merge PR, ~1 min |\n| +3 more | invoice format, rate limits, pricing page | \u23f8 |\n\n[Merge PR #212] [I'll fix the migration first]",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.08486360000000001,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limit | stop API abuse | \u23f8 not checked, waits for deploy |\n| Login page | ships the deploy | \ud83d\udc49 you: merge PR, ~1 min |\n\n[Merge PR #212] [Check rate limit now instead]",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.09534710000000002,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoice export format | invoices leave the app | \ud83d\udc49 you: pick one, ~10 sec |\n\n[PDF first (recommended)] [CSV first]",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": true
+   }
+  }
+ ]
+}

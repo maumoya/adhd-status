@@ -1,0 +1,39 @@
+{
+ "arm": "row4",
+ "run": 1,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.457,
+ "first_cost": 0.2222123,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.2222123,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config step failed at 2 AM |\n| Invoices migration | invoices need DB | \u274c column already exists, rolled back |\n| Login page | new sign-in look | \ud83d\udc49 you: merge PR, ~1 min |\n| +3 more: invoice PDF/CSV pick, rate-limit check, pricing page | open / parked | \u23f8 |\n\n\ud83d\udc49 Merge the login PR (CI green per earlier log), then I'll fix the backup and migration.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2349268,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c partly: db and uploads saved, config step failed |\n\nNothing for you. I'm fixing the config step next. The error says the restic repo is missing its `config` file.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

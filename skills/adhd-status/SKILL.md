@@ -75,8 +75,12 @@ The user should never have to report back to you.
 - Show wins: anything finished since the last STATUS gets a ✅ row (finishing things is
   motivating). Older done items are noise; leave them out.
 - More than 4 rows to show? Count all of them (wins and parked tasks included).
-  Keep the 3 most urgent and make row 4 `+N more | parked | ⏸` (in the hub thread:
-  `+N more | in ROADMAP.md | ⏸`). Never drop items silently to fit.
+  Rows 1–3 go to the most urgent: ❌ and ⚠️ items and 👉 rows always win a visible row and are
+  never folded away. Row 4 names **every** hidden item, in 2–3 words each:
+  `+2 more: invoice format, pricing page | parked | ⏸` (in the hub thread:
+  `… | in ROADMAP.md | ⏸`). A bare count ("+2 more") is not enough: the user can't see
+  what was hidden. Never drop items silently to fit.
+- The table is always there, even when the next action is a decision or pick list.
 - **Task**: 2–4 plain words. No links, ticket or PR numbers, branch names, hashes or file paths.
 - **Why**: up to 6 plain words, the benefit to the user, not the mechanism.
 - **Status**: one emoji and up to 5 words. On a 👉 row add a real time estimate (`~2 min`) so

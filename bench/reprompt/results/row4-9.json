@@ -1,0 +1,26 @@
+{
+ "arm": "row4",
+ "run": 9,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.067,
+ "first_cost": 0.0669533,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0669533,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, config snapshot missing |\n| Login page | users can sign in | \ud83d\udc49 you: merge PR, ~1 min |\n| Invoices migration | invoices need a table | \u26a0\ufe0f can't confirm it ran |\n| +3 more: invoice export format, rate limit check, pricing page | parked | \u23f8 |\n\nMerge the login page PR (all 6 checks were green): [Open PR #212](https://github.com/pull/212)",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}

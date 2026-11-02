@@ -1,0 +1,91 @@
+{
+ "arm": "with2",
+ "run": 3,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 1.568,
+ "first_cost": 0.2145426,
+ "first_covered": 2,
+ "all_covered": true,
+ "paste_asks": 2,
+ "log": [
+  {
+   "cost": 0.2145426,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config step failed |\n| Login page | new sign-in look | \ud83d\udc49 you: merge it, ~1 min |\n| Invoices DB | invoice storage | \u26a0\ufe0f migration not confirmed |\n| +3 more | invoice format, rate limit, pricing | \u23f8 parked |\n\n**Merge the login page.** The tests passed and all 6 CI checks were green when I last checked. I couldn't recheck the PR just now.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2263649,
+   "reply": "No, it failed. The db dump and the uploads were backed up. The third step, the config snapshot, failed because restic couldn't find `/Volumes/Backup/app/config`. The run exited with an error at 02:08.\n\nBecause of that, the nightly run is not fully safe yet. The most likely cause is a missing config path on the backup drive.\n\n| Task | Why | Status |\n|---|---|---|\n| Backup config step | don't lose data | \ud83d\udc49 you: say \"fix it\", ~1 min |",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.2582363,
+   "reply": "No, the migration failed and was rolled back. The error was `column \"invoice_number\" of relation \"orders\" already exists`. The column is already in the database, so nothing was changed. Invoices aren't set up yet.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoices migration | store invoices | \u274c failed, rolled back |\n\nNext step: I make the migration skip the column that already exists. Say \"fix it\" and I'll do that.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": true
+   }
+  },
+  {
+   "cost": 0.27930269999999996,
+   "reply": "Not checked yet. I said I'd look at it after the next deploy, and no deploy has happened. I searched this folder and found no rate-limit config here, so I can't say whether the API is protected.\n\n| Task | Why | Status |\n|---|---|---|\n| API rate limit | stop API abuse | \u26a0\ufe0f not checked yet |\n\nNext step: point me to the API code, and I'll check the limits now.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2896991,
+   "reply": "Still open. You said you weren't sure, and I said I'd come back to it. I haven't given a recommendation yet, so here it is: **PDF**.\n\nAn invoice is a document you send to a customer, and PDF stays the same on any device. CSV is better for accountants and spreadsheets, so you can add it later as a second export.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoice export format | customers get invoices | \ud83d\udc49 you: pick 1 or 2, ~10 sec |\n\n1. PDF (recommended)\n2. CSV",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2994946,
+   "reply": "Still waiting on your pick. My recommendation is **PDF**.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoice export format | customers get invoices | \ud83d\udc49 you: pick 1 or 2, ~10 sec |\n\n1. PDF (recommended)\n2. CSV",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

@@ -60,6 +60,25 @@ What this shows:
 
 Episodes are in `results/` (`lite-*`, `lite2-*`, `ladder-*`); the texts are in `candidates/`.
 
+## Experiment: row 4 names what it hides (2026-11-01, shipped in 1.5.0)
+
+In the current skill's first replies, row 4 often read `+2 more | parked | ⏸`, so the user could
+not see which items were hidden (the parked pricing page was missed in 5 of 10 runs), and twice a
+failed migration was folded into it. The `row4` version makes row 4 name every hidden item, keeps
+❌, ⚠️ and 👉 items in visible rows, and always shows the table.
+
+The same skill scored worse on the day of this run than on the day of the main results (model
+drift), so it was re-run that day as a control (`with2`, same text as the skill before 1.5.0):
+
+| Version (same day, 10 episodes each) | Spend per STATUS | First reply | Re-asks | Items in first reply (of 6) | Runs that never covered all items |
+|---|---|---|---|---|---|
+| Skill before 1.5.0 (`with2`) | $0.83 | $0.146 | 3.3 | 2.9 | 4/10 |
+| `row4` (now the skill) | $0.60 | $0.147 | 2.8 | 4.2 | 4/10 |
+
+28% less spend per STATUS and more items in the first reply, at equal first-reply cost. Runs
+that never covered everything did not improve (4/10 each), so that stays the next thing to fix.
+Episodes are in `results/` (`row4-*`, `with2-*`).
+
 ## Limits
 
 One synthetic thread, 10 episodes per arm, an LLM judge, and a scripted user. Treat the numbers as

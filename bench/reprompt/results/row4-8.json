@@ -1,0 +1,91 @@
+{
+ "arm": "row4",
+ "run": 8,
+ "turns": 6,
+ "reprompts": 5,
+ "cost": 0.699,
+ "first_cost": 0.0744903,
+ "first_covered": 1,
+ "all_covered": false,
+ "paste_asks": 1,
+ "log": [
+  {
+   "cost": 0.0744903,
+   "reply": "Correction: that last call did nothing, and I haven't touched the migration yet.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a table | \u274c column exists, rolled back |\n| Nightly backup | don't lose data | \u274c config snapshot failed |\n| Login page | new sign-in look | \ud83d\udc49 you: merge PR, ~1 min |\n| +3 more: invoice PDF/CSV, API rate limit, pricing page | parked | \u23f8 |\n\n1. Fix the migration (I'll add a guard)\n2. Merge the login page PR first",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.0960569,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c partly failed |\n\nNo. At 02:08 the database dump and uploads saved, but the config snapshot failed: restic couldn't find `/Volumes/Backup/app/config`. The run exited with an error.\n\nI couldn't check the backup drive myself, because that command needs your approval. I'd like to run it to see whether the repo is missing or the drive isn't mounted.\n\n```bash\nls /Volumes/Backup/app\n```",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.11738660000000001,
+   "reply": "I can't fix it yet because the migration file isn't in this folder. This workspace only holds `backup.log` and `terminal.log`.\n\n| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a table | \ud83d\udc49 you: open the app folder, ~1 min |\n\nNext: start me in the app project folder, where `scripts/migrate.js` lives, and I'll add the guard there.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.12709610000000002,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need a table | \u274c failed, rolled back |\n\nNo, same as before. It failed on the existing `invoice_number` column and rolled back, and nothing has changed since.\n\nNext: start me in the app project folder so I can fix the migration.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.13679480000000002,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| API rate limit | stop API abuse | \u26a0\ufe0f not checked yet |\n\nI promised to check it after the next deploy. No deploy has happened and I haven't looked at the config. The code isn't in this folder, so I can't check it from here.\n\nNext: start me in the app project folder, and I'll read the rate limit config.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.14706170000000002,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoice export format | pick PDF or CSV | \ud83d\udc49 you: pick one, ~1 min |\n\nYou haven't decided yet. I said I'd come back to it after the login page, and the login PR still isn't merged.\n\nMy pick is PDF: invoices are sent to customers, and a PDF looks the same on every device. CSV is better only if you want to open invoices in a spreadsheet, and I can add it later.\n\n1. PDF (recommended)\n2. CSV",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": true
+   }
+  }
+ ]
+}

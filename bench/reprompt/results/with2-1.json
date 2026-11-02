@@ -1,0 +1,65 @@
+{
+ "arm": "with2",
+ "run": 1,
+ "turns": 4,
+ "reprompts": 3,
+ "cost": 0.976,
+ "first_cost": 0.2208021,
+ "first_covered": 3,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.2208021,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c failed, 3rd step |\n| Login page | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n| Invoices DB | store invoices | \u26a0\ufe0f migration not found |\n| +3 more | export, rate limit, pricing | \u23f8 |\n\nMerge the login page now, before the backup fix. The merge button is on the pull request page.\n\n[Merge login page] [Skip for now]",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.24172870000000002,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Rate limit | stop API abuse | \u26a0\ufe0f none found in code |\n| Login page | new sign-in look | \ud83d\udc49 you: merge, ~1 min |\n\nI said I'd check it after the next deploy, and no deploy has happened yet. I searched the code for rate-limit settings and found none, so the API looks unprotected.\n\n[Add rate limiting] [Later]",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": true,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2520387,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoice export | decide file format | \ud83d\udc49 you: pick one, ~10 sec |\n\nI recommend PDF. Customers expect invoices as PDF, and CSV can be added later.\n\n[PDF (recommended)] [CSV]",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": true,
+    "pricing": false,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.2613948,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Pricing page | clearer pricing | \u23f8 parked, you said not now |\n\nNothing for you to do. It stays parked until you say go.",
+   "grade": {
+    "login": false,
+    "backup": false,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}
