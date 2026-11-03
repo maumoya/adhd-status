@@ -1,0 +1,57 @@
+name: ADHD status reply lint
+description: Check status replies against the adhd-status format (one Task | Why | Status table, at most 4 rows, one next action, no paste asks).
+author: Mauricio Alonso Moya Tapia
+branding:
+  icon: check-square
+  color: purple
+
+inputs:
+  files:
+    description: Reply files to check, one path or glob per line (** works). The step fails if none match.
+    required: true
+
+outputs:
+  problems:
+    description: Number of problems found across all files.
+    value: ${{ steps.lint.outputs.problems }}
+
+runs:
+  using: composite
+  steps:
+    - id: lint
+      shell: bash
+      env:
+        FILES: ${{ inputs.files }}
+        LINTER: ${{ github.action_path }}/tools/lint_reply.py
+      run: |
+        shopt -s globstar nullglob
+        checked=0 total=0
+        {
+          echo "### adhd-status reply lint"
+          echo
+          echo "| File | Problems |"
+          echo "|---|---|"
+        } >> "$GITHUB_STEP_SUMMARY"
+        while IFS= read -r pattern; do
+          [ -z "${pattern// }" ] && continue
+          for f in $pattern; do
+            [ -f "$f" ] || continue
+            checked=$((checked + 1))
+            out=$(python3 -I "$LINTER" "$f") || true
+            n=0
+            while IFS= read -r line; do
+              [ -z "$line" ] && continue
+              n=$((n + 1))
+              echo "::error file=$f::$line"
+            done <<< "$out"
+            total=$((total + n))
+            if [ "$n" -eq 0 ]; then echo "| \`$f\` | ✅ 0 |"; else echo "| \`$f\` | ❌ $n |"; fi >> "$GITHUB_STEP_SUMMARY"
+          done
+        done <<< "$FILES"
+        echo "problems=$total" >> "$GITHUB_OUTPUT"
+        if [ "$checked" -eq 0 ]; then
+          echo "::error::no reply files matched: $FILES"
+          exit 1
+        fi
+        echo "Checked $checked file(s), $total problem(s)."
+        [ "$total" -eq 0 ]

@@ -24,3 +24,34 @@ jobs:
 
       - name: Run tests
         run: python3 -I -m unittest discover -s tests -v
+
+  action:
+    name: Action self-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Good replies pass
+        uses: ./
+        with:
+          files: tests/fixtures/good/*.md
+
+      - name: Bad reply fails
+        id: bad
+        continue-on-error: true
+        uses: ./
+        with:
+          files: tests/fixtures/bad/F5-paste-ask.md
+
+      - name: Check the bad reply failed
+        env:
+          OUTCOME: ${{ steps.bad.outcome }}
+          PROBLEMS: ${{ steps.bad.outputs.problems }}
+        run: |
+          test "$OUTCOME" = failure
+          test "$PROBLEMS" = 1

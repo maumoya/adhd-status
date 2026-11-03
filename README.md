@@ -122,6 +122,23 @@ them to `~/.claude/settings.json` (change the path to where you cloned this repo
 
 Check any reply by hand: `python3 tools/lint_reply.py reply.md`.
 
+### Check replies in CI (GitHub Action)
+
+The same checker runs as a GitHub Action, listed on the
+[GitHub Marketplace](https://github.com/marketplace/actions/adhd-status-reply-lint). Save sample
+status replies as Markdown files (for example from your own agent's prompts or evals) and fail the
+build when one breaks the format:
+
+```yaml
+- uses: maumoya/adhd-status@v1.8.0
+  with:
+    files: |
+      replies/**/*.md
+```
+
+Each problem shows as an annotation on the file, the job summary lists every file with its count,
+and the `problems` output holds the total. The step fails if no file matches.
+
 ## Test it (benchmark)
 
 The `evals/` folder holds test cases in the format `claude plugin eval` reads. From this folder:
@@ -200,7 +217,7 @@ Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as
 [slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
 
 ```bash
-slsa-verifier verify-artifact adhd-status-v1.7.0.zip --provenance-path adhd-status-v1.7.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v1.7.0
+slsa-verifier verify-artifact adhd-status-v1.8.0.zip --provenance-path adhd-status-v1.8.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v1.8.0
 ```
 
 ## FAQ
