@@ -118,9 +118,11 @@ every reply and makes things easy to lose.
   2. Close this thread: archive it if the host has a tool for that. If the thread stays open for
      later, compact it first (or tell the user the `/compact` line); do not compact a thread you
      are archiving, that is wasted work.
-  3. End with one tiny reply: one line saying it is done and closed, and exactly one button,
-     **Back to parent**, that takes the user to the parent thread. Without buttons, one line
-     naming the parent thread to open.
+  3. End with one tiny reply: the table (its ✅ row says it is done; "closed" fits in that Status
+     cell) and exactly one action: a **Back to parent** button that takes the user to the parent
+     thread, or, without buttons, the single line `Open <parent thread> next.` Nothing else: no
+     "this thread is closed" sentence, no note on how you checked or what you could not do
+     (evidence goes in the Status cell, e.g. "per CI log"), no "you can close it".
 
   The parent picks up its next task, which may start a new child thread. This loop repeats until
   the work is done.
@@ -155,9 +157,11 @@ Below, "hub thread" means whichever of the two it is.
   tiny.
 - **The hub only consolidates.** It keeps the status, lists the tasks and opens sub-task threads.
   It never brings a child thread's merge, adopt, deploy or install step over: no button, no Run
-  block, no question for it. That row reads `👉 in <thread> thread`, with a link to that thread
+  block, no question for it. That row's Status is just `👉 in <thread> thread` (not the step itself), with a link to that thread
   if the host has thread links (the one link allowed in the table, and only in Status). The
-  child thread owns its own merge and adopt asks and buttons.
+  child thread owns its own merge and adopt asks and buttons. The row is enough: no "open the
+  billing thread next" line under the table either. The hub's next action is only hub work (a
+  new sub-task thread, a roadmap choice), or nothing.
 - **STATUS in any other thread**: show only that thread's own task; do not summarize the roadmap.
 
 ## Step 5: context (compacting)
@@ -186,7 +190,8 @@ sentence:
 
 - **A decision**: clickable option buttons if your host has them (a question tool or next-step
   buttons): recommended option first, at most 2 options. Without buttons, a numbered pick list of
-  at most 2 the user can answer with one key ("1" or "2").
+  at most 2 the user can answer with one key ("1" or "2"). Only for a real choice: a failure
+  with one clear fix gets that fix as the action, not a "fix it / leave it" pick list.
 - **Host with a next-step box** (Claude Code desktop app: `wrap_up`): call it before the reply,
   with the summary sentence as `recap`, the decision as `ask` and at most 2 `actions`, recommended
   first. The reply under it is still only the table (plus a command block if one is next).
@@ -228,8 +233,11 @@ Check the reply; if any answer is no, fix it first.
 2. At most 4 data rows, and no links, PR or ticket numbers, hashes, branch names or paths in Task?
 3. Does every ✅ rest on evidence you checked (Step 1.3), not on a report from a subagent or
    another thread?
-4. Below the table: nothing, or exactly one next action? No paragraph, closing line, second
-   question or list of future steps.
+4. Below the table: nothing, or exactly one next action? No paragraph, closing line ("this is
+   done", "thread closed", "I checked X"), second question or list of future steps. A failure
+   with one clear fix gets that fix: one command, or, if you would do it but need an OK, one
+   "Fix it" button (without buttons: one line, "Say go and I fix it."). Never a "1. I fix it /
+   2. leave it" pick list.
 5. No ask to paste output or "let me know when done", and no typed answer where a button or one
    key would do?
 6. Only this thread's task? A new task becomes a new thread.
