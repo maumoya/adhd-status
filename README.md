@@ -40,7 +40,11 @@ Say `STATUS` in any working session and you get:
 - **hub mode**: a `ROADMAP.md` file is the summary page of every task in flight. One hub thread
   keeps it (your existing roadmap thread if you have one, else the root thread); child threads
   update only their own row when they hand back; STATUS in the hub thread shows the top 4 rows
+- the hub only consolidates: a child thread's merge or deploy step stays in that child thread, and
+  the hub row just points to it
 - a nudge to compact (at a milestone, never mid-fix) or start fresh when the conversation gets long
+- hard to miss: it loads on every way you say status (also inside a sentence and after a
+  compaction) and on every done or hand-back report; optional hooks make it certain
 
 Built for ADHD brains, useful for anyone juggling several things in one session.
 
@@ -163,9 +167,12 @@ Small sample, one synthetic thread, an LLM judge: a direction, not a guarantee. 
 |---|---|---|
 | 1.5.0 | row 4 names every hidden item; failures always get their own row | **28% less** spend per STATUS, 4.2 vs 2.9 items right on the first reply |
 | 1.6.0 | reads log files before saying "can't verify" | **half** the re-asks (1.7 vs 3.6), runs that never covered everything 2 vs 4 of 10 |
+| 1.7.0 | hard to miss: loads on every status and done report, table first, one check before sending, hub only consolidates | same spend per STATUS (median $0.084 vs $0.079, 4 episodes per arm), paste asks 0 vs 2 |
 
-The numbers above the table were measured on 1.4.x; 1.6.0 was not re-run against "no skill". Details
-in [`bench/reprompt/README.md`](bench/reprompt/README.md).
+1.7.0 fixes the format, not the cost: it was built from 86 real `status` turns where the skill was
+never loaded ([why](docs/FAILURES.md)). Against "no skill", the full plugin eval on 1.7.0
+(2026-11-03, 11 cases, 3 runs each) scores **0.96 with the skill vs 0.50 without**; every failure
+found has its own eval case. Details in [`bench/reprompt/README.md`](bench/reprompt/README.md).
 
 ## Security at a glance
 
@@ -190,7 +197,7 @@ Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as
 [slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
 
 ```bash
-slsa-verifier verify-artifact adhd-status-v1.6.0.zip --provenance-path adhd-status-v1.6.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v1.6.0
+slsa-verifier verify-artifact adhd-status-v1.7.0.zip --provenance-path adhd-status-v1.7.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v1.7.0
 ```
 
 ## FAQ

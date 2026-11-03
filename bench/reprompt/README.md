@@ -112,6 +112,20 @@ It lost on every measure, so 1.6.0 stays. Another rule about the reply's tail pu
 away from the sweep; the existing "Never" line already covers paste asks. Episodes are in
 `results/` (`nopaste-*`, `ctl4-*`).
 
+## 1.7.0 vs 1.6.0 (2026-11-03)
+
+1.7.0 changes the reply format (table first, loads on every status and done report), not the
+sweep. Same day, 4 episodes per arm, 1.6.0 as `candidates/v16.md`:
+
+| Version (same day, 4 episodes each) | Median spend per STATUS | Mean | Re-asks | Runs that covered all items | Paste asks |
+|---|---|---|---|---|---|
+| 1.7.0 | $0.084 | $0.24 | 0.25 | 4/4 | 0 |
+| 1.6.0 (`v16`) | $0.079 | $0.14 | 0 | 4/4 | 2 |
+
+No token change: both covered all six items on the first reply in nearly every run; one 1.7.0
+episode needed one re-ask, which raised its mean. Fewer paste asks. Episodes are in `results/`
+(`v17-*`, `v16-*`).
+
 ## Limits
 
 One synthetic thread, 10 episodes per arm, an LLM judge, and a scripted user. Treat the numbers as

@@ -1,0 +1,39 @@
+{
+ "arm": "with",
+ "run": 170,
+ "turns": 2,
+ "reprompts": 1,
+ "cost": 0.704,
+ "first_cost": 0.3458987,
+ "first_covered": 5,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.3458987,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Invoices migration | invoices need the database | \u274c column already exists, rolled back |\n| Nightly backup | don't lose data | \u274c config snapshot failed |\n| Login page | new look live | \ud83d\udc49 you: merge it, ~1 min |\n| +3 more: invoice format undecided, rate-limit check open, pricing page parked | see list | \u23f8 |\n\nSay go and I fix the migration.",
+   "grade": {
+    "login": true,
+    "backup": false,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  },
+  {
+   "cost": 0.3577822,
+   "reply": "No, it only half worked. The db dump (412 MB) and uploads (3.1 GB) saved. The config snapshot failed with `/Volumes/Backup/app/config: no such file or directory`, so the run ended with exit 1 at 02:08.\n\nThe cause is probably a missing or incomplete `config` path in the restic repo. Say go and I'll check the repo and the job script.",
+   "grade": {
+    "login": false,
+    "backup": true,
+    "migrate": false,
+    "ratelimit": false,
+    "invoice": false,
+    "pricing": false,
+    "paste": false
+   }
+  }
+ ]
+}

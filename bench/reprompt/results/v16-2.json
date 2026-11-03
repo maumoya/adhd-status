@@ -1,0 +1,26 @@
+{
+ "arm": "v16",
+ "run": 2,
+ "turns": 1,
+ "reprompts": 0,
+ "cost": 0.078,
+ "first_cost": 0.0783547,
+ "first_covered": 6,
+ "all_covered": true,
+ "paste_asks": 0,
+ "log": [
+  {
+   "cost": 0.0783547,
+   "reply": "| Task | Why | Status |\n|---|---|---|\n| Nightly backup | don't lose data | \u274c config step failed |\n| Invoices migration | invoices need a table | \u274c column already exists |\n| Login page | new look live | \ud83d\udc49 you: merge PR, ~1 min |\n| | | +3 more: PDF/CSV pick open, rate limit check open, pricing parked \\| see list \\| \u23f8 |\n\n1. Fix backup first (recommended)\n2. Fix migration first",
+   "grade": {
+    "login": true,
+    "backup": true,
+    "migrate": true,
+    "ratelimit": true,
+    "invoice": true,
+    "pricing": true,
+    "paste": false
+   }
+  }
+ ]
+}
