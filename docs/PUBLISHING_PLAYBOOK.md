@@ -1,7 +1,7 @@
 # Skill Launch Loop
 
 A playbook for publishing any Claude Code skill so people can find it, trust it and install it.
-Measured on 2026-11-01/02 against `git log`, the GitHub API, the OpenSSF Scorecard API and bestpractices.dev.
+Measured on 2026-11-01/02 (numbers refreshed 2026-11-03) against `git log`, the GitHub API, the OpenSSF Scorecard API and bestpractices.dev.
 Interactive version with tick boxes: [`docs/progress.html`](progress.html).
 
 **Next action:** record a 10-second demo GIF (type `STATUS`, get the table) and put it at the top of the README. See "Apply to adhd-status next", item 1.
@@ -17,12 +17,12 @@ Stars cannot be guaranteed. Everything below raises the odds that the right peop
 | Measure | Value | Source |
 |---|---|---|
 | Stars / forks | 1 / 0 | `gh repo view` |
-| Latest release | v1.4.0, 2026-11-02, zip + `adhd-status-v1.4.0.intoto.jsonl` (SLSA provenance) | `gh release view` |
-| OpenSSF Scorecard | **7.4** / 10 (2026-11-02) | api.securityscorecards.dev |
+| Latest release | v1.7.0, 2026-11-03, zip + `adhd-status-v1.7.0.intoto.jsonl` (SLSA provenance) | `gh release view` |
+| OpenSSF Scorecard | **7.4** / 10 (2026-11-03) | api.securityscorecards.dev |
 | OpenSSF Best Practices | **passing 100%**, silver 15%, gold 4% (project 16177) | bestpractices.dev |
 | GitHub topics | 20 of 20 used | `gh repo view` |
-| Evals | 6 cases in `evals/`, run with `claude plugin eval .` | repo |
-| Commits on main | 18 (13 direct, then PRs #1 to #5) | `git log` |
+| Evals | 12 cases in `evals/`, run with `claude plugin eval .`; 1.7.0 scores 0.96 with the skill vs 0.50 without (2026-11-03) | repo |
+| Commits on main | 33 (13 direct, then PRs #1 to #20) | `git log` |
 
 ### Timeline (from `git log`, oldest first)
 
