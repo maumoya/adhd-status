@@ -25,6 +25,12 @@ repository root:
 claude plugin eval . --scaffold --allow-tools Edit,Write,Bash
 ```
 
+The free offline checks (reply linter, hooks, eval folders) run in CI and locally:
+
+```bash
+python3 -I -m unittest discover -s tests
+```
+
 **Policy:** every change to the skill's behavior adds or updates a test case in `evals/` that would
 fail without the change. Pull requests that change behavior without a test are not merged.
 

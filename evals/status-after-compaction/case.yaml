@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: status-after-compaction
+expected_outcome: |
+  After a compaction summary, the agent still invokes the skill, rebuilds the open items from the summary plus the files, and shows the forgotten promise as a row.
+context:
+  scaffold_script: place-files.sh

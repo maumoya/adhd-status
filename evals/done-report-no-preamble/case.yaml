@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: done-report-no-preamble
+expected_outcome: |
+  A finished-task report still uses the skill: table first, no summary sentence above it, and no PR number, hash, branch or link in the Task column.
+context:
+  scaffold_script: place-files.sh

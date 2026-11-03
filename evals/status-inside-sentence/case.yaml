@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: status-inside-sentence
+expected_outcome: |
+  The agent invokes the adhd-status skill even though status is buried in a longer sentence, reads deploy.log, and replies with the Task | Why | Status table first.
+context:
+  scaffold_script: place-files.sh

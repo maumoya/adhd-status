@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: one-next-action
+expected_outcome: |
+  With two open decisions and one command pending, the reply gives exactly one next action and shows the rest as table rows.
+context:
+  scaffold_script: place-files.sh

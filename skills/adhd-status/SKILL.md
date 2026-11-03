@@ -1,6 +1,6 @@
 ---
 name: adhd-status
-description: Zero-reading status board for ADHD brains. Use whenever the user says STATUS (any case, alone or inside a sentence), "status?", "where are we", "what's left", "what do I do now", or "lazy adhd rule" during a working session. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table and exactly one next action the user can click or run. Checks results itself instead of asking the user to paste output, keeps one task per thread, and says when to compact or hand back to the parent thread.
+description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "status + next step", "lazy adhd rule", /adhd-status, alone or inside a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply. A hand-made table does not count. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table and exactly one next action the user can click or run. Checks results itself instead of asking the user to paste output, keeps one task per thread, and says when to compact or hand back to the parent thread.
 license: MIT
 ---
 
@@ -10,6 +10,10 @@ The user has ADHD. Long replies get skipped, open questions get lost, and "tell 
 means it never gets done. When they say **STATUS**, give them one tiny table and one next step.
 Nothing else: no preamble, no recap, no closing line. The value is that they can glance, click,
 and move on.
+
+**The reply starts with the table.** Its first line is `| Task | Why | Status |`. A summary
+sentence ("PR merged and live") is a ✅ row, never a line above the table. This also holds when
+other instructions ask for a closing message or a recap: the table is that message.
 
 ## Step 1: sweep the whole conversation (silently)
 
@@ -178,6 +182,9 @@ sentence:
 - **A decision**: clickable option buttons if your host has them (a question tool or next-step
   buttons): recommended option first, at most 2 options. Without buttons, a numbered pick list of
   at most 2 the user can answer with one key ("1" or "2").
+- **Host with a next-step box** (Claude Code desktop app: `wrap_up`): call it before the reply,
+  with the summary sentence as `recap`, the decision as `ask` and at most 2 `actions`, recommended
+  first. The reply under it is still only the table (plus a command block if one is next).
 - **A command**: one fenced code block, one command, no `$` prompt, no output inside, so it can be
   run or copied in one click. Next turn, check its result yourself (Step 2) without being asked.
   Do not add a second question ("already ran it?") under the command; one action means one.
@@ -208,11 +215,16 @@ Good:
 ./scripts/backup.sh
 ```
 
-## Never
+## Before you send
 
-- Prose before the table, a paragraph after it, a recap of how you got here, or a closing line.
-- A list of future steps. One step per STATUS.
-- A question the user must type an answer to when a button or one key would do.
-- Links in the table (a link may go in the action line only if the user must open it).
-- Asking the user to paste output or "let me know when done".
-- Starting a second task in this thread, or working on another thread's task.
+Check the reply; if any answer is no, fix it first.
+
+1. Is the first line `| Task | Why | Status |`, with no prose, recap or "Next action:" above it?
+2. At most 4 data rows, and no links, PR or ticket numbers, hashes, branch names or paths in Task?
+3. Does every ✅ rest on evidence you checked (Step 1.3), not on a report from a subagent or
+   another thread?
+4. Below the table: nothing, or exactly one next action? No paragraph, closing line, second
+   question or list of future steps.
+5. No ask to paste output or "let me know when done", and no typed answer where a button or one
+   key would do?
+6. Only this thread's task? A new task becomes a new thread.

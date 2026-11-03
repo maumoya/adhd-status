@@ -1,0 +1,2 @@
+2026-11-02T10:01:12Z deploy search-speedup: build ok
+2026-11-02T10:03:40Z deploy search-speedup: health check FAILED (HTTP 502), rolled back

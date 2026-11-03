@@ -97,6 +97,27 @@ Add this line to your project's `CLAUDE.md` so a `/compact` keeps what the board
 Compact instructions: keep every open task, its status, any command given to me, and the parent thread this one reports to.
 ```
 
+## Never miss it (optional hooks)
+
+A skill loads when the model decides it fits. In long, compacted threads it often answers
+`status` without loading it ([why](docs/FAILURES.md)). Two optional hooks make it certain. Add
+them to `~/.claude/settings.json` (change the path to where you cloned this repo):
+
+```json
+"hooks": {
+  "UserPromptSubmit": [{"hooks": [{"type": "command", "command": "python3 -I ~/adhd-status/hooks/status_reminder.py"}]}],
+  "Stop": [{"hooks": [{"type": "command", "command": "python3 -I ~/adhd-status/hooks/status_lint_stop.py"}]}]
+}
+```
+
+- `status_reminder.py` adds one line telling the agent to load the skill when you say status
+  (add `--always` to do it on every message).
+- `status_lint_stop.py` checks the reply after a status turn and sends it back once if it breaks
+  the format (prose above the table, more than 4 rows, links in Task, two next actions, a paste
+  request).
+
+Check any reply by hand: `python3 tools/lint_reply.py reply.md`.
+
 ## Test it (benchmark)
 
 The `evals/` folder holds test cases in the format `claude plugin eval` reads. From this folder:
