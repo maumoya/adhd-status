@@ -153,6 +153,11 @@ Below, "hub thread" means whichever of the two it is.
   checked cheaply, fix stale rows, then show the usual table: its 4 most urgent rows (row 4 is
   `+N more | in ROADMAP.md | ⏸` when there are more). The file is the full page; the reply stays
   tiny.
+- **The hub only consolidates.** It keeps the status, lists the tasks and opens sub-task threads.
+  It never brings a child thread's merge, adopt, deploy or install step over: no button, no Run
+  block, no question for it. That row reads `👉 in <thread> thread`, with a link to that thread
+  if the host has thread links (the one link allowed in the table, and only in Status). The
+  child thread owns its own merge and adopt asks and buttons.
 - **STATUS in any other thread**: show only that thread's own task; do not summarize the roadmap.
 
 ## Step 5: context (compacting)

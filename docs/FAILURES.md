@@ -37,6 +37,7 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F5 | asks the user to paste output | `reads-terminal-not-paste` | F5 |
 | F6 | ✅ without proof | `claim-is-not-proof` | (eval only) |
 | F7 | links or numbers in Task | `done-report-no-preamble` | F7 |
+| F8 | hub thread relays a child's merge or adopt ask | `hub-no-child-merge` | (eval only) |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
 
@@ -47,5 +48,7 @@ The author's own Claude Code transcripts were searched for turns where they type
 - One rule near the top: the reply starts with the table header; a summary is a ✅ row.
 - Step 6 says where the summary and buttons go in a host with a next-step box.
 - "Never" became a 6-question check to run before sending (same rules, no new ones).
+- Hub mode: the hub only consolidates; a child's merge or adopt step stays in the child
+  thread (owner feedback, 2026-11-03).
 - Optional hooks: a reminder on every `status` prompt, and a Stop hook that sends a broken
   reply back once.

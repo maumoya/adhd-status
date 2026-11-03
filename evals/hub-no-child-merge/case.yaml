@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: hub-no-child-merge
+expected_outcome: |
+  The hub thread consolidates status only. The billing row says the merge waits in the billing thread ("👉 in billing thread"); the reply has no merge or adopt button, Run block or question. The one next action, if any, is the hub's own (the dark mode color pick).
+context:
+  scaffold_script: place-files.sh

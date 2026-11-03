@@ -89,7 +89,7 @@ class Repo(unittest.TestCase):
     def test_every_failure_has_an_eval(self):
         doc = read("docs", "FAILURES.md")
         rows = re.findall(r"^\| (F\d) \|[^|]+\| ([^|]+) \|", doc, re.M)
-        self.assertEqual([r[0] for r in rows], [f"F{i}" for i in range(1, 8)])
+        self.assertEqual([r[0] for r in rows], [f"F{i}" for i in range(1, 9)])
         for fid, evals in rows:
             names = re.findall(r"`([\w-]+)`", evals)
             self.assertTrue(names, fid)
@@ -99,6 +99,8 @@ class Repo(unittest.TestCase):
 
     def test_eval_folders_are_complete(self):
         for name in sorted(os.listdir(os.path.join(ROOT, "evals"))):
+            if name == "results":  # local eval reports (gitignored)
+                continue
             base = os.path.join(ROOT, "evals", name)
             with self.subTest(name):
                 case = read("evals", name, "case.yaml")
