@@ -5,8 +5,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Claude%20Code-skill%20%2B%20plugin-7c5cfc" alt="Claude Code skill and plugin">
   <img src="https://img.shields.io/badge/ADHD-friendly-22c55e" alt="ADHD friendly">
-  <a href="#results-measured-2026-11-01"><img src="https://img.shields.io/badge/forgotten%20tasks%20caught-83%25%20vs%2025%25-2da44e" alt="Forgotten tasks caught: 83% vs 25%"></a>
-  <a href="#results-measured-2026-11-01"><img src="https://img.shields.io/badge/spend%20per%20STATUS-%E2%88%9235%25-2da44e" alt="Spend per STATUS: 35% less"></a>
+  <a href="#results"><img src="https://img.shields.io/badge/eval%20score-0.96%20vs%200.50-2da44e" alt="Eval score: 0.96 with the skill vs 0.50 without"></a>
+  <a href="#results"><img src="https://img.shields.io/badge/spend%20per%20STATUS-%E2%88%9235%25-2da44e" alt="Spend per STATUS: 35% less"></a>
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license">
   <a href="https://opensource.org/license/mit"><img src="https://img.shields.io/badge/Open%20Source-OSI%20approved%20license-3DA639?logo=opensourceinitiative&logoColor=white" alt="Open Source: OSI-approved MIT license"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-no%20tracking%20%C2%B7%20no%20data%20collected-7c5cfc" alt="Privacy: no tracking, no data collected"></a>
@@ -20,9 +20,9 @@
 `STATUS`, get one tiny table and one next step. Built for focus, executive function and context
 management. MIT licensed.
 
-**Measured:** catches a forgotten task **83% of the time vs 25%** without it, and spends **35% less
-per STATUS** in a long thread because you rarely have to ask again
-([results](#results-measured-2026-11-01)).
+**Measured:** scores **0.96 with the skill vs 0.50 without** on 11 status cases (1.7.0), and
+spends **35% less per STATUS** in a long thread because you rarely have to ask again
+([results](#results)).
 
 An open source skill for Claude Code (and other agents that read `SKILL.md` skills, the open Agent
 Skills format) that turns **STATUS** into a zero-reading status board.
@@ -133,13 +133,16 @@ claude plugin eval . --scaffold --allow-tools Edit,Write,Bash
 It runs each case with and without the skill and reports the score difference. These are real
 model runs and are billed to your account.
 
-### Results (measured 2026-11-01)
+### Results
 
-**Plugin eval** (6 cases, 2 runs each, `claude plugin eval`): overall score **0.95 with the skill vs
-0.65 without**. The "forgotten item" case, where one promised task is buried in a long thread, was
-caught **83% of the time with the skill vs 25% without**.
+**Plugin eval** (1.7.0, 2026-11-03, 11 cases, 3 runs each, `claude plugin eval`): overall score
+**0.96 with the skill vs 0.50 without**. Every run passes in 7 of 11 cases with the skill, 1 of 11
+without. In the "forgotten item" case, where one promised task is buried in a long thread, the
+skill caught the task 3 of 3 times (2 of 3 without) and scored 0.94 vs 0.28 on the whole reply.
+The first run (1.4.0, 2026-11-01, 6 cases, 2 runs each) scored 0.95 vs 0.65, with the forgotten
+task caught 83% vs 25% of the time.
 
-**Re-prompt cost** ([`bench/reprompt/`](bench/reprompt/), 10 episodes per arm, one ~13k-token
+**Re-prompt cost** (1.4.0 vs no skill, 2026-11-01, [`bench/reprompt/`](bench/reprompt/), 10 episodes per arm, one ~13k-token
 thread with 6 open items, the user asks again about each item the reply misses):
 
 <img src="assets/savings.svg" align="right" width="240" alt="35% less spend per STATUS: $0.70 vs $1.08">
