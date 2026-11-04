@@ -1,0 +1,5 @@
+tests/*.py
+tools/sync.py
+bench/**/*
+evals/**/*
+docs/FAILURES.md

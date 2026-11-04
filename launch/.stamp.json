@@ -1,0 +1,15 @@
+{
+ "assets": {
+  "Repo description and profile row": "c3442a9b5634",
+  "assets/savings.svg": "fdcb8c585c24"
+ },
+ "facts": {
+  "cost_with": "$0.70",
+  "cost_without": "$1.08",
+  "eval_cases": "11",
+  "eval_version": "1.7.0",
+  "eval_with": "0.96",
+  "eval_without": "0.50",
+  "spend_less": "35%"
+ }
+}

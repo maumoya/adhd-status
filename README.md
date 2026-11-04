@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Claude%20Code-skill%20%2B%20plugin-7c5cfc" alt="Claude Code skill and plugin">
   <img src="https://img.shields.io/badge/ADHD-friendly-22c55e" alt="ADHD friendly">
-  <a href="#results"><img src="https://img.shields.io/badge/eval%20score-0.96%20vs%200.50-2da44e" alt="Eval score: 0.96 with the skill vs 0.50 without"></a>
+  <a href="#results"><img src="https://img.shields.io/badge/eval%20score-0.96%20vs%200.50-2da44e" alt="Eval score: <!--fact:eval_with-->0.96<!--/fact--> with the skill vs <!--fact:eval_without-->0.50<!--/fact--> without"></a>
   <a href="#results"><img src="https://img.shields.io/badge/spend%20per%20STATUS-%E2%88%9235%25-2da44e" alt="Spend per STATUS: 35% less"></a>
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license">
   <a href="https://opensource.org/license/mit"><img src="https://img.shields.io/badge/Open%20Source-OSI%20approved%20license-3DA639?logo=opensourceinitiative&logoColor=white" alt="Open Source: OSI-approved MIT license"></a>
@@ -20,8 +20,8 @@
 `STATUS`, get one tiny table and one next step. Built for focus, executive function and context
 management. MIT licensed.
 
-**Measured:** scores **0.96 with the skill vs 0.50 without** on 11 status cases (1.7.0), and
-spends **35% less per STATUS** in a long thread because you rarely have to ask again
+**Measured:** scores **<!--fact:eval_with-->0.96<!--/fact--> with the skill vs <!--fact:eval_without-->0.50<!--/fact--> without** on <!--fact:eval_cases-->11<!--/fact--> status cases (<!--fact:eval_version-->1.7.0<!--/fact-->), and
+spends **<!--fact:spend_less-->35%<!--/fact--> less per STATUS** in a long thread because you rarely have to ask again
 ([results](#results)).
 
 An open source skill for Claude Code (and other agents that read `SKILL.md` skills, the open Agent
@@ -153,7 +153,7 @@ model runs and are billed to your account.
 ### Results
 
 **Plugin eval** (1.7.0, 2026-11-03, 11 cases, 3 runs each, `claude plugin eval`): overall score
-**0.96 with the skill vs 0.50 without**. Every run passes in 7 of 11 cases with the skill, 1 of 11
+**<!--fact:eval_with-->0.96<!--/fact--> with the skill vs <!--fact:eval_without-->0.50<!--/fact--> without**. Every run passes in 7 of 11 cases with the skill, 1 of 11
 without. In the "forgotten item" case, where one promised task is buried in a long thread, the
 skill caught the task 3 of 3 times (2 of 3 without) and scored 0.94 vs 0.28 on the whole reply.
 The first run (1.4.0, 2026-11-01, 6 cases, 2 runs each) scored 0.95 vs 0.65, with the forgotten
@@ -166,7 +166,7 @@ thread with 6 open items, the user asks again about each item the reply misses):
 
 | Per STATUS, until every item is covered | With skill | Without |
 |---|---|---|
-| Average cost | **$0.70** | $1.08 |
+| Average cost | **<!--fact:cost_with-->$0.70<!--/fact-->** | <!--fact:cost_without-->$1.08<!--/fact--> |
 | Median cost | $0.59 | $1.08 |
 | Times the user had to ask again | **1.7** | 3.1 |
 | Items right on the first reply | 4.5 of 6 | 3.9 of 6 |
@@ -174,7 +174,7 @@ thread with 6 open items, the user asks again about each item the reply misses):
 | Times it asked the user to paste or report | **2** | 23 |
 
 The first reply costs about the same in both arms (~$0.23). The saving comes from fewer follow-up
-turns: about **35% less spend per STATUS** in this test. In short, tiny eval threads with nothing to
+turns: about **<!--fact:spend_less-->35%<!--/fact--> less spend per STATUS** in this test. In short, tiny eval threads with nothing to
 forget, the skill's extra instructions make a single reply cost more; the payoff shows up in long
 threads, where forgetting is likely.
 
@@ -191,7 +191,7 @@ Small sample, one synthetic thread, an LLM judge: a direction, not a guarantee. 
 
 1.7.0 fixes the format, not the cost: it was built from 86 real `status` turns where the skill was
 never loaded ([why](docs/FAILURES.md)). Against "no skill", the full plugin eval on 1.7.0
-(2026-11-03, 11 cases, 3 runs each) scores **0.96 with the skill vs 0.50 without**; every failure
+(2026-11-03, 11 cases, 3 runs each) scores **<!--fact:eval_with-->0.96<!--/fact--> with the skill vs <!--fact:eval_without-->0.50<!--/fact--> without**; every failure
 found has its own eval case. Details in [`bench/reprompt/README.md`](bench/reprompt/README.md).
 
 ## Security at a glance

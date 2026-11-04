@@ -1,0 +1,9 @@
+{
+ "eval_version": {"value": "1.7.0", "source": "claude plugin eval, 11 cases x 3 runs", "date": "2026-11-03"},
+ "eval_with": {"value": "0.96", "source": "claude plugin eval 1.7.0, overall score with the skill", "date": "2026-11-03"},
+ "eval_without": {"value": "0.50", "source": "claude plugin eval 1.7.0, overall score without", "date": "2026-11-03"},
+ "eval_cases": {"value": "11", "source": "evals/ cases in the 1.7.0 run", "date": "2026-11-03"},
+ "spend_less": {"value": "35%", "source": "bench/reprompt 1.4.0 vs no skill, mean cost per STATUS", "date": "2026-11-01"},
+ "cost_with": {"value": "$0.70", "source": "bench/reprompt, mean cost per STATUS with the skill", "date": "2026-11-01"},
+ "cost_without": {"value": "$1.08", "source": "bench/reprompt, mean cost per STATUS without", "date": "2026-11-01"}
+}
