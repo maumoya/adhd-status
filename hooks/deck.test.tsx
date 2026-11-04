@@ -196,14 +196,15 @@ test('focus falls back to the oldest needs-you thread, and a tile click moves it
   await ui.unmount()
 })
 
-test('the focus shows the status rows as a grid with the ask', async ($, on) => {
+test('the focus shows the conversation with the ask', async ($, on) => {
   engine(on, { safeReply: PICK })
   await $.command.run({ command: 'deck' })
   const ui = await $.ui.mount(PANE)
   await focus(ui, SAFE.sessionId)
-  const text = await cardText(ui, SAFE.sessionId)
-  expect(text).toMatch(/TASK\s*WHY\s*STATUS\s*Colours\s*look right\s*👉 you: pick one/)
-  expect((await ui.find({ type: 'Text', text: '👉 you: pick one' }))?.props.color).toBe('warning')
+  // The conversation shows the reply (its table drawn as markdown); the grid only stands in without one.
+  expect(String((await ui.find({ type: 'Markdown' }))?.props.text)).toMatch(/\| Colours \| look right \| 👉 you: pick one \|/)
+  expect(await ui.find({ type: 'Text', text: 'Colours — 👉 you: pick one' })).toBeDefined()
+  expect(await ui.find({ key: 'm-' + SAFE.sessionId })).toBeDefined()
   await ui.unmount()
 })
 

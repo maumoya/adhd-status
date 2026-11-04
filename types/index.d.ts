@@ -38,6 +38,7 @@ declare module 'claude-code' {
       noteSeen: Shaped<Record<string, string>>
       focusId: Shaped<string | null>
       details: Shaped<Record<string, DeckDetail>>
+      transcript: Shaped<{ id: string; at: string; events: string } | null>
     }
   }
 }
