@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: all-done-archive
+expected_outcome: |
+  Every row is ✅ (the signup form is merged and live, per deploy.log). The reply is only the table and one archive prompt, recommended first, that archives this thread and sends the user back to the parent "Planning" thread. No command block, no extra question, no closing prose.
+context:
+  scaffold_script: place-files.sh

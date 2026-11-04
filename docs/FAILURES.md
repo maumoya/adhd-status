@@ -38,8 +38,15 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F6 | ✅ without proof | `claim-is-not-proof` | (eval only) |
 | F7 | links or numbers in Task | `done-report-no-preamble` | F7 |
 | F8 | hub thread relays a child's merge or adopt ask | `hub-no-child-merge` | (eval only) |
+| F9 | all rows ✅ but no archive prompt or way back to the parent (or roadmap) thread | `all-done-archive`, `nothing-pending` | (eval only) |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
+
+## What changed in 1.9.0
+
+- When every row is ✅, the one next action is an archive prompt: archive this thread and go back
+  to the parent thread, or to the roadmap thread when there is no parent (owner feedback,
+  2026-11-03). Covered by F9.
 
 ## What changed in 1.7.0
 
