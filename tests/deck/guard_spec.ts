@@ -42,5 +42,6 @@ test('readResult: delivered and queued are sent, else unknown', () => {
 test('confirmText names the thread, short id, PR and the race', () => {
   const t = confirmText({ ...c, prNumber: 9 }, 'blue')
   assert.ok(t.startsWith('Send to "Colours" (abcdef), PR 9? A turn may start before this lands.\n\nblue'))
+  assert.ok(t.endsWith('?'))
   assert.ok(confirmText(c, 'x').includes('PR none'))
 })
