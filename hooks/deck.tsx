@@ -40,6 +40,7 @@ const prevCounts = atom({ plugin: 'adhd-status', key: 'prevCounts' }, null as Co
 const noteSeen = atom({ plugin: 'adhd-status', key: 'noteSeen' }, {} as Record<string, string>, { shape: 'map-1' })
 const focusId = atom({ plugin: 'adhd-status', key: 'focusId' }, null as string | null, { shape: 'id-1' })
 const details = atom({ plugin: 'adhd-status', key: 'details' }, {} as Record<string, Detail>, { shape: 'details-1' })
+const released = atom({ plugin: 'adhd-status', key: 'released' }, {} as Record<string, string>, { shape: 'map-1' })
 const transcript = atom({ plugin: 'adhd-status', key: 'transcript' }, null as { id: string; at: string; events: string } | null, { shape: 'transcript-1' })
 
 type Raw = { sessionId: string; title?: string; isRunning?: boolean; isArchived?: boolean; prNumber?: number; prState?: string; lastActivityAt?: string }
@@ -67,6 +68,14 @@ async function loadChat($: any, c: Card | null): Promise<void> {
   let ev: string
   try { ev = text(await $.mcp.call(SM, 'list_events', { session_id: c.id, limit: 30 })) } catch { return }
   await update($, transcript, () => ({ id: c.id, at: c.lastActivityAt, events: ev }))
+}
+
+// The real thread beside the deck, where the app allows it (threads this session started); else
+// the preview stays the view and the note says how to open it. Layout only: nothing is sent.
+async function showThread($: any, c: Card): Promise<void> {
+  let r = ''
+  try { r = text(await $.mcp.call('ccd_window', 'open_session_in', { session_id: c.id, target: 'split' })) } catch (x) { r = 'refused: ' + String((x as Error).message ?? x) }
+  if (/refus|not allowed|only|cannot|can't|error/i.test(r)) await update($, notes, n => ({ ...n, [c.id]: 'Live thread: drag it from the sidebar beside the deck' }))
 }
 
 // One thread, read fresh: what the send guard compares against.
@@ -119,7 +128,7 @@ async function poll($: any): Promise<void> {
   await update($, cards, () => next)
   await update($, pollError, () => '')
   await update($, polledAt, () => Date.now())
-  await loadChat($, pickFocus(order(next, await read($, frozen)), await read($, focusId)))
+  await loadChat($, pickFocus(order(next, await read($, frozen)), await read($, focusId), await read($, released)))
 }
 
 // Set before the first await, so two presses at once cannot both pass.
@@ -158,7 +167,13 @@ async function sendOnce($: any, id: string, body: string, allowed: (c: Card) => 
     const sent = readResult(r)
     await note(sent.state === 'sent' ? `Sent · ${sent.messageId}` : 'Unknown — open the thread')
     if (once) await update($, answered, a => ({ ...a, [id]: JSON.stringify(before) }))
-    if (sent.state === 'sent') await update($, drafts, d => ({ ...d, [id]: '' }))
+    if (sent.state === 'sent') {
+      await update($, drafts, d => ({ ...d, [id]: '' }))
+      // Handled: release the top so the next thread that needs you takes it.
+      const at = (now ?? card).lastActivityAt
+      await update($, released, r => ({ ...r, [id]: at }))
+      await update($, focusId, f => (f === id ? null : f))
+    }
   } finally {
     await update($, sending, () => null)
     await update($, frozen, () => null)
@@ -208,11 +223,11 @@ export const register: Register = on => {
     const cols = Number(props.bodyColumns) || Number(e.viewport?.columns) || 80
     const half = Math.floor((Number(props.scroll?.bodyRows) || Number(e.viewport?.rows) || 0) / 2)
     const now = Date.now()
-    const [list, at, err, fz, dr, busy, nt, isPaused, qOpen, fna, prev, ans, fid, dets, tr] = await Promise.all([
+    const [list, at, err, fz, dr, busy, nt, isPaused, qOpen, fna, prev, ans, fid, dets, tr, rel] = await Promise.all([
       read($, cards), read($, polledAt), read($, pollError), read($, frozen),
       read($, drafts), read($, sending), read($, notes), read($, paused),
       read($, quietOpen), read($, firstNeedsAt), read($, prevCounts), read($, answered),
-      read($, focusId), read($, details), read($, transcript),
+      read($, focusId), read($, details), read($, transcript), read($, released),
     ])
     const shown = order(list, fz)
     const stale = at > 0 && now - at > STALE_MS
@@ -222,7 +237,7 @@ export const register: Register = on => {
     const health = shaky ? 'error' : isPaused ? 'warning' : at > 0 ? 'success' : 'subtle'
     const live = shown.filter(c => c.kind !== 'quiet')
     const quiet = shown.filter(c => c.kind === 'quiet')
-    const focus = pickFocus(shown, fid)
+    const focus = pickFocus(shown, fid, rel)
     const grid = tileGrid(cols)
     const touch = async () => {
       await update($, lastInput, () => Date.now())
@@ -232,11 +247,13 @@ export const register: Register = on => {
     const select = async (c: Card) => {
       await update($, lastInput, () => Date.now())
       await update($, focusId, () => c.id)
+      void showThread($, c)
       await loadChat($, c)
     }
-    // Every action goes through the one guarded send, under its own gate.
-    const pick = (c: Card, option: string) => async () => { if (busy === null) await send($, c.id, option, x => canAct(x, option)) }
-    const run = (c: Card, command: string) => async () => { if (busy === null) await send($, c.id, runMessage(command), x => canAct(x, command)) }
+    // Every action goes through the one guarded send, under its own gate. Not awaited: the send
+    // waits on the owner's confirm, which may outlast a hook's 10 s budget.
+    const pick = (c: Card, option: string) => () => { if (busy === null) void send($, c.id, option, x => canAct(x, option)) }
+    const run = (c: Card, command: string) => () => { if (busy === null) void send($, c.id, runMessage(command), x => canAct(x, command)) }
 
     // The parsed reply, only while it is the reply the card shows.
     const det = (c: Card): Detail | null => { const d = dets[c.id]; return d && d.replyHash === c.replyHash ? d : null }
@@ -434,7 +451,7 @@ export const register: Register = on => {
                   rows={1}
                   value={dr[c.id] ?? ''}
                   onInput={async (v: string) => { await touch(); await update($, drafts, x => ({ ...x, [c.id]: v })) }}
-                  onSubmit={async (v: string) => { if (busy === null) await send($, c.id, v) }}
+                  onSubmit={(v: string) => { if (busy === null) void send($, c.id, v) }}
                 />
               </Box>
             )}
@@ -447,7 +464,7 @@ export const register: Register = on => {
                   rows={2}
                   value={dr[c.id] ?? ''}
                   onInput={async (v: string) => { await touch(); await update($, drafts, x => ({ ...x, [c.id]: v })) }}
-                  onSubmit={async (v: string) => { if (busy === null) await send($, c.id, v, x => canMessage(x, v), false) }}
+                  onSubmit={(v: string) => { if (busy === null) void send($, c.id, v, x => canMessage(x, v), false) }}
                 />
               </Box>
             )}
@@ -479,7 +496,7 @@ export const register: Register = on => {
             {s.fresh && chip('NEW', 'warning')}
             <Text size="caption" color="subtle" tabular>{age(c.lastActivityAt, now)}</Text>
           </Box>
-          <Button key={'f-' + c.id} plain label={cut(c.title, room)} onPress={() => select(c)} />
+          <Button key={'f-' + c.id} plain label={'⤒ ' + cut(c.title, room - 2)} onPress={() => select(c)} />
           {s.k === 'unclear'
             ? <Text size="caption" italic color="subtle">No status table</Text>
             : c.ask !== '' && <Text size="footnote" dimColor={!s.nyou || s.waiting} wrap="truncate-end">{cut(c.ask, room * 2)}</Text>}

@@ -133,6 +133,15 @@ test('pickFocus keeps a listed choice, else the oldest needs-you, never a quiet 
   assert.equal(pickFocus([q], null), null)
 })
 
+test('pickFocus hands the top to the next thread after one is answered, until it moves again', () => {
+  const a = card('a', 'needs-you', { lastActivityAt: '2026-11-04T05:00:00Z' })
+  const b = card('b', 'needs-you', { lastActivityAt: '2026-11-04T04:00:00Z' })
+  assert.equal(pickFocus([a, b], null, { b: b.lastActivityAt })?.id, 'a')
+  assert.equal(pickFocus([a, b], null, { b: '2026-11-04T03:00:00Z' })?.id, 'b')
+  assert.equal(pickFocus([a, b], 'b', { b: b.lastActivityAt })?.id, 'b')
+  assert.equal(pickFocus([b], null, { b: b.lastActivityAt })?.id, 'b')
+})
+
 test('cut ends a long text with an ellipsis', () => {
   assert.equal(cut('short', 10), 'short')
   assert.equal(cut('abcdefghij', 5), 'abcd…')

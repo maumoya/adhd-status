@@ -83,11 +83,11 @@ test('an unchanged thread gets one send with the context line', async ($, on) =>
   await $.command.run({ command: 'deck' })
   const ui = await $.ui.mount(PANE)
   await focus(ui, SAFE.sessionId)
-  // A double press at once: still one send. Then the field is gone until the ask changes.
+  // A double press at once: still one send. Then the top releases it for the next thread.
   const a = 'a-' + SAFE.sessionId
   await Promise.all([ui.input({ key: a, text: 'blue', kind: 'submit' }), ui.input({ key: a, text: 'blue', kind: 'submit' })])
   expect(await ui.find({ key: a })).toBeUndefined()
-  expect(await ui.find({ type: 'Text', text: /Answered\. Waiting for the thread\./ })).toBeDefined()
+  expect(await ui.find({ key: 'm-' + SAFE.sessionId })).toBeUndefined()
   expect(sent.length).toBe(1)
   expect(sent[0]?.session_id).toBe(SAFE.sessionId)
   expect(String(sent[0]?.message)).toBe('blue\n\n(thread deck · re: Colours — 👉 you: which colour?)')
@@ -100,7 +100,7 @@ test('one thread failing to read is only that card unclear; a failed list keeps 
   await $.command.run({ command: 'deck' })
   const ui = await $.ui.mount(PANE)
   expect(await cardText(ui, SAFE.sessionId)).toMatch(/NEEDS YOU\s*Colours/)
-  expect(await cardText(ui, MERGE.sessionId)).toMatch(/UNCLEAR\s*\w*\s*Release/)
+  expect(await cardText(ui, MERGE.sessionId)).toMatch(/UNCLEAR\s*\w*\s*⤒?\s*Release/)
   await ui.press({ key: 'o-' + SAFE.sessionId })
   expect(await ui.find({ type: 'Text', text: /Click "Colours" in the sidebar/ })).toBeDefined()
   await $.command.run({ command: 'deck' })
@@ -147,7 +147,7 @@ test('a card that just started needing the owner is marked NEW; the first poll m
   expect(await ui.find({ key: 'c-' + SAFE.sessionId })).toBeUndefined()
   expect(await ui.find({ type: 'Text', text: /^ NEW $/ })).toBeUndefined()
   await $.command.run({ command: 'deck' })
-  expect(await cardText(ui, SAFE.sessionId)).toMatch(/NEEDS YOU\s*NEW\s*\w*\s*Colours/)
+  expect(await cardText(ui, SAFE.sessionId)).toMatch(/NEEDS YOU\s*NEW\s*\w*\s*⤒?\s*Colours/)
   expect((await ui.find({ key: 't-' + SAFE.sessionId }))?.props.borderStyle).toBe('bold')
   expect(await ui.find({ type: 'Text', text: '+1' })).toBeDefined()
   // The thread that needed the owner all along is not new.

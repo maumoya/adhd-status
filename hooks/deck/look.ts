@@ -215,12 +215,15 @@ export function statusTone(s: string): 'success' | 'warning' | 'error' | 'sugges
 
 // The focus: the chosen thread while it is listed and not quiet, else the longest-waiting
 // needs-you thread, else the first non-quiet one.
-export function pickFocus(cards: readonly Card[], id: string | null): Card | null {
+// `released`: threads just answered from the deck (id → activity then); auto-pick skips them until
+// they move again, so the top hands over to the next one that needs you.
+export function pickFocus(cards: readonly Card[], id: string | null, released: Readonly<Record<string, string>> = {}): Card | null {
   const live = cards.filter(c => c.kind !== 'quiet')
   const chosen = id === null ? undefined : live.find(c => c.id === id)
   if (chosen) return chosen
-  const needs = live.filter(c => c.kind === 'needs-you').sort((a, b) => a.lastActivityAt.localeCompare(b.lastActivityAt))
-  return needs[0] ?? live[0] ?? null
+  const open = live.filter(c => released[c.id] !== c.lastActivityAt)
+  const needs = open.filter(c => c.kind === 'needs-you').sort((a, b) => a.lastActivityAt.localeCompare(b.lastActivityAt))
+  return needs[0] ?? open[0] ?? live[0] ?? null
 }
 
 // Cut to `max` characters with an ellipsis; the text is otherwise kept as written.
