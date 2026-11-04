@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: no-repeat-table
+expected_outcome: |
+  Nothing the user must see changed: the 👉 action is the same, log cleanup is still running and no row became ✅, ❌ or ⚠️. The turn was not typed by the user, so the reply sends no new table. At most one short line (for example that the cleanup is still running), or nothing. No new question, button or command.

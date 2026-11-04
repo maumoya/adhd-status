@@ -3,7 +3,9 @@
 
 After a turn whose prompt mentioned status, it lints the final reply with tools/lint_reply.py.
 If the reply breaks a rule, it blocks the stop once with the list of problems, so the agent
-rewrites the reply. It never blocks twice in a row (stop_hook_active) and never on other turns.
+rewrites the reply. It never blocks twice in a row (stop_hook_active) and never on other turns,
+including turns the user did not type (a background task notification or another event), so it
+never forces a repeat table there.
 Standard library only; reads the hook JSON on stdin.
 """
 import json
@@ -15,6 +17,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from lint_reply import lint  # noqa: E402
 
 STATUS = re.compile(r"\bstatus\b", re.I)
+# Turns the user did not type: background task finished, thread or CI events.
+NOT_TYPED = re.compile(r"^<(task-notification|[\w-]+-event)\b")
 
 
 def _texts(content):
@@ -34,9 +38,22 @@ def last_turn(transcript_path):
                 continue
             msg = rec.get("message") or {}
             if rec.get("type") == "user":
-                texts = [t for t in _texts(msg.get("content")) if t.strip() and not t.startswith("<")]
-                if texts and not rec.get("isMeta"):
-                    prompt, final = texts[-1], []
+                if rec.get("isMeta"):
+                    continue
+                texts = _texts(msg.get("content"))
+                typed = [t for t in texts if t.strip() and not t.startswith("<")]
+                if typed:
+                    prompt, final = typed[-1], []
+                elif any(NOT_TYPED.match(t.lstrip()) for t in texts):
+                    prompt, final = "", []
+            elif rec.get("type") == "attachment":
+                # Claude Code stores a background task notification as a queued command.
+                att = rec.get("attachment") or {}
+                if att.get("type") == "queued_command" and (
+                    att.get("commandMode") == "task-notification"
+                    or NOT_TYPED.match(str(att.get("prompt", "")).lstrip())
+                ):
+                    prompt, final = "", []
             elif rec.get("type") == "assistant":
                 for part in msg.get("content") or []:
                     if not isinstance(part, dict):

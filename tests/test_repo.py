@@ -58,11 +58,12 @@ class Hooks(unittest.TestCase):
         ).stdout
         self.assertEqual(json.loads(out)["hookSpecificOutput"]["hookEventName"], "UserPromptSubmit")
 
-    def _transcript(self, prompt, reply):
+    def _transcript(self, prompt, reply, after=()):
         recs = [
             {"type": "user", "message": {"role": "user", "content": prompt}},
             {"type": "assistant", "message": {"content": [{"type": "tool_use", "name": "Skill", "input": {}}]}},
             {"type": "assistant", "message": {"content": [{"type": "text", "text": reply}]}},
+            *after,
         ]
         f = tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False)
         f.write("\n".join(json.dumps(r) for r in recs))
@@ -84,12 +85,25 @@ class Hooks(unittest.TestCase):
         prose = "Fixed the bug."
         self.assertIsNone(status_lint_stop.decide({"transcript_path": self._transcript("fix the bug", prose)}))
 
+    def test_stop_hook_skips_turns_the_user_did_not_type(self):
+        good = read("tests", "fixtures", "good", "command.md")
+        note = "<task-notification>\n<task-id>a1</task-id>\n</task-notification>"
+        line = {"type": "assistant", "message": {"content": [{"type": "text", "text": "Cleanup still running."}]}}
+        for rec in (
+            {"type": "user", "message": {"role": "user", "content": note}},
+            {"type": "attachment", "attachment": {"type": "queued_command", "prompt": note,
+                                                  "commandMode": "task-notification"}},
+        ):
+            with self.subTest(rec["type"]):
+                path = self._transcript("status", good, after=[rec, line])
+                self.assertIsNone(status_lint_stop.decide({"transcript_path": path}))
+
 
 class Repo(unittest.TestCase):
     def test_every_failure_has_an_eval(self):
         doc = read("docs", "FAILURES.md")
-        rows = re.findall(r"^\| (F\d) \|[^|]+\| ([^|]+) \|", doc, re.M)
-        self.assertEqual([r[0] for r in rows], [f"F{i}" for i in range(1, 10)])
+        rows = re.findall(r"^\| (F\d+) \|[^|]+\| ([^|]+) \|", doc, re.M)
+        self.assertEqual([r[0] for r in rows], [f"F{i}" for i in range(1, 11)])
         for fid, evals in rows:
             names = re.findall(r"`([\w-]+)`", evals)
             self.assertTrue(names, fid)

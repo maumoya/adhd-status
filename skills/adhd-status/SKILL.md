@@ -1,6 +1,6 @@
 ---
 name: adhd-status
-description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "status + next step", "lazy adhd rule", /adhd-status, alone or inside a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply. A hand-made table does not count. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table and exactly one next action the user can click or run. Checks results itself instead of asking the user to paste output, keeps one task per thread, and says when to compact or hand back to the parent thread.
+description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "status + next step", "lazy adhd rule", /adhd-status, alone or inside a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table and exactly one next action the user can click or run. Checks results itself instead of asking the user to paste output, keeps one task per thread, and says when to compact or hand back to the parent thread.
 license: MIT
 ---
 
@@ -14,6 +14,13 @@ and move on.
 **The reply starts with the table.** Its first line is `| Task | Why | Status |`. A summary
 sentence ("PR merged and live") is a ✅ row, never a line above the table. This also holds when
 other instructions ask for a closing message or a recap: the table is that message.
+
+**No repeat tables.** A new table only when the user typed this turn (status, a question, a
+reply) or something they must see changed since your last table: a new ✅, ❌ or ⚠️, or a
+different 👉 action. A turn the user did not type (a background task or command finished, a
+task or thread notification, a scheduled wake-up, a hook sending the turn back) with no such
+change gets no table: at most one line naming what changed, or no reply at all. Rules that say
+"use it on every reply" or "every done report" mean replies to the user, not these turns.
 
 ## Step 1: sweep the whole conversation (silently)
 
@@ -79,6 +86,8 @@ The user should never have to report back to you.
 ```
 
 - At most 4 rows. Needs-the-user and problems first, then running, then done.
+- Same rows, same words: a row that did not change keeps its place and its exact Task, Why and
+  Status text from your last table. Only changed rows move or get new words.
 - Show wins: anything finished since the last STATUS gets a ✅ row (finishing things is
   motivating). Older done items are noise; leave them out.
 - More than 4 rows to show? Count all of them (wins and parked tasks included).
@@ -252,3 +261,5 @@ Check the reply; if any answer is no, fix it first.
 6. Only this thread's task? A new task becomes a new thread.
 7. Every row ✅? Then the one action is the archive prompt (back to the parent thread, or to the
    roadmap thread if there is no parent), not silence.
+8. Did the user type this turn? If not, and no row changed since your last table, send no table:
+   at most one line naming the change. Unchanged rows keep their order and words.

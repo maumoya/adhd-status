@@ -39,8 +39,20 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F7 | links or numbers in Task | `done-report-no-preamble` | F7 |
 | F8 | hub thread relays a child's merge or adopt ask | `hub-no-child-merge` | (eval only) |
 | F9 | all rows ✅ but no archive prompt or way back to the parent (or roadmap) thread | `all-done-archive`, `nothing-pending` | (eval only) |
+| F10 | same table sent again on a turn the user did not type (background task finished) with nothing changed | `no-repeat-table` | (eval only) |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
+
+## What changed in 1.10.0
+
+- No repeat tables (owner feedback, 2026-11-04). After background tasks finished, the agent sent
+  the same 4-row table three times in a row, rows shuffled, same 👉 action. Causes: no rule for
+  turns the user did not type, "use it on every reply" read as every turn, no "nothing changed"
+  rule, and the Stop hook kept treating a notification turn as the earlier `status` turn, so it
+  sent a short reply back until it became a full table.
+- Fix: a turn the user did not type gets a new table only when a row changed (new ✅, ❌ or ⚠️, or
+  a different 👉 action); otherwise at most one line. Unchanged rows keep their order and words.
+  The Stop hook skips notification turns. Covered by F10.
 
 ## What changed in 1.9.0
 
