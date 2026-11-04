@@ -26,5 +26,5 @@ export function readResult(r: string | Error): Sent {
 }
 
 export function confirmText(c: Card, body: string): string {
-  return `Send to "${c.title}" (${c.id.slice(6, 12)}), PR ${c.prNumber ?? 'none'}? A turn may start before this lands.\n\n${body}`
+  return `Send to "${c.title}" (${c.id.slice(6, 12)}), PR ${c.prNumber ?? 'none'}? A turn may start before this lands.\n\n${body}\n\nSend it?`
 }

@@ -9,6 +9,7 @@
   "license": "MIT",
   "homepage": "https://github.com/maumoya/adhd-status",
   "repository": "https://github.com/maumoya/adhd-status",
+  "types": "./types/index.d.ts",
   "keywords": [
     "adhd",
     "claude-code",
