@@ -18,6 +18,10 @@
   <img src="assets/demo.gif" width="720" alt="Demo: a long agent session, the user types STATUS, and the agent replies with a four-row table. The migration is the user's turn, the rate limit was forgotten, the signup form is in tests and the README fix is merged, followed by one button: npm run migrate.">
 </p>
 
+<p align="center">
+  <a href="#results"><img src="assets/savings-card.svg" width="480" alt="35% less spend per STATUS: $0.70 vs $1.08"></a>
+</p>
+
 # adhd-status
 
 **The free, open source ADHD-friendly status board for Claude Code and AI coding agents.** Say
@@ -156,7 +160,7 @@ status replies as Markdown files (for example from your own agent's prompts or e
 build when one breaks the format:
 
 ```yaml
-- uses: maumoya/adhd-status@v1.8.1
+- uses: maumoya/adhd-status@v2.0.0
   with:
     files: |
       replies/**/*.md
@@ -187,8 +191,6 @@ task caught 83% vs 25% of the time.
 
 **Re-prompt cost** (1.4.0 vs no skill, 2026-11-01, [`bench/reprompt/`](bench/reprompt/), 10 episodes per arm, one ~13k-token
 thread with 6 open items, the user asks again about each item the reply misses):
-
-<img src="assets/savings.svg" align="right" width="240" alt="35% less spend per STATUS: $0.70 vs $1.08">
 
 | Per STATUS, until every item is covered | With skill | Without |
 |---|---|---|
@@ -243,7 +245,7 @@ Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as
 [slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
 
 ```bash
-slsa-verifier verify-artifact adhd-status-v1.8.1.zip --provenance-path adhd-status-v1.8.1.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v1.8.1
+slsa-verifier verify-artifact adhd-status-v2.0.0.zip --provenance-path adhd-status-v2.0.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.0.0
 ```
 
 ## FAQ

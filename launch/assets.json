@@ -1,4 +1,4 @@
 [
- {"path": "assets/savings.svg", "template": "launch/templates/savings.svg", "uses": ["spend_less", "cost_with", "cost_without"]},
+ {"path": "assets/savings-card.svg", "template": "launch/templates/savings-card.svg", "uses": ["spend_less", "cost_with", "cost_without"]},
  {"name": "Repo description and profile row", "outward": "check the GitHub About text and the maumoya/maumoya row show the same numbers as the README", "uses": ["eval_with", "eval_without", "spend_less"]}
 ]
