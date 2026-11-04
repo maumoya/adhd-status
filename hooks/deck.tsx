@@ -6,6 +6,11 @@ import { toCard } from './deck/parse.ts'
 import { order } from './deck/order.ts'
 import { canAnswer } from './deck/gate.ts'
 import { snap, recheck, compose, readResult, confirmText } from './deck/guard.ts'
+import {
+  ACCENT, LABEL, ago, bar, burst, check, chips, counts, countsAlt, isNew, markNew,
+  noteLook, pulse, rise, ring, settleNotes, spinner,
+} from './deck/look.ts'
+import type { Counts } from './deck/look.ts'
 
 // The thread deck: one pane with every thread's next step for the owner.
 // Opens only on /deck. Reads the desktop app's session tools; nothing leaves the Mac.
@@ -25,6 +30,10 @@ const notes = atom({ plugin: 'adhd-status', key: 'notes' }, {} as Record<string,
 const answered = atom({ plugin: 'adhd-status', key: 'answered' }, {} as Record<string, string>, { shape: 'map-1' })
 const lastInput = atom({ plugin: 'adhd-status', key: 'lastInput' }, 0, { shape: 'n-1' })
 const paused = atom({ plugin: 'adhd-status', key: 'paused' }, false, { shape: 'b-1' })
+const quietOpen = atom({ plugin: 'adhd-status', key: 'quietOpen' }, false, { shape: 'b-1' })
+const firstNeedsAt = atom({ plugin: 'adhd-status', key: 'firstNeedsAt' }, {} as Record<string, number>, { shape: 'nmap-1' })
+const prevCounts = atom({ plugin: 'adhd-status', key: 'prevCounts' }, null as Counts | null, { shape: 'counts-1' })
+const noteSeen = atom({ plugin: 'adhd-status', key: 'noteSeen' }, {} as Record<string, string>, { shape: 'map-1' })
 
 type Raw = { sessionId: string; title?: string; isRunning?: boolean; isArchived?: boolean; prNumber?: number; prState?: string; lastActivityAt?: string }
 
@@ -61,7 +70,8 @@ async function poll($: any): Promise<void> {
     await update($, pollError, () => String((x as Error).message ?? x))
     return
   }
-  const old = new Map((await read($, cards)).map(c => [c.id, c]))
+  const prevList = await read($, cards)
+  const old = new Map(prevList.map(c => [c.id, c]))
   const next: Card[] = []
   for (const s of list.filter(s => !s.isArchived)) {
     const t = toThread(s)
@@ -73,6 +83,15 @@ async function poll($: any): Promise<void> {
     }
     next.push(toCard(t, await events($, t.id)))
   }
+  // What changed since the last poll: drives the NEW mark, the bar slide and the +n.
+  const first = prevList.length === 0 && (await read($, polledAt)) === 0
+  const now = Date.now()
+  const seen = await read($, noteSeen)
+  let marks: Record<string, string> = {}
+  await update($, firstNeedsAt, m => markNew(prevList, next, m, now, first))
+  await update($, prevCounts, () => (first ? null : counts(prevList)))
+  await update($, notes, n => { const r = settleNotes(n, seen, next); marks = r.seen; return r.notes })
+  await update($, noteSeen, () => marks)
   await update($, cards, () => next)
   await update($, pollError, () => '')
   await update($, polledAt, () => Date.now())
@@ -125,6 +144,10 @@ const age = (iso: string, now: number) => {
 }
 const clock = (ms: number) => (ms ? new Date(ms).toTimeString().slice(0, 8) : 'never')
 
+
+const TICK = '◐◓◑◒'
+const PR_KEY = (s: string | null) => (s === 'OPEN' ? 'success' : s === 'MERGED' ? 'merged' : 'subtle')
+
 export const register: Register = on => {
   let timer: { cancel: () => void } | null = null
   const stop = () => { timer?.cancel(); timer = null }
@@ -147,56 +170,228 @@ export const register: Register = on => {
   on('session.end', async ($, e, next) => { stop(); return next(e) })
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
-    const { Box, Text, Button, Input } = $.ui.resolve(e)
+    const els = $.ui.resolve(e) as Record<string, any>
+    const { Box, Text, Button } = els
+    // Terminal has no Svg, mobile no Input; their tables may still list one, so go by the surface too.
+    const Svg = e.surface !== 'terminal' && 'Svg' in els ? els.Svg : null
+    const Input = e.surface !== 'mobile' && 'Input' in els ? els.Input : null
+    const rich = Svg !== null
     const now = Date.now()
-    const [list, at, err, fz, dr, busy, nt, isPaused] = await Promise.all([
+    const [list, at, err, fz, dr, busy, nt, isPaused, qOpen, fna, prev, ans] = await Promise.all([
       read($, cards), read($, polledAt), read($, pollError), read($, frozen),
       read($, drafts), read($, sending), read($, notes), read($, paused),
+      read($, quietOpen), read($, firstNeedsAt), read($, prevCounts), read($, answered),
     ])
     const shown = order(list, fz)
     const stale = at > 0 && now - at > STALE_MS
+    const cur = counts(list)
+    const up = rise(prev, cur)
+    const shaky = err !== '' || stale
+    const health = shaky ? 'error' : isPaused ? 'warning' : at > 0 ? 'success' : 'subtle'
+    const main = shown.filter(c => c.kind !== 'quiet')
+    const quiet = shown.filter(c => c.kind === 'quiet')
     const touch = async () => {
       await update($, lastInput, () => Date.now())
       await update($, frozen, f => f ?? shown.map(c => c.id))
     }
+    const openNote = (c: Card) => update($, notes, n => ({ ...n, [c.id]: `Click "${c.title}" in the sidebar` }))
+
+    const chip = (label: string, key: string) => (
+      <Text size="caption" weight="semibold" color="inverseText" backgroundColor={key}>{` ${label} `}</Text>
+    )
+    const prChip = (c: Card) => c.prNumber === null ? null : (
+      <Text size="caption" weight="semibold" color="inverseText" backgroundColor={PR_KEY(c.prState)}>
+        {` PR #${c.prNumber}${c.prState ? ' ' + c.prState : ''} `}
+      </Text>
+    )
+    const banner = (key: string, body: unknown, action?: unknown) => (
+      <Box borderStyle="round" borderColor={key} paddingX="sm" paddingY="xs" flexDirection="row"
+        justifyContent="space-between" alignItems="center">
+        {body}
+        {action ?? null}
+      </Box>
+    )
+    const glyph = (c: Card) => {
+      if (c.kind === 'busy') return rich
+        ? <Svg width={12} height={12} isInteractive alt="Running" source={pulse()} />
+        : <Text color="suggestion">{TICK[Math.floor(now / POLL_MS) % 4]}</Text>
+      if (c.kind === 'needs-you') return <Text color="warning">●</Text>
+      if (c.kind === 'done') return <Text color="success">○</Text>
+      return <Text color={ACCENT[c.kind]}>◌</Text>
+    }
+    const noteLine = (c: Card) => {
+      if (busy === c.id) return (
+        <Box flexDirection="row" gap="xs" alignItems="center">
+          {rich ? <Svg width={12} height={12} isInteractive alt="Sending" source={spinner()} /> : <Text color="suggestion">…</Text>}
+          <Text size="footnote" color="suggestion">Sending…</Text>
+        </Box>
+      )
+      const t = nt[c.id]
+      if (t === undefined) return null
+      const look = noteLook(t)
+      return (
+        <Box flexDirection="row" gap="xs" alignItems="center">
+          <Text color={look.tone}>{look.glyph}</Text>
+          <Text size="footnote" color={look.tone}>{t}</Text>
+        </Box>
+      )
+    }
+
+    // A one-line row: done threads and expanded quiet ones.
+    const line = (c: Card) => (
+      <Box key={'l-' + c.id} flexDirection="column">
+        <Box flexDirection="row" justifyContent="space-between" alignItems="center" paddingX="sm" gap="xs">
+          <Box flexDirection="row" gap="xs" alignItems="center" flexShrink={1}>
+            {glyph(c)}
+            <Text size="footnote" color={c.kind === 'quiet' ? 'inactive' : undefined} dimColor={c.kind === 'done' || shaky} wrap="truncate-end">{c.title}</Text>
+            {prChip(c)}
+            <Text size="caption" color="subtle" tabular>{age(c.lastActivityAt, now)}</Text>
+          </Box>
+          <Button key={'o-' + c.id} plain dimColor hover={{ dimColor: false }} label="Open" onPress={() => openNote(c)} />
+        </Box>
+        {nt[c.id] !== undefined && <Box paddingX="sm">{noteLine(c)}</Box>}
+      </Box>
+    )
+
+    const card = (c: Card) => {
+      const k = c.kind
+      const nyou = k === 'needs-you'
+      const accent = ACCENT[k]
+      const t = nt[c.id]
+      const unknown = t !== undefined && noteLook(t).tone === 'error'
+      const fresh = nyou && isNew(fna[c.id], now)
+      const sendingThis = busy === c.id
+      const waiting = ans[c.id] === JSON.stringify(snap(c))
+      const askable = canAnswer(c)
+      const border = unknown ? 'error' : nyou ? 'warning' : k === 'unclear' ? 'permission' : 'subtle'
+      const field = askable && Input !== null && !sendingThis && !waiting && !unknown
+      return (
+        <Box key={'c-' + c.id} flexDirection="row" borderStyle={fresh ? 'bold' : 'round'} borderColor={border}
+          borderDimColor={!nyou && !unknown} overflow="hidden" hover={{ borderColor: border === 'subtle' ? accent : border, borderDimColor: false }}>
+          {rich && <Box width={1} backgroundColor={accent} />}
+          <Box flexDirection="column" flexGrow={1} paddingX="sm" paddingY="xs" gap="xs">
+            <Box flexDirection="row" alignItems="center" gap="xs">
+              {!rich && <Text color={accent}>▌</Text>}
+              {glyph(c)}
+              {chip(LABEL[k], accent)}
+              {fresh && chip('NEW', 'warning')}
+              {fresh && rich && <Svg width={12} height={12} isInteractive alt="New" source={burst()} />}
+              <Text weight={nyou || k === 'unclear' ? 'semibold' : 'medium'} size={nyou ? 'heading' : 'body'}
+                dimColor={shaky} wrap="truncate-end">{c.title}</Text>
+            </Box>
+            <Box flexDirection="row" gap="sm" alignItems="center">
+              <Text size="caption" mono color="subtle">{c.id.slice(6, 12)}</Text>
+              {prChip(c)}
+              <Text size="caption" color="subtle" tabular>{age(c.lastActivityAt, now)} ago</Text>
+            </Box>
+            <Box display="none" hover={{ display: 'flex' }} flexDirection="row" gap="sm">
+              <Text size="caption" mono color="subtle">{c.id}</Text>
+              <Text size="caption" color="subtle" tabular>last activity {clock(Date.parse(c.lastActivityAt) || 0)}</Text>
+            </Box>
+            {k === 'unclear' && (
+              <Text size="footnote" italic color="subtle">No status table in the last reply. Open the thread.</Text>
+            )}
+            {k !== 'unclear' && c.ask !== '' && (
+              <Box flexDirection="row" flexWrap="wrap">
+                <Text size={nyou ? 'body' : 'footnote'} weight={nyou ? 'medium' : 'regular'} color="text"
+                  dimColor={!nyou || waiting} wrap="wrap">
+                  {c.ask.includes('👉') ? c.ask : `👉 ${c.ask}`}
+                </Text>
+                {c.extra > 0 && <Text size="footnote" color="subtle">{` +${c.extra} more`}</Text>}
+              </Box>
+            )}
+            {noteLine(c)}
+            {waiting && !unknown && <Text size="caption" color="subtle">Answered. Waiting for the thread.</Text>}
+            {field && busy !== null && <Text size="caption" color="subtle">Another answer is sending…</Text>}
+            <Box flexDirection="row" gap="xs" alignItems="center">
+              {field && (
+                <Box flexGrow={1}>
+                  <Input
+                    key={'a-' + c.id}
+                    placeholder="Type your answer"
+                    submitLabel="send"
+                    rows={1}
+                    value={dr[c.id] ?? ''}
+                    onInput={async (v: string) => { await touch(); await update($, drafts, d => ({ ...d, [c.id]: v })) }}
+                    onSubmit={async (v: string) => { if (busy === null) await send($, c.id, v) }}
+                  />
+                </Box>
+              )}
+              {sendingThis && <Box flexGrow={1}><Text dimColor wrap="truncate-end">{dr[c.id] ?? ''}</Text></Box>}
+              {nyou && !askable && <Text size="caption" color="subtle">Answer in the thread (approval or open PR)</Text>}
+              {askable && Input === null && <Text size="caption" color="subtle">Answer from desktop or the thread</Text>}
+              <Button key={'o-' + c.id} plain dimColor hover={{ dimColor: false }} label="Open" onPress={() => openNote(c)} />
+            </Box>
+          </Box>
+        </Box>
+      )
+    }
+
+    // Cards in the shown order, a section label before each run of one kind.
+    const body: unknown[] = []
+    main.forEach((c, i) => {
+      if (i === 0 || main[i - 1]?.kind !== c.kind) {
+        body.push(<Text size="caption" weight="semibold" color="subtle">{`${LABEL[c.kind]} · ${cur[c.kind]}`}</Text>)
+      }
+      body.push(c.kind === 'done' ? line(c) : card(c))
+    })
+
+    const allClear = err === '' && at > 0 && list.length > 0 && cur['needs-you'] === 0 && cur.unclear === 0
+    const ringOn = rich && at > 0 && !isPaused && !shaky
+
     return (
-      <Box flexDirection="column">
-        <Text dimColor>Updated {clock(at)}</Text>
-        {err !== '' && <Text color="red">Poll failed: {err}</Text>}
-        {err === '' && stale && <Text color="red">Stale: last update over a minute ago</Text>}
-        {isPaused && (
-          <Box flexDirection="row">
-            <Text color="red">Paused after 10 min idle </Text>
-            <Button key="resume" label="Resume" onPress={async () => {
-              await update($, paused, () => false)
-              await update($, lastInput, () => Date.now())
-              await poll($)
-            }} />
+      <Box flexDirection="column" gap="sm" padding="sm">
+        <Box flexDirection="column" gap="xs">
+          <Box flexDirection="row" alignItems="center" justifyContent="space-between">
+            <Text size="heading" weight="semibold">Thread deck</Text>
+            <Box flexDirection="row" alignItems="center" gap="xs">
+              <Text color={health}>●</Text>
+              <Text size="caption" color="subtle" tabular>
+                {at > 0 ? `Updated ${clock(at)} · ${ago(at, now)} ago` : 'Updated never'}
+              </Text>
+              {ringOn && <Svg width={14} height={14} isInteractive alt="Next refresh in 10 seconds" source={ring(at)} />}
+            </Box>
+          </Box>
+          {rich && list.length > 0 && <Svg width={280} height={8} isInteractive alt={countsAlt(cur)} source={bar(prev, cur)} />}
+          {list.length > 0 && (
+            <Box flexDirection="row" flexWrap="wrap" gap="xs" alignItems="center">
+              {chips(cur).map(x => chip(x.text, ACCENT[x.kind]))}
+              {up > 0 && <Text size="caption" color="warning">{`+${up}`}</Text>}
+            </Box>
+          )}
+        </Box>
+
+        {err !== '' && banner('error', <Text color="error" weight="medium" wrap="truncate-end">Poll failed: {err}</Text>)}
+        {err === '' && stale && banner('error', <Text color="error" weight="medium">Stale: cards may be out of date</Text>)}
+        {isPaused && banner('warning', <Text color="warning" weight="medium">Paused after 10 min idle</Text>,
+          <Button key="resume" variant="primary" hotkey="r" label="Resume" onPress={async () => {
+            await update($, paused, () => false)
+            await update($, lastInput, () => Date.now())
+            await poll($)
+          }} />)}
+        {allClear && <Text color="success" weight="medium">✓ Nothing needs you right now</Text>}
+
+        {at === 0 && err === '' && <Text color="subtle">Loading threads…</Text>}
+        {at > 0 && err === '' && list.length === 0 && (
+          <Box flexDirection="column" alignItems="center" paddingY="lg" gap="xs">
+            {rich && <Svg width={40} height={40} isInteractive alt="All clear" source={check()} />}
+            <Text size="heading" weight="semibold">No open threads</Text>
+            <Text size="caption" color="subtle">New threads appear here within 10 s.</Text>
           </Box>
         )}
-        {shown.length === 0 && <Text dimColor>No open threads.</Text>}
-        {shown.map(c => (
-          <Box key={'c-' + c.id} flexDirection="column" marginTop={1}>
-            <Text bold>
-              [{c.kind}] {c.title} ({c.id.slice(6, 12)}){c.prNumber !== null ? ` · PR #${c.prNumber} ${c.prState ?? ''}` : ''} · {age(c.lastActivityAt, now)}
-            </Text>
-            {c.ask !== '' && <Text>{c.ask}{c.extra > 0 ? ` (+${c.extra})` : ''}</Text>}
-            {nt[c.id] !== undefined && <Text dimColor>{nt[c.id]}</Text>}
-            <Button key={'o-' + c.id} label="Open" plain onPress={() =>
-              update($, notes, n => ({ ...n, [c.id]: `Click "${c.title}" in the sidebar` }))} />
-            {canAnswer(c) && (
-              <Input
-                key={'a-' + c.id}
-                label="Answer"
-                placeholder="type an answer"
-                submitLabel="send"
-                value={dr[c.id] ?? ''}
-                onInput={async (v: string) => { await touch(); await update($, drafts, d => ({ ...d, [c.id]: v })) }}
-                onSubmit={async (v: string) => { if (busy === null) await send($, c.id, v) }}
-              />
-            )}
+
+        {body.length > 0 && <Box flexDirection="column" gap="xs">{body}</Box>}
+
+        {quiet.length > 0 && (
+          <Box key="quiet" flexDirection="column" gap="xs">
+            <Box flexDirection="row" justifyContent="space-between" alignItems="center" paddingX="sm">
+              <Text color="inactive" size="footnote">{`◌ ${quiet.length} quiet thread${quiet.length === 1 ? '' : 's'}`}</Text>
+              <Button key="quiet-toggle" plain dimColor hotkey="q" label={qOpen ? 'Hide' : 'Show'}
+                onPress={() => update($, quietOpen, v => !v)} />
+            </Box>
+            {qOpen && quiet.map(line)}
           </Box>
-        ))}
+        )}
       </Box>
     )
   })

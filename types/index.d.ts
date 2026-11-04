@@ -25,6 +25,10 @@ declare module 'claude-code' {
       answered: Shaped<Record<string, string>>
       lastInput: Shaped<number>
       paused: Shaped<boolean>
+      quietOpen: Shaped<boolean>
+      firstNeedsAt: Shaped<Record<string, number>>
+      prevCounts: Shaped<Record<DeckCard['kind'], number> | null>
+      noteSeen: Shaped<Record<string, string>>
     }
   }
 }
