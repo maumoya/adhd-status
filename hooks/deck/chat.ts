@@ -38,6 +38,17 @@ export function chat(events: string | null): Msg[] {
   return out
 }
 
+// The thread's latest reply, whole, and the owner's message it answers: what the focus shows,
+// as the thread itself shows it. Either is null when the transcript has none.
+export function lastExchange(msgs: readonly Msg[]): { you: string | null; reply: string | null } {
+  let i = msgs.length - 1
+  while (i >= 0 && msgs[i].role !== 'assistant') i--
+  if (i < 0) return { you: null, reply: null }
+  let j = i - 1
+  while (j >= 0 && msgs[j].role !== 'user') j--
+  return { you: j >= 0 ? msgs[j].text : null, reply: msgs[i].text }
+}
+
 // Markdown safe to draw: no pressable links or images, no raw tags, no control characters.
 export function safeMd(s: string): string {
   return s

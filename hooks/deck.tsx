@@ -5,7 +5,7 @@ import type { Card, Thread } from './deck/types.ts'
 import { toCard } from './deck/parse.ts'
 import { order } from './deck/order.ts'
 import { canAnswer, canAct, canMessage } from './deck/gate.ts'
-import { chat, fit, safeMd } from './deck/chat.ts'
+import { chat, lastExchange, safeMd } from './deck/chat.ts'
 import { snap, recheckWith, compose, readResult, confirmText } from './deck/guard.ts'
 import {
   ACCENT, LABEL, ago, bar, burst, check, chips, counts, countsAlt, cut, isNew, markNew,
@@ -40,6 +40,7 @@ const prevCounts = atom({ plugin: 'adhd-status', key: 'prevCounts' }, null as Co
 const noteSeen = atom({ plugin: 'adhd-status', key: 'noteSeen' }, {} as Record<string, string>, { shape: 'map-1' })
 const focusId = atom({ plugin: 'adhd-status', key: 'focusId' }, null as string | null, { shape: 'id-1' })
 const details = atom({ plugin: 'adhd-status', key: 'details' }, {} as Record<string, Detail>, { shape: 'details-1' })
+const deckOpen = atom({ plugin: 'adhd-status', key: 'deckOpen' }, false, { shape: 'b-1' })
 const released = atom({ plugin: 'adhd-status', key: 'released' }, {} as Record<string, string>, { shape: 'map-1' })
 const transcript = atom({ plugin: 'adhd-status', key: 'transcript' }, null as { id: string; at: string; events: string } | null, { shape: 'transcript-1' })
 
@@ -196,11 +197,14 @@ export const register: Register = on => {
 
   on('session.start', async ($, e, next) => {
     await $.command.register({ name: 'deck', description: "Open the thread deck: every thread's next step in one pane" })
+    // A reload starts the module over: an open deck gets its refresh back.
+    if (!timer && (await read($, deckOpen))) timer = $.clock.every(POLL_MS, () => { void poll($) })
     return next(e)
   })
 
   on('command.run', { command: 'deck' }, async $ => {
     await $.ui.open({ id: PANE, title: 'Thread deck' })
+    await update($, deckOpen, () => true)
     await update($, lastInput, () => Date.now())
     await update($, paused, () => false)
     if (!timer) timer = $.clock.every(POLL_MS, () => { void poll($) })
@@ -208,7 +212,7 @@ export const register: Register = on => {
     return { text: 'Thread deck opened.' }
   })
 
-  on('ui.close', async ($, e, next) => { if ((e as { id?: string }).id === PANE) stop(); return next(e) })
+  on('ui.close', async ($, e, next) => { if ((e as { id?: string }).id === PANE) { stop(); await update($, deckOpen, () => false) } return next(e) })
   on('session.end', async ($, e, next) => { stop(); return next(e) })
 
 
@@ -355,7 +359,8 @@ export const register: Register = on => {
       // The free composer: any thread, once there is no open answer to give.
       const composer = !field && Input !== null && !s.sendingThis && !s.unknown
       const msgs = tr !== null && tr.id === c.id ? chat(tr.events) : []
-      const shownMsgs = fit(msgs, Math.max(12, half - 14), inner)
+      // The latest reply in full, as the thread shows it; the grid below only when there is none.
+      const ex = lastExchange(msgs)
       return (
         <Box key={'c-' + c.id} flexDirection="column" borderStyle={s.fresh ? 'bold' : 'round'} borderColor={s.border}
           borderDimColor={!s.nyou && !s.unknown} paddingX="sm" paddingY="xs" gap="xs"
@@ -377,25 +382,15 @@ export const register: Register = on => {
             <Text size="caption" mono color="subtle">{c.id}</Text>
             <Text size="caption" color="subtle" tabular>last activity {clock(Date.parse(c.lastActivityAt) || 0)}</Text>
           </Box>
-          {shownMsgs.length > 0 && (
-            <Box key={'chat-' + c.id} flexDirection="column" gap="xs" borderStyle="round" borderColor="subtle"
-              borderDimColor paddingX="sm" paddingY="xs">
-              <Text size="caption" weight="semibold" color="subtle">{`CONVERSATION · last ${shownMsgs.length} of ${msgs.length}`}</Text>
-              {shownMsgs.map((m, i) => m.role === 'tool'
-                ? <Text key={`cm-${c.id}-${i}`} size="caption" color="subtle" wrap="truncate-end">{`⚙ ${plain(m.text, inner)}`}</Text>
-                : m.role === 'user'
-                  ? (
-                    <Box key={`cm-${c.id}-${i}`} flexDirection="column" paddingX="sm" borderStyle="round" borderColor="claude" borderDimColor>
-                      <Text size="caption" weight="semibold" color="claude">You</Text>
-                      <Text size="footnote" wrap="wrap">{m.text.replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, ' ')}</Text>
-                    </Box>
-                  )
-                  : Markdown
-                    ? <Markdown key={`cm-${c.id}-${i}`} text={safeMd(m.text)} />
-                    : <Text key={`cm-${c.id}-${i}`} size="footnote" wrap="wrap">{safeMd(m.text)}</Text>)}
-            </Box>
+          {ex.you !== null && (
+            <Text key={'you-' + c.id} size="footnote" color="claude" wrap="truncate-end">
+              {`You: ${plain(ex.you.replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, ' '), inner - 6)}`}
+            </Text>
           )}
-          {shownMsgs.length === 0 && d !== null && d.rows.length > 0 && (
+          {ex.reply !== null && (Markdown
+            ? <Markdown key={'reply-' + c.id} text={safeMd(ex.reply)} />
+            : <Text key={'reply-' + c.id} size="footnote" wrap="wrap">{safeMd(ex.reply)}</Text>)}
+          {ex.reply === null && d !== null && d.rows.length > 0 && (
             <Box flexDirection="column">
               <Box flexDirection="row" gap={1}>
                 <Box width={taskW}><Text size="caption" weight="semibold" color="subtle">TASK</Text></Box>

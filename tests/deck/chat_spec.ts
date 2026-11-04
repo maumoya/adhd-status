@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { chat, fit, safeMd } from '../../hooks/deck/chat.ts'
+import { chat, fit, lastExchange, safeMd } from '../../hooks/deck/chat.ts'
 import { canMessage } from '../../hooks/deck/gate.ts'
 import type { Card } from '../../hooks/deck/types.ts'
 
@@ -41,4 +41,11 @@ test('canMessage blocks approval words and a bare yes to an approval ask', () =>
   assert.equal(canMessage({ ...C, prState: 'OPEN' }, 'ok!'), false)
   assert.equal(canMessage({ ...C, prState: 'OPEN' }, 'what does the PR change?'), true)
   assert.equal(canMessage(C, '   '), false)
+})
+
+test('lastExchange is the latest reply whole and the owner message before it', () => {
+  const m = chat('[user] first\n[assistant] old\n[user] pick blue\n[assistant] (called Bash)\n[assistant] | A | B |\n|---|---|\n| 1 | 2 |\n[result] done')
+  assert.deepEqual(lastExchange(m), { you: 'pick blue', reply: '| A | B |\n|---|---|\n| 1 | 2 |' })
+  assert.deepEqual(lastExchange(chat('[user] hi')), { you: null, reply: null })
+  assert.deepEqual(lastExchange(chat('[assistant] hello')), { you: null, reply: 'hello' })
 })
