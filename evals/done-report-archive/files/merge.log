@@ -1,0 +1,2 @@
+2026-11-04T09:02:11Z merge: rate-limit into main (checks: 12 passed)
+2026-11-04T09:05:40Z deploy: production ok, 429 returned after 60 requests/min

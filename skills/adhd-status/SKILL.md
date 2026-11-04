@@ -133,12 +133,26 @@ every reply and makes things easy to lose.
      "this thread is closed" sentence, no note on how you checked or what you could not do
      (evidence goes in the Status cell, e.g. "per CI log"), no "you can close it".
 
-- **Every row ✅ (100% done)?** Then the thread's task is finished: run the hand-back above and
-  make the one next action an **archive** prompt, recommended first: a button that archives this
-  thread and takes the user back to the parent thread (`Archive → back to <parent>`). No parent
-  (a root thread, or the parent is gone)? Send the user back to the roadmap (hub) thread instead.
-  If the host can archive with no prompt and the user already said to close it, just do it and
-  show the same table. Never show an all-✅ table with no way out.
+- **This thread's own task done?** Every row about this thread's own work is ✅. A row that
+  only shows another thread's work (a child or sibling thread still 🔄 or ⏸) does not count:
+  this thread is still done. This holds for STATUS and for every done, merged or hand-back
+  report. Then run the hand-back above and make the one next action an **archive** prompt,
+  recommended first: a button that archives this thread and takes the user back to the parent
+  thread (`Archive → back to <parent>`). No parent (a root thread, or the parent is gone)? Send
+  the user back to the roadmap (hub) thread instead. If the host can archive with no prompt and
+  the user already said to close it, just do it and show the same table. Never end a finished
+  thread with no way out, even when nothing else needs the user.
+
+  With a next-step box (`wrap_up`), always pass the ask; a recap alone draws no box and no
+  button:
+
+  ```
+  wrap_up(recap="Signup form is live; this thread's task is done.",
+          ask="Archive this thread?",
+          actions=[{label: "Archive → back to parent",
+                    message: "Archive this thread and open the Planning thread."},
+                   {label: "Keep it open"}])
+  ```
 
   The parent picks up its next task, which may start a new child thread. This loop repeats until
   the work is done.
@@ -216,9 +230,10 @@ sentence:
   Do not add a second question ("already ran it?") under the command; one action means one.
 - **A click somewhere**: one line saying exactly where to click, plus a "Done" button.
 
-If nothing needs the user, give no button. The last row's status can say "nothing for you".
-The one exception: when every row is ✅, the next action is the archive prompt from Step 4
-(archive, then back to the parent thread, or to the roadmap thread if there is no parent).
+**Thread's task done? Then the archive prompt from Step 4 is the action, always** (archive,
+then back to the parent thread, or to the roadmap thread if there is no parent). This beats the
+rule below. Otherwise, if nothing needs the user, give no button; the last row's status can say
+"nothing for you".
 
 ## Example
 
@@ -259,7 +274,9 @@ Check the reply; if any answer is no, fix it first.
 5. No ask to paste output or "let me know when done", and no typed answer where a button or one
    key would do?
 6. Only this thread's task? A new task becomes a new thread.
-7. Every row ✅? Then the one action is the archive prompt (back to the parent thread, or to the
-   roadmap thread if there is no parent), not silence.
+7. This thread's own task done (rows about other threads' work don't count), in a STATUS or a
+   done report? Then the one action is the archive prompt (back to the parent thread, or to the
+   roadmap thread if there is no parent), with `wrap_up` an ask plus an Archive button, never a
+   table alone.
 8. Did the user type this turn? If not, and no row changed since your last table, send no table:
    at most one line naming the change. Unchanged rows keep their order and words.

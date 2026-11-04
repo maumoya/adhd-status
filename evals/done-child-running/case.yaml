@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: done-child-running
+expected_outcome: |
+  This thread's own task (the billing page) is done per deploy.log. The other thread still running is that thread's work, so it may show as one 🔄 row but does not keep this thread open. The one next action is an archive prompt, recommended first, that archives this thread and sends the user back to the parent "Planning" thread. No action, or waiting for the other thread, is a failure.
+context:
+  scaffold_script: place-files.sh

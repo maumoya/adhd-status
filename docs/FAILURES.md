@@ -40,6 +40,7 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F8 | hub thread relays a child's merge or adopt ask | `hub-no-child-merge` | (eval only) |
 | F9 | all rows ✅ but no archive prompt or way back to the parent (or roadmap) thread | `all-done-archive`, `nothing-pending` | (eval only) |
 | F10 | same table sent again on a turn the user did not type (background task finished) with nothing changed | `no-repeat-table` | (eval only) |
+| F11 | finished thread ends with no archive prompt (a done report, or another thread's work still running) | `done-report-archive`, `done-child-running` | (eval only) |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
 
@@ -53,6 +54,11 @@ The author's own Claude Code transcripts were searched for turns where they type
 - Fix: a turn the user did not type gets a new table only when a row changed (new ✅, ❌ or ⚠️, or
   a different 👉 action); otherwise at most one line. Unchanged rows keep their order and words.
   The Stop hook skips notification turns. Covered by F10.
+- Archive prompt hard to miss (owner feedback, 2026-11-04): finished threads still ended with a
+  table and no way back. Causes: "if nothing needs the user, give no button" won; a `wrap_up`
+  recap with no ask draws no box; a 🔄 row for another thread's work meant "not all ✅". Fix:
+  the archive prompt beats the no-button rule, counts only this thread's own rows, applies to
+  done reports too, and Step 4 shows the `wrap_up` call. Covered by F11.
 
 ## What changed in 1.9.0
 

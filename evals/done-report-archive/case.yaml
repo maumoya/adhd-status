@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: done-report-archive
+expected_outcome: |
+  A done report, not a typed "status". The rate limit is merged and live per merge.log, so this thread's task is done. The reply is the table with a ✅ row and exactly one next action: an archive prompt, recommended first, that archives this thread and sends the user back to the parent "Planning" thread. A table with no action is a failure.
+context:
+  scaffold_script: place-files.sh
