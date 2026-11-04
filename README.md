@@ -14,6 +14,10 @@
   <a href="https://www.bestpractices.dev/projects/16177"><img src="https://www.bestpractices.dev/projects/16177/badge" alt="OpenSSF Best Practices"></a>
 </p>
 
+<p align="center">
+  <img src="assets/demo.gif" width="720" alt="Demo: a long agent session, the user types STATUS, and the agent replies with a four-row table. The migration is the user's turn, the rate limit was forgotten, the signup form is in tests and the README fix is merged, followed by one button: npm run migrate.">
+</p>
+
 # adhd-status
 
 **The free, open source ADHD-friendly status board for Claude Code and AI coding agents.** Say
