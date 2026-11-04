@@ -1,4 +1,11 @@
 // State the thread deck keeps, per session, in plugin adhd-status.
+export type DeckDetail = {
+  replyHash: string
+  rows: Array<{ task: string; why: string; status: string }>
+  options: string[]
+  recommended: number
+  command: string
+}
 export type DeckCard = {
   id: string
   title: string
@@ -29,6 +36,8 @@ declare module 'claude-code' {
       firstNeedsAt: Shaped<Record<string, number>>
       prevCounts: Shaped<Record<DeckCard['kind'], number> | null>
       noteSeen: Shaped<Record<string, string>>
+      focusId: Shaped<string | null>
+      details: Shaped<Record<string, DeckDetail>>
     }
   }
 }

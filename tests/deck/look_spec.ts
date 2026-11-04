@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   ago, bar, burst, check, chips, counts, countsAlt, isNew, layout, markNew, noteLook, pulse, rise, ring,
-  settleNotes, spinner, NEW_MS,
+  settleNotes, spinner, NEW_MS, tileGrid, statusTone, pickFocus, cut,
 } from '../../hooks/deck/look.ts'
 import type { Card, Kind } from '../../hooks/deck/types.ts'
 
@@ -100,4 +100,40 @@ test('ago reads seconds, minutes, hours, days', () => {
   assert.equal(ago(0, 7_200_000), '2h')
   assert.equal(ago(0, 172_800_000), '2d')
   assert.equal(ago(5_000, 0), '0s')
+})
+
+test('tileGrid fits 3 to 5 tiles on a wide window and one on a narrow one', () => {
+  assert.deepEqual(tileGrid(40), { perRow: 1, width: 38 })
+  assert.equal(tileGrid(100).perRow, 3)
+  assert.equal(tileGrid(200).perRow, 5)
+  assert.equal(tileGrid(400).perRow, 5)
+  const g = tileGrid(130)
+  assert.ok(g.perRow * g.width + (g.perRow - 1) <= 128)
+  assert.equal(tileGrid(Number.NaN).perRow, 2)
+})
+
+test('statusTone colours the status emoji', () => {
+  assert.equal(statusTone('👉 you: pick'), 'warning')
+  assert.equal(statusTone('✅ done'), 'success')
+  assert.equal(statusTone('❌ failed'), 'error')
+  assert.equal(statusTone('⏳ running'), 'suggestion')
+  assert.equal(statusTone('later'), 'text')
+})
+
+test('pickFocus keeps a listed choice, else the oldest needs-you, never a quiet one', () => {
+  const a = card('a', 'needs-you', { lastActivityAt: '2026-11-04T05:00:00Z' })
+  const b = card('b', 'needs-you', { lastActivityAt: '2026-11-04T04:00:00Z' })
+  const q = card('q', 'quiet')
+  const r = card('r', 'busy')
+  assert.equal(pickFocus([a, b, q], 'a')?.id, 'a')
+  assert.equal(pickFocus([a, b, q], null)?.id, 'b')
+  assert.equal(pickFocus([a, b, q], 'gone')?.id, 'b')
+  assert.equal(pickFocus([a, b, q], 'q')?.id, 'b')
+  assert.equal(pickFocus([q, r], null)?.id, 'r')
+  assert.equal(pickFocus([q], null), null)
+})
+
+test('cut ends a long text with an ellipsis', () => {
+  assert.equal(cut('short', 10), 'short')
+  assert.equal(cut('abcdefghij', 5), 'abcd…')
 })

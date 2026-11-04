@@ -196,3 +196,35 @@ export function ago(ms: number, now: number): string {
   if (!Number.isFinite(s)) return '?'
   return s < 60 ? `${s}s` : s < 3600 ? `${Math.round(s / 60)}m` : s < 86400 ? `${Math.round(s / 3600)}h` : `${Math.round(s / 86400)}d`
 }
+
+// Tiles of one width so 3 to 5 fit a wide pane: at least 30 cells each, one cell between.
+export function tileGrid(cols: number, min = 30, most = 5): { perRow: number; width: number } {
+  const room = Math.max(min, Math.floor(Number.isFinite(cols) ? cols : 80) - 2)
+  const perRow = Math.max(1, Math.min(most, Math.floor((room + 1) / (min + 1))))
+  return { perRow, width: Math.floor((room - (perRow - 1)) / perRow) }
+}
+
+// A status cell's colour, by the emoji it holds.
+export function statusTone(s: string): 'success' | 'warning' | 'error' | 'suggestion' | 'text' {
+  if (s.includes('👉')) return 'warning'
+  if (/[❌⛔🔴]/u.test(s)) return 'error'
+  if (s.includes('✅')) return 'success'
+  if (/[⏳🔄🟡]/u.test(s)) return 'suggestion'
+  return 'text'
+}
+
+// The focus: the chosen thread while it is listed and not quiet, else the longest-waiting
+// needs-you thread, else the first non-quiet one.
+export function pickFocus(cards: readonly Card[], id: string | null): Card | null {
+  const live = cards.filter(c => c.kind !== 'quiet')
+  const chosen = id === null ? undefined : live.find(c => c.id === id)
+  if (chosen) return chosen
+  const needs = live.filter(c => c.kind === 'needs-you').sort((a, b) => a.lastActivityAt.localeCompare(b.lastActivityAt))
+  return needs[0] ?? live[0] ?? null
+}
+
+// Cut to `max` characters with an ellipsis; the text is otherwise kept as written.
+export function cut(s: string, max: number): string {
+  const n = Math.max(1, Math.floor(max))
+  return s.length <= n ? s : s.slice(0, n - 1) + '…'
+}

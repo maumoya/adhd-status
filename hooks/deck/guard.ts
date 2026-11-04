@@ -11,9 +11,14 @@ export function snap(c: Card): Snap {
 }
 
 export function recheck(before: Snap, now: Card): 'ok' | 'changed' | 'busy' {
+  return recheckWith(before, now, canAnswer)
+}
+
+// The same re-check under another gate (an option or Run button's).
+export function recheckWith(before: Snap, now: Card, allowed: (c: Card) => boolean): 'ok' | 'changed' | 'busy' {
   if (now.isRunning) return 'busy'
   const same = (Object.keys(before) as (keyof Snap)[]).every(k => before[k] === snap(now)[k])
-  return same && canAnswer(now) ? 'ok' : 'changed'
+  return same && allowed(now) ? 'ok' : 'changed'
 }
 
 export function compose(text: string, c: Card): string {
