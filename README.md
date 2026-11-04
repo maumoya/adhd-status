@@ -126,6 +126,28 @@ them to `~/.claude/settings.json` (change the path to where you cloned this repo
 
 Check any reply by hand: `python3 tools/lint_reply.py reply.md`.
 
+## Thread deck (Claude desktop app, plugin install)
+
+Running ten threads at once? Type `/deck` in one thread and a pane lists every open thread with
+the 👉 row of its last status table, so you see what each one needs from you without opening it.
+
+- **Cards**, sorted: needs you (longest wait first), unclear (no table found), busy, done, quiet.
+  Each shows the title, a short id, the PR and how long ago it last moved.
+- **Open** tells you which thread to click in the sidebar.
+- **Answer** appears only when the 👉 row is a plain question: it ends in `?`, names no merge,
+  adopt, deploy, install, approve, release, push, ship or live step, and the thread has no open
+  PR. Approvals always happen inside the thread itself.
+- **Before it sends**, the deck asks you to confirm, re-reads that thread, and refuses if anything
+  moved ("Changed — refreshed") or the thread is working ("Busy — try when idle"). It sends once,
+  never retries, and adds one line, `(thread deck · re: …)`, so the thread knows what you answered.
+- It refreshes every 10 s while open, shows a red banner when a refresh failed or is over a
+  minute old, and pauses after 10 minutes without input (press Resume).
+
+Keep the thread that holds the deck on screen (split view works): a pane only refreshes while it
+is visible. The deck reads the desktop app's own session tools on your Mac; nothing is sent
+anywhere else and no model is called. Thread text is shown as plain text, never as links or
+buttons.
+
 ### Check replies in CI (GitHub Action)
 
 The same checker runs as a GitHub Action, listed on the
