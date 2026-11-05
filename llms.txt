@@ -12,7 +12,7 @@ Author and owner: Mauricio Alonso Moya Tapia. License: MIT (OSI-approved).
 - Hub mode: a ROADMAP.md file summarizes every task in flight; the hub only consolidates and leaves each child thread's merge or deploy step in that thread.
 - Hard to miss (1.7.0): loads on every way the user says status and on done or hand-back reports; optional hooks make it certain. Plugin eval 2026-11-03: 0.96 with the skill vs 0.50 without.
 - Suggests compacting the context at milestones.
-- GitHub Action (2.0.0): `uses: maumoya/adhd-status@v2.0.0` checks saved status replies in CI and fails on format breaks; listed on the GitHub Marketplace as "ADHD status reply lint".
+- GitHub Action (2.1.0): `uses: maumoya/adhd-status@v2.1.0` checks saved status replies in CI and fails on format breaks; listed on the GitHub Marketplace as "ADHD status reply lint".
 
 ## Docs
 

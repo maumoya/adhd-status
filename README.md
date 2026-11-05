@@ -37,8 +37,8 @@ Skills format) that turns **STATUS** into a zero-reading status board.
 
 Say `STATUS` in any working session and you get:
 
-- one tiny **Task | Why | Status** table (4 rows max, plain words, emoji status, time estimates on
-  your-turn rows, wins shown as ✅)
+- one tiny **Task | Why | Status** table (4 rows max, plain words, emoji status, an ETA on
+  every open row (`~5 min`, `after CI`), wins shown as ✅)
 - exactly **one** next action you can click or run
 - nothing forgotten: the agent sweeps the whole conversation with a built-in completion check first, so
   promised-but-dropped work shows up as a row
@@ -160,7 +160,7 @@ status replies as Markdown files (for example from your own agent's prompts or e
 build when one breaks the format:
 
 ```yaml
-- uses: maumoya/adhd-status@v2.0.0
+- uses: maumoya/adhd-status@v2.1.0
   with:
     files: |
       replies/**/*.md
@@ -245,7 +245,7 @@ Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as
 [slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
 
 ```bash
-slsa-verifier verify-artifact adhd-status-v2.0.0.zip --provenance-path adhd-status-v2.0.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.0.0
+slsa-verifier verify-artifact adhd-status-v2.1.0.zip --provenance-path adhd-status-v2.1.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.1.0
 ```
 
 ## FAQ

@@ -11,8 +11,8 @@ never added.
 | Task | Why | Status |
 |---|---|---|
 | Database migration | new signup fields work | 👉 you: run it, ~1 min |
-| Login rate limit | stops password guessing | ⚠️ forgotten, not started |
-| Signup form | new users can join | 🔄 tests running |
+| Login rate limit | stops password guessing | ⚠️ forgotten, not started, ~20 min |
+| Signup form | new users can join | 🔄 tests running, ~8 min |
 | README typo | docs read right | ✅ merged |
 
 ```bash

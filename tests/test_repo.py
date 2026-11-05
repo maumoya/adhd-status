@@ -103,7 +103,7 @@ class Repo(unittest.TestCase):
     def test_every_failure_has_an_eval(self):
         doc = read("docs", "FAILURES.md")
         rows = re.findall(r"^\| (F\d+) \|[^|]+\| ([^|]+) \|", doc, re.M)
-        self.assertEqual([r[0] for r in rows], [f"F{i}" for i in range(1, 12)])
+        self.assertEqual([r[0] for r in rows], [f"F{i}" for i in range(1, 13)])
         for fid, evals in rows:
             names = re.findall(r"`([\w-]+)`", evals)
             self.assertTrue(names, fid)

@@ -41,8 +41,18 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F9 | all rows ✅ but no archive prompt or way back to the parent (or roadmap) thread | `all-done-archive`, `nothing-pending` | (eval only) |
 | F10 | same table sent again on a turn the user did not type (background task finished) with nothing changed | `no-repeat-table` | (eval only) |
 | F11 | finished thread ends with no archive prompt (a done report, or another thread's work still running) | `done-report-archive`, `done-child-running` | (eval only) |
+| F12 | open row with no ETA, so the user can't tell when it finishes | `pending-command-and-forgotten-item` | F12 |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
+
+## What changed in 2.1.0
+
+- ETA on every open row (owner ask, 2026-11-04): only 👉 rows had a time estimate, so running and
+  waiting rows gave no hint of when they would finish. Every row that is not ✅ now ends its
+  Status with an ETA (`~5 min`, `~1 h`) or what it waits on (`after CI`). It stays in the Status
+  cell, not a new column, so the header, the linter, the Action and the thread deck keep working.
+- The reply linter (and the GitHub Action) adds rule F12: an open row with no ETA fails. Replies
+  saved before 2.1.0 may need an ETA added. Covered by F12.
 
 ## What changed in 1.10.0
 

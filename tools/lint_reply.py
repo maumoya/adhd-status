@@ -12,6 +12,9 @@ import sys
 HEADER = re.compile(r"^\|\s*Task\s*\|\s*Why\s*\|\s*Status\s*\|\s*$")
 EMOJI = ("✅", "🔄", "👉", "⏸", "⚠️", "❌")
 TASK_NOISE = re.compile(r"\]\(|https?://|#\d+|`|\b[0-9a-f]{7,40}\b|/[\w.-]+/")
+ETA = re.compile(r"~\s*\d+(\.\d+)?\s*(s|secs?|m|mins?|minutes?|h|hrs?|hours?|d|days?|w|wks?|weeks?)\b"
+                 r"|\bafter\s+\S", re.I)
+MORE = re.compile(r"^\+\s*\d+\s+more\b", re.I)
 PASTE = re.compile(r"\bpaste\b|let me know when|tell me when|report back|\bcopy the output\b", re.I)
 
 
@@ -46,6 +49,9 @@ def lint(text):
             problems.append("F7 link, number, hash or path in Task: " + cells[0][:40])
         if not cells[2].startswith(EMOJI):
             problems.append("F2 Status does not start with a status emoji: " + cells[2][:40])
+        elif not (cells[2].startswith("✅") or MORE.match(cells[0])
+                  or re.search(r"\bdropped\b", cells[2], re.I) or ETA.search(cells[2])):
+            problems.append("F12 open row has no ETA (~5 min, ~1 h, after X): " + cells[2][:40])
 
     tail = lines[last + 1:]
     fences = sum(1 for l in tail if l.strip().startswith("```"))

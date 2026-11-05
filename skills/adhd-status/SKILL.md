@@ -1,6 +1,6 @@
 ---
 name: adhd-status
-description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "status + next step", "lazy adhd rule", /adhd-status, alone or inside a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table and exactly one next action the user can click or run. Checks results itself instead of asking the user to paste output, keeps one task per thread, and says when to compact or hand back to the parent thread.
+description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "status + next step", "lazy adhd rule", /adhd-status, alone or inside a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table (an ETA on every open row) and exactly one next action the user can click or run. Checks results itself instead of asking the user to paste output, keeps one task per thread, and says when to compact or hand back to the parent thread.
 license: MIT
 ---
 
@@ -81,8 +81,8 @@ The user should never have to report back to you.
 | Task | Why | Status |
 |---|---|---|
 | Login page | users can sign in | 👉 you: run test, ~2 min |
-| Nightly backup | don't lose data | 🔄 running |
-| Old API cleanup | forgot it earlier | ⚠️ not started |
+| Nightly backup | don't lose data | 🔄 running, ~10 min |
+| Old API cleanup | forgot it earlier | ⚠️ not started, ~15 min |
 ```
 
 - At most 4 rows. Needs-the-user and problems first, then running, then done.
@@ -100,8 +100,15 @@ The user should never have to report back to you.
 - The table is always there, even when the next action is a decision or pick list.
 - **Task**: 2–4 plain words. No links, ticket or PR numbers, branch names, hashes or file paths.
 - **Why**: up to 6 plain words, the benefit to the user, not the mechanism.
-- **Status**: one emoji and up to 5 words. On a 👉 row add a real time estimate (`~2 min`) so
-  starting feels small.
+- **Status**: one emoji and up to 5 words, then the ETA.
+- **ETA on every row that is not ✅**: after a comma at the end of Status, how long until that
+  row is done: `~2 min`, `~20 min`, `~1 h`, `~2 d`. If it waits on something else, name it:
+  `after CI`, `after your merge`. It does not count toward the 5 words. On a 👉 row it is the
+  user's own time (it makes starting feel small); on 🔄, ⏸, ⚠️ and ❌ rows it is the time until
+  the row turns ✅ (for ⚠️ and ❌, the fix). Base it on something real (the last run's length, the
+  CI average, the step count), round up, and when a later table shows an ETA was too short, give
+  the new one; never keep a stale ETA. Never `?` or `TBD`: if no time can be given, use
+  `after <thing>`. The `+N more` row, ✅ rows and dropped rows take no ETA.
 
 | Emoji | Means |
 |---|---|
@@ -251,7 +258,7 @@ Good:
 | Task | Why | Status |
 |---|---|---|
 | Backup script | don't lose data | 👉 you: run it, ~1 min |
-| Auth cleanup | fewer login bugs | 🔄 tests running |
+| Auth cleanup | fewer login bugs | 🔄 tests running, ~8 min |
 | README typo | docs read right | ✅ merged |
 
 ```bash
@@ -280,3 +287,5 @@ Check the reply; if any answer is no, fix it first.
    table alone.
 8. Did the user type this turn? If not, and no row changed since your last table, send no table:
    at most one line naming the change. Unchanged rows keep their order and words.
+9. Does every row that is not ✅, dropped or `+N more` end with an ETA (`~5 min`, `~1 h` or
+   `after <thing>`), based on something real and not stale?
