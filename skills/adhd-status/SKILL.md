@@ -1,6 +1,6 @@
 ---
 name: adhd-status
-description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "status + next step", "lazy adhd rule", /adhd-status, alone or inside a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table (an ETA on every open row) and exactly one next action the user can click or run. Checks results itself instead of asking the user to paste output, keeps one task per thread, and says when to compact or hand back to the parent thread.
+description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "status + next step", "lazy adhd rule", /adhd-status, alone or inside a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table (3 rows: last done, now, next; the hub gets every open row, grouped; ETA on open rows) and exactly one next action the user can click or run. Checks results itself, never asks for pasted output, keeps one task per thread, and says when to compact or hand back to the parent thread.
 license: MIT
 ---
 
@@ -77,38 +77,76 @@ The user should never have to report back to you.
 
 ## Step 3: the table
 
+Two shapes. **Every thread except the hub** gets the 3-row table. **The hub thread** (Step 4)
+gets the full grouped table. Both use the same header and cells.
+
+### Thread table: exactly 3 rows
+
 ```
 | Task | Why | Status |
 |---|---|---|
-| Login page | users can sign in | 👉 you: run test, ~2 min |
-| Nightly backup | don't lose data | 🔄 running, ~10 min |
-| Old API cleanup | forgot it earlier | ⚠️ not started, ~15 min |
+| README typo | docs read right | ✅ merged |
+| Signup tests | catch broken signups | 🔄 CI running, ~8 min |
+| Backup script | don't lose data | 👉 you: run it, ~1 min |
 ```
 
-- At most 4 rows. Needs-the-user and problems first, then running, then done.
-- Same rows, same words: a row that did not change keeps its place and its exact Task, Why and
-  Status text from your last table. Only changed rows move or get new words.
-- Show wins: anything finished since the last STATUS gets a ✅ row (finishing things is
-  motivating). Older done items are noise; leave them out.
-- More than 4 rows to show? Count all of them (wins and parked tasks included).
-  Rows 1–3 go to the most urgent: ❌ and ⚠️ items and 👉 rows always win a visible row and are
-  never folded away. Row 4 names **every** hidden item with its state, in 2–4 words each:
-  `+2 more: cache cleanup open, dark mode parked | see list | ⏸` (in the hub thread:
-  `… | in ROADMAP.md | ⏸`). A bare count ("+2 more") is not enough: the user can't see
-  what was hidden. A promise you made and have not kept is open, never "parked". Never drop
-  items silently to fit.
+Always these 3 rows, in this order, never more, never fewer:
+
+1. **Last finished**: the latest thing this thread finished (proved, Step 1.3). Status `✅`.
+   Nothing finished yet? `Nothing yet | — | ✅ just started`.
+2. **Currently working**: what is in progress right now. Status `🔄`, or `⚠️`/`❌` when it is a
+   problem being fixed, or `⏸ after <thing>` when it is blocked. Nothing running (the thread is
+   done)? The hand-back: `Hand back | parent sees result | ✅ reported`.
+3. **Next step**: the one next action. Status `👉` when it is the user's (it is the action under
+   the table; also when it fixes a problem, never `⚠️` here), or `⏸ after <thing>` when it waits
+   on row 2 or on something else.
+
+- A ❌ or ⚠️ always takes row 2 or row 3; problems are never hidden behind a win.
+- The sweep found more open items than fit (a forgotten promise, a second problem)? Never drop
+  one silently: row 3's Status ends with `then: <item>, <item>` (2–4 words each; they do not
+  count toward the 5 words). A forgotten item that matters more than row 3 becomes row 3.
+- Same rows, same words: a row that did not change keeps its exact Task, Why and Status text from
+  your last table.
+
+### Hub table: everything, grouped
+
+```
+| Task | Why | Status |
+|---|---|---|
+| **Needs you** | | |
+| Dark mode | easier night reading | 👉 in dark-mode thread, ~2 min |
+| **Running** | | |
+| Invoice export | customers get invoices | 🔄 building, ~1 h |
+| **Waiting** | | |
+| Password reset | users recover accounts | ⏸ after invoices |
+| Onboarding emails | new users get started | ⏸ after password reset |
+| **Done** | | |
+| Search index | find things fast | ✅ live |
+```
+
+- **Every** open row of `ROADMAP.md`, expanded: no row cap and no `+N more` fold. The hub
+  reply is the one place the user sees the whole picture.
+- Group label rows, in this order: `**Needs you**` (👉, and ⚠️/❌ that need the user's call),
+  `**Running**` (🔄, and ⚠️/❌ being fixed), `**Waiting**` (⏸), `**Done**` (✅ finished since
+  the last hub STATUS, at most 5). Leave out a group that has no rows. A label row has empty Why
+  and Status cells.
+- Every open row has its ETA. Same rows, same words, as above.
+
+### Both tables
+
 - The table is always there, even when the next action is a decision or pick list.
 - **Task**: 2–4 plain words. No links, ticket or PR numbers, branch names, hashes or file paths.
 - **Why**: up to 6 plain words, the benefit to the user, not the mechanism.
 - **Status**: one emoji and up to 5 words, then the ETA.
 - **ETA on every row that is not ✅**: after a comma at the end of Status, how long until that
   row is done: `~2 min`, `~20 min`, `~1 h`, `~2 d`. If it waits on something else, name it:
-  `after CI`, `after your merge`. It does not count toward the 5 words. On a 👉 row it is the
+  `after CI`, `after your merge`. A 🔄 row is the thing itself running, so it gets a time
+  (`~8 min`, from the last run), never `after` its own run. It does not count toward the 5 words. On a 👉 row it is the
   user's own time (it makes starting feel small); on 🔄, ⏸, ⚠️ and ❌ rows it is the time until
   the row turns ✅ (for ⚠️ and ❌, the fix). Base it on something real (the last run's length, the
   CI average, the step count), round up, and when a later table shows an ETA was too short, give
   the new one; never keep a stale ETA. Never `?` or `TBD`: if no time can be given, use
-  `after <thing>`. The `+N more` row, ✅ rows and dropped rows take no ETA.
+  `after <thing>`. ✅ rows, group label rows and dropped rows take no ETA.
 
 | Emoji | Means |
 |---|---|
@@ -189,9 +227,8 @@ Below, "hub thread" means whichever of the two it is.
   parent. Re-read the file just before writing and change that one line, so two threads never
   overwrite each other. Ordering, new rows for other tasks and cleanup belong to the hub thread.
 - **STATUS in the hub thread**: read `ROADMAP.md`, check the live state of any 🔄 row that can be
-  checked cheaply, fix stale rows, then show the usual table: its 4 most urgent rows (row 4 is
-  `+N more | in ROADMAP.md | ⏸` when there are more). The file is the full page; the reply stays
-  tiny.
+  checked cheaply, fix stale rows, then show the hub table (Step 3): every open row, expanded and
+  grouped (Needs you, Running, Waiting, Done), each with its ETA. No row cap, no fold.
 - **The hub only consolidates.** It keeps the status, lists the tasks and opens sub-task threads.
   It never brings a child thread's merge, adopt, deploy or install step over: no button, no Run
   block, no question for it. That row's Status is just `👉 in <thread> thread` (not the step itself), with a link to that thread
@@ -199,7 +236,8 @@ Below, "hub thread" means whichever of the two it is.
   child thread owns its own merge and adopt asks and buttons. The row is enough: no "open the
   billing thread next" line under the table either. The hub's next action is only hub work (a
   new sub-task thread, a roadmap choice), or nothing.
-- **STATUS in any other thread**: show only that thread's own task; do not summarize the roadmap.
+- **STATUS in any other thread**: the 3-row thread table about this thread's own task only; do
+  not summarize the roadmap.
 
 ## Step 5: context (compacting)
 
@@ -209,7 +247,8 @@ Long conversations get slow, expensive and forgetful. Check this on every STATUS
   `/clear` in Claude Code) over compacting; it is cheaper. This is a tip, never the next action on
   its own: when nothing else needs the user, give no command block (Step 6).
 - **Same task, thread is long** (many steps done, big tool outputs, or the host reports high context
-  use): add the row `Context | save tokens | ⚠️ big → compact` and make compacting the next action.
+  use): row 3 becomes `Compact thread | save tokens | 👉 you: compact, ~1 min` and compacting is
+  the next action (the step it replaces moves to `then:`).
   Do it at a milestone (after a merge, after a bug is fixed), never in the middle of a fix.
 - You usually cannot compact yourself; the user runs it. Give the exact command in a copy block,
   naming the open tasks so they survive, for example:
@@ -257,9 +296,9 @@ Good:
 
 | Task | Why | Status |
 |---|---|---|
-| Backup script | don't lose data | 👉 you: run it, ~1 min |
-| Auth cleanup | fewer login bugs | 🔄 tests running, ~8 min |
 | README typo | docs read right | ✅ merged |
+| Auth cleanup | fewer login bugs | 🔄 tests running, ~8 min |
+| Backup script | don't lose data | 👉 you: run it, ~1 min |
 
 ```bash
 ./scripts/backup.sh
@@ -270,7 +309,9 @@ Good:
 Check the reply; if any answer is no, fix it first.
 
 1. Is the first line `| Task | Why | Status |`, with no prose, recap or "Next action:" above it?
-2. At most 4 data rows, and no links, PR or ticket numbers, hashes, branch names or paths in Task?
+2. Right shape? Hub thread: every open row, grouped under Needs you / Running / Waiting / Done,
+   no fold. Any other thread: exactly 3 rows, ✅ last finished, then currently working, then the
+   👉 or ⏸ next step. No links, PR or ticket numbers, hashes, branch names or paths in Task?
 3. Does every ✅ rest on evidence you checked (Step 1.3), not on a report from a subagent or
    another thread?
 4. Below the table: nothing, or exactly one next action? No paragraph, closing line ("this is
@@ -287,5 +328,5 @@ Check the reply; if any answer is no, fix it first.
    table alone.
 8. Did the user type this turn? If not, and no row changed since your last table, send no table:
    at most one line naming the change. Unchanged rows keep their order and words.
-9. Does every row that is not ✅, dropped or `+N more` end with an ETA (`~5 min`, `~1 h` or
+9. Does every row that is not ✅, dropped or a group label end with an ETA (`~5 min`, `~1 h` or
    `after <thing>`), based on something real and not stale?

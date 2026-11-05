@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: root-roadmap-status
 expected_outcome: |
-  The reply reads ROADMAP.md, marks the search index done, and shows at most 4 rows with a "+N more" row pointing at the roadmap, plus one next action (the dark mode color pick). ROADMAP.md is updated so the search index row is done.
+  The reply reads ROADMAP.md, marks the search index done, and shows every open roadmap row expanded and grouped (Needs you, Running, Waiting, Done) with no "+N more" fold, plus one next action (the dark mode color pick). ROADMAP.md is updated so the search index row is done.
 context:
   scaffold_script: place-files.sh

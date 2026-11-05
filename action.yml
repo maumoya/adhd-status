@@ -1,5 +1,5 @@
 name: ADHD status reply lint
-description: "Check agent status replies: one Task | Why | Status table, max 4 rows, one next action, no paste asks."
+description: "Check agent status replies: one Task | Why | Status table, 3 rows or grouped hub, one next action, no paste asks."
 author: Mauricio Alonso Moya Tapia
 branding:
   icon: check-square

@@ -15,6 +15,10 @@ TASK_NOISE = re.compile(r"\]\(|https?://|#\d+|`|\b[0-9a-f]{7,40}\b|/[\w.-]+/")
 ETA = re.compile(r"~\s*\d+(\.\d+)?\s*(s|secs?|m|mins?|minutes?|h|hrs?|hours?|d|days?|w|wks?|weeks?)\b"
                  r"|\bafter\s+\S", re.I)
 MORE = re.compile(r"^\+\s*\d+\s+more\b", re.I)
+GROUPS = ["Needs you", "Running", "Waiting", "Done"]
+GROUP_EMOJI = {"Needs you": ("👉", "⚠️", "❌"), "Running": ("🔄", "⚠️", "❌"),
+               "Waiting": ("⏸",), "Done": ("✅",)}
+LABEL = re.compile(r"^\*\*(.+?)\*\*$")
 PASTE = re.compile(r"\bpaste\b|let me know when|tell me when|report back|\bcopy the output\b", re.I)
 
 
@@ -38,18 +42,21 @@ def lint(text):
     if any(i > last for i in table):
         problems.append("F2 more than one table")
     rows = lines[first + 2:last + 1]
-    if len(rows) > 4:
-        problems.append(f"F2 {len(rows)} data rows (max 4)")
-    for r in rows:
-        cells = [c.strip() for c in r.strip().strip("|").split("|")]
+    parsed = [[c.strip() for c in r.strip().strip("|").split("|")] for r in rows]
+    labels = [LABEL.match(c[0]) for c in parsed]
+    hub = any(m and not any(c[1:]) for m, c in zip(labels, parsed))
+    problems += shape(parsed, labels, hub)
+    for r, cells, m in zip(rows, parsed, labels):
         if len(cells) != 3:
             problems.append("F2 row does not have 3 cells: " + r[:60])
+            continue
+        if hub and m and not any(cells[1:]):
             continue
         if TASK_NOISE.search(cells[0]):
             problems.append("F7 link, number, hash or path in Task: " + cells[0][:40])
         if not cells[2].startswith(EMOJI):
             problems.append("F2 Status does not start with a status emoji: " + cells[2][:40])
-        elif not (cells[2].startswith("✅") or MORE.match(cells[0])
+        elif not (cells[2].startswith("✅")
                   or re.search(r"\bdropped\b", cells[2], re.I) or ETA.search(cells[2])):
             problems.append("F12 open row has no ETA (~5 min, ~1 h, after X): " + cells[2][:40])
 
@@ -74,6 +81,41 @@ def lint(text):
     if PASTE.search(text):
         problems.append("F5 asks the user to paste output or report back")
     return problems
+
+
+def shape(parsed, labels, hub):
+    """F13: thread table = exactly 3 rows (✅ last, now, 👉/⏸ next); hub = every row, grouped."""
+    out = []
+    if any(c and MORE.match(c[0]) for c in parsed):
+        out.append("F13 '+N more' fold: show every row (hub) or use the 3 fixed rows (thread)")
+    if not hub:
+        if len(parsed) != 3:
+            out.append(f"F13 {len(parsed)} data rows (a thread table has exactly 3: last finished, now, next)")
+        status = [c[2] if len(c) == 3 else "" for c in parsed]
+        if status and not status[0].startswith("✅"):
+            out.append("F13 row 1 is not the last finished ✅ item")
+        if len(status) > 1 and status[1].startswith("👉"):
+            out.append("F13 row 2 is the current work, not the 👉 next step")
+        if len(status) == 3 and not status[2].startswith(("👉", "⏸")):
+            out.append("F13 row 3 (next step) is not 👉 or ⏸")
+        return out
+    group, seen = None, []
+    for cells, m in zip(parsed, labels):
+        if m and not any(cells[1:]):
+            name = m.group(1).strip()
+            if name not in GROUPS:
+                out.append("F13 unknown hub group: " + name)
+                group = None
+                continue
+            if seen and GROUPS.index(name) <= GROUPS.index(seen[-1]):
+                out.append("F13 hub groups out of order (Needs you, Running, Waiting, Done)")
+            seen.append(name)
+            group = name
+        elif group is None:
+            out.append("F13 hub row outside a group: " + cells[0][:40])
+        elif len(cells) == 3 and not cells[2].startswith(GROUP_EMOJI[group]):
+            out.append(f"F13 row in {group} has the wrong status: " + cells[2][:40])
+    return out
 
 
 def main(argv):

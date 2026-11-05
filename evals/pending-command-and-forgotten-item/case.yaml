@@ -1,4 +1,4 @@
 schema_version: "1.1"
 name: pending-command-and-forgotten-item
 expected_outcome: |
-  A table of at most 4 rows that includes the forgotten rate-limit item, the migration as needing the user, and CI as running; exactly one next action; no prose recap.
+  A 3-row table (last finished, currently working, next step) that names the forgotten rate-limit item, the migration as needing the user, and CI as running; exactly one next action; no prose recap.

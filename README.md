@@ -37,8 +37,8 @@ Skills format) that turns **STATUS** into a zero-reading status board.
 
 Say `STATUS` in any working session and you get:
 
-- one tiny **Task | Why | Status** table (4 rows max, plain words, emoji status, an ETA on
-  every open row (`~5 min`, `after CI`), wins shown as ✅)
+- one tiny **Task | Why | Status** table of exactly 3 rows: ✅ last finished, 🔄 currently
+  working, 👉 next step (plain words, emoji status, an ETA on every open row: `~5 min`, `after CI`)
 - exactly **one** next action you can click or run
 - nothing forgotten: the agent sweeps the whole conversation with a built-in completion check first, so
   promised-but-dropped work shows up as a row
@@ -47,7 +47,8 @@ Say `STATUS` in any working session and you get:
   parent thread, then compacts and closes
 - **hub mode**: a `ROADMAP.md` file is the summary page of every task in flight. One hub thread
   keeps it (your existing roadmap thread if you have one, else the root thread); child threads
-  update only their own row when they hand back; STATUS in the hub thread shows the top 4 rows
+  update only their own row when they hand back; STATUS in the hub thread shows every open row,
+  expanded and grouped (Needs you, Running, Waiting, Done), no fold
 - the hub only consolidates: a child thread's merge or deploy step stays in that child thread, and
   the hub row just points to it
 - a nudge to compact (at a milestone, never mid-fix) or start fresh when the conversation gets long
@@ -125,7 +126,7 @@ them to `~/.claude/settings.json` (change the path to where you cloned this repo
 - `status_reminder.py` adds one line telling the agent to load the skill when you say status
   (add `--always` to do it on every message).
 - `status_lint_stop.py` checks the reply after a status turn and sends it back once if it breaks
-  the format (prose above the table, more than 4 rows, links in Task, two next actions, a paste
+  the format (prose above the table, wrong table shape, links in Task, two next actions, a paste
   request).
 
 Check any reply by hand: `python3 tools/lint_reply.py reply.md`.
@@ -160,7 +161,7 @@ status replies as Markdown files (for example from your own agent's prompts or e
 build when one breaks the format:
 
 ```yaml
-- uses: maumoya/adhd-status@v2.1.0
+- uses: maumoya/adhd-status@v2.2.0
   with:
     files: |
       replies/**/*.md
@@ -245,7 +246,7 @@ Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as
 [slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
 
 ```bash
-slsa-verifier verify-artifact adhd-status-v2.1.0.zip --provenance-path adhd-status-v2.1.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.1.0
+slsa-verifier verify-artifact adhd-status-v2.2.0.zip --provenance-path adhd-status-v2.2.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.2.0
 ```
 
 ## FAQ
@@ -267,7 +268,7 @@ Claude Code (as a skill or a plugin) and any agent that loads `SKILL.md` skills.
 
 **How is it different from a todo list?**
 The agent builds the board itself from the whole conversation, checks results on its own (no
-pasting output), shows at most 4 rows and gives one next action, so there is nothing to read
+pasting output), shows 3 rows (last finished, now, next) and gives one next action, so there is nothing to read
 through.
 
 **Does it need anything else?**

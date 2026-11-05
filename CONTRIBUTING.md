@@ -12,7 +12,7 @@ Thanks for helping. adhd-status is one Markdown skill file plus docs, so changes
 ## Requirements for a pull request
 
 - English only, plain words, short sentences.
-- Keep the skill's promise: one table of at most 4 rows and one next action.
+- Keep the skill's promise: one table (3 rows: last finished, now, next; the hub: every open row, grouped) and one next action.
 - The CodeQL check must pass before merge.
 - No tracking, network calls or data collection (see [PRIVACY.md](PRIVACY.md)).
 

@@ -31,7 +31,7 @@ The author's own Claude Code transcripts were searched for turns where they type
 | Id | Failure | Eval | Lint rule |
 |---|---|---|---|
 | F1 | skill not invoked | `status-inside-sentence`, `status-after-compaction`, `done-report-no-preamble` | (hook) |
-| F2 | hand-made table (wrong header, >4 rows, no emoji) | `pending-command-and-forgotten-item` | F2 |
+| F2 | hand-made table (wrong header, no emoji) | `pending-command-and-forgotten-item` | F2 |
 | F3 | prose before or after the table | `done-report-no-preamble` | F3 |
 | F4 | more than one next action | `one-next-action` | F4 |
 | F5 | asks the user to paste output | `reads-terminal-not-paste` | F5 |
@@ -42,8 +42,22 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F10 | same table sent again on a turn the user did not type (background task finished) with nothing changed | `no-repeat-table` | (eval only) |
 | F11 | finished thread ends with no archive prompt (a done report, or another thread's work still running) | `done-report-archive`, `done-child-running` | (eval only) |
 | F12 | open row with no ETA, so the user can't tell when it finishes | `pending-command-and-forgotten-item` | F12 |
+| F13 | wrong table shape: a thread table that is not exactly 3 rows (✅ last finished, now, 👉/⏸ next), or a hub table that folds rows (`+N more`) or is not grouped | `pending-command-and-forgotten-item`, `root-roadmap-status`, `long-thread-compact` | F13 |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
+
+## What changed in 2.2.0
+
+- Two table shapes (owner ask, 2026-11-05). The 4-row cap with a `+N more` fold hid work in the
+  hub, and in other threads the user still had to read up to 4 mixed rows to find "what just
+  happened, what is happening, what's next".
+- Every thread except the hub: exactly 3 rows, always in the same order: ✅ last finished,
+  currently working (🔄, or ⚠️/❌/⏸), next step (👉, or ⏸ `after X`). Extra open items go in
+  row 3's `then:` list, never dropped.
+- Hub (roadmap) thread: every open row, expanded, grouped under bold label rows in the order
+  Needs you, Running, Waiting, Done, each open row with its ETA. No row cap, no fold.
+- The reply linter (and the GitHub Action) adds rule F13 and drops the old "max 4 rows" check;
+  it tells the shapes apart by the group label rows. Covered by F13.
 
 ## What changed in 2.1.0
 
