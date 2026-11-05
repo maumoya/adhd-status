@@ -99,7 +99,9 @@ Always these 3 rows, in this order, never more, never fewer:
    done)? The hand-back: `Hand back | parent sees result | ✅ reported`.
 3. **Next step**: the one next action. Status `👉` when it is the user's (it is the action under
    the table; also when it fixes a problem, never `⚠️` here), or `⏸ after <thing>` when it waits
-   on row 2 or on something else.
+   on row 2 or on something else. Thread done? Row 3 is the way out:
+   `Archive → back to <parent> | fresh start | 👉 you: archive, ~1 min` (no parent: back to the
+   roadmap thread).
 
 - A ❌ or ⚠️ always takes row 2 or row 3; problems are never hidden behind a win.
 - The sweep found more open items than fit (a forgotten promise, a second problem)? Never drop
@@ -173,8 +175,9 @@ every reply and makes things easy to lose.
      later, compact it first (or tell the user the `/compact` line); do not compact a thread you
      are archiving, that is wasted work.
   3. End with one tiny reply: the table (its ✅ row says it is done; "closed" fits in that Status
-     cell) and exactly one action: a **Back to parent** button that takes the user to the parent
-     thread, or, without buttons, the single line `Open <parent thread> next.` Nothing else: no
+     cell) and exactly one action: an **Archive → back to <parent>** button that archives this thread
+     and takes the user to the parent thread, or, without buttons, the single line
+     `Archive this thread, then open <parent thread> next.` Both halves, always. Nothing else: no
      "this thread is closed" sentence, no note on how you checked or what you could not do
      (evidence goes in the Status cell, e.g. "per CI log"), no "you can close it".
 

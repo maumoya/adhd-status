@@ -8,7 +8,7 @@ Author and owner: Mauricio Alonso Moya Tapia. License: MIT (OSI-approved).
 
 - Sweeps the whole conversation (built-in completion check, nothing else to install) so no task, pending command or promise is dropped.
 - Checks results itself: reads the terminal or verifies the effect; never asks the user to paste output.
-- One task per thread; finished threads report to their parent, archive, and offer a "Back to parent" button.
+- One task per thread; finished threads report to their parent, archive, and offer an "Archive → back to parent" button.
 - Hub mode: a ROADMAP.md file summarizes every task in flight; the hub only consolidates and leaves each child thread's merge or deploy step in that thread.
 - Hard to miss (1.7.0): loads on every way the user says status and on done or hand-back reports; optional hooks make it certain. Plugin eval 2026-11-03: 0.96 with the skill vs 0.50 without.
 - Suggests compacting the context at milestones.
