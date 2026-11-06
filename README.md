@@ -45,10 +45,18 @@ Say `STATUS` in any working session and you get:
 - no "paste the output" or "tell me when done": the agent checks results itself
 - **one task per thread**: new work goes to a new thread; a finished thread reports back to its
   parent thread, then compacts and closes
+- **three modes, picked by where STATUS runs** (an explicit `level: master|main|leaf` marker in
+  the thread's own roadmap file wins; else a thread with child threads is MAIN; else LEAF):
+  - **LEAF** (a simple or nested thread): exactly 3 rows, last finished, now, next
+  - **MAIN** (a thread with nested tasks, like a roadmap hub): every open row, expanded and
+    grouped (Needs you, Running, Waiting, Done), no fold
+  - **MASTER** (a `MASTER_ROADMAP.md` that lists several main threads' roadmap files): one row per
+    main thread with its health and open / blocked / need-you counts, then at most 5 critical
+    actions across all of them, each pointing to its owning thread. It reads the main files
+    read-only
 - **hub mode**: a `ROADMAP.md` file is the summary page of every task in flight. One hub thread
   keeps it (your existing roadmap thread if you have one, else the root thread); child threads
-  update only their own row when they hand back; STATUS in the hub thread shows every open row,
-  expanded and grouped (Needs you, Running, Waiting, Done), no fold
+  update only their own row when they hand back
 - the hub only consolidates: a child thread's merge or deploy step stays in that child thread, and
   the hub row just points to it
 - a nudge to compact (at a milestone, never mid-fix) or start fresh when the conversation gets long
@@ -161,7 +169,7 @@ status replies as Markdown files (for example from your own agent's prompts or e
 build when one breaks the format:
 
 ```yaml
-- uses: maumoya/adhd-status@v2.2.0
+- uses: maumoya/adhd-status@v2.3.0
   with:
     files: |
       replies/**/*.md
@@ -246,7 +254,7 @@ Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as
 [slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
 
 ```bash
-slsa-verifier verify-artifact adhd-status-v2.2.0.zip --provenance-path adhd-status-v2.2.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.2.0
+slsa-verifier verify-artifact adhd-status-v2.3.0.zip --provenance-path adhd-status-v2.3.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.3.0
 ```
 
 ## FAQ

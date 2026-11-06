@@ -18,6 +18,10 @@ MORE = re.compile(r"^\+\s*\d+\s+more\b", re.I)
 GROUPS = ["Needs you", "Running", "Waiting", "Done"]
 GROUP_EMOJI = {"Needs you": ("👉", "⚠️", "❌"), "Running": ("🔄", "⚠️", "❌"),
                "Waiting": ("⏸",), "Done": ("✅",)}
+MASTER_GROUPS = ["Main threads", "Critical"]
+CRITICAL_EMOJI = ("👉", "❌", "⚠️", "⏸")
+COUNTS = re.compile(r"\b\d+\s+open\b|file missing|no roadmap file", re.I)
+OWNER = re.compile(r"\bin\s+\S.*\bthread\b", re.I)
 LABEL = re.compile(r"^\*\*(.+?)\*\*$")
 PASTE = re.compile(r"\bpaste\b|let me know when|tell me when|report back|\bcopy the output\b", re.I)
 
@@ -45,8 +49,13 @@ def lint(text):
     parsed = [[c.strip() for c in r.strip().strip("|").split("|")] for r in rows]
     labels = [LABEL.match(c[0]) for c in parsed]
     hub = any(m and not any(c[1:]) for m, c in zip(labels, parsed))
-    problems += shape(parsed, labels, hub)
+    master = hub and next(m.group(1).strip() for m, c in zip(labels, parsed)
+                          if m and not any(c[1:])) in MASTER_GROUPS
+    problems += master_shape(parsed, labels) if master else shape(parsed, labels, hub)
+    group = None
     for r, cells, m in zip(rows, parsed, labels):
+        if hub and m and not any(cells[1:]) and len(cells) == 3:
+            group = m.group(1).strip()
         if len(cells) != 3:
             problems.append("F2 row does not have 3 cells: " + r[:60])
             continue
@@ -56,6 +65,9 @@ def lint(text):
             problems.append("F7 link, number, hash or path in Task: " + cells[0][:40])
         if not cells[2].startswith(EMOJI):
             problems.append("F2 Status does not start with a status emoji: " + cells[2][:40])
+        elif master and group == "Main threads":
+            if not COUNTS.search(cells[2]):
+                problems.append("F13 main-thread row has no counts (<n> open, ...): " + cells[2][:40])
         elif not (cells[2].startswith("✅")
                   or re.search(r"\bdropped\b", cells[2], re.I) or ETA.search(cells[2])):
             problems.append("F12 open row has no ETA (~5 min, ~1 h, after X): " + cells[2][:40])
@@ -84,7 +96,7 @@ def lint(text):
 
 
 def shape(parsed, labels, hub):
-    """F13: thread table = exactly 3 rows (✅ last, now, 👉/⏸ next); hub = every row, grouped."""
+    """F13: thread (leaf) = exactly 3 rows (✅ last, now, 👉/⏸ next); hub (main) = every row, grouped."""
     out = []
     if any(c and MORE.match(c[0]) for c in parsed):
         out.append("F13 '+N more' fold: show every row (hub) or use the 3 fixed rows (thread)")
@@ -115,6 +127,33 @@ def shape(parsed, labels, hub):
             out.append("F13 hub row outside a group: " + cells[0][:40])
         elif len(cells) == 3 and not cells[2].startswith(GROUP_EMOJI[group]):
             out.append(f"F13 row in {group} has the wrong status: " + cells[2][:40])
+    return out
+
+
+def master_shape(parsed, labels):
+    """F13 master: Main threads rows (health + counts), then at most 5 Critical rows with owners."""
+    out, group, seen, critical = [], None, [], 0
+    for cells, m in zip(parsed, labels):
+        if m and not any(cells[1:]):
+            name = m.group(1).strip()
+            if name not in MASTER_GROUPS:
+                out.append("F13 unknown master group: " + name)
+                group = None
+                continue
+            if seen and MASTER_GROUPS.index(name) <= MASTER_GROUPS.index(seen[-1]):
+                out.append("F13 master groups out of order (Main threads, Critical)")
+            seen.append(name)
+            group = name
+        elif group is None:
+            out.append("F13 master row outside a group: " + cells[0][:40])
+        elif group == "Critical" and len(cells) == 3:
+            critical += 1
+            if not cells[2].startswith(CRITICAL_EMOJI):
+                out.append("F13 critical row is not 👉, ❌, ⚠️ or ⏸: " + cells[2][:40])
+            if not OWNER.search(cells[2]):
+                out.append("F13 critical row does not name its owning thread: " + cells[2][:40])
+    if critical > 5:
+        out.append(f"F13 {critical} critical rows (a master shows at most 5)")
     return out
 
 

@@ -1,6 +1,6 @@
 ---
 name: adhd-status
-description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "status + next step", "lazy adhd rule", /adhd-status, alone or inside a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation with a built-in completion check so nothing is forgotten, then replies with one tiny Task | Why | Status table (3 rows: last done, now, next; the hub gets every open row, grouped; ETA on open rows) and exactly one next action the user can click or run. Checks results itself, never asks for pasted output, keeps one task per thread, and says when to compact or hand back to the parent thread.
+description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "lazy adhd rule", /adhd-status, alone or in a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation so nothing is forgotten, then replies with one tiny Task | Why | Status table (leaf thread: 3 rows, last done, now, next; main thread: every open child row, grouped; master: one row per main thread plus top critical actions; ETAs) and exactly one next action the user can click or run. Checks results itself, never asks for pasted output, keeps one task per thread, and says when to compact or hand back.
 license: MIT
 ---
 
@@ -75,12 +75,34 @@ The user should never have to report back to you.
   thread's last report). Read only the lines you need. Do not re-read what is already in context;
   that wastes tokens.
 
-## Step 3: the table
+## Step 3: pick the mode, then the table
 
-Two shapes. **Every thread except the hub** gets the 3-row table. **The hub thread** (Step 4)
-gets the full grouped table. Both use the same header and cells.
+Three modes, by where STATUS runs. All three use the same header and cells.
 
-### Thread table: exactly 3 rows
+| Mode | Where | Table |
+|---|---|---|
+| **LEAF** | a simple thread, or one nested under a main thread | exactly 3 rows: last finished, now, next |
+| **MAIN** | a thread with nested tasks (child threads or roadmap rows) | every open item, grouped |
+| **MASTER** | a master roadmap that reads several main threads | one row per main thread, then ≤5 critical actions |
+
+**Pick the mode in this order; the first match wins.** It needs no session tools: a file, the
+conversation or a host tool each count.
+
+1. **Explicit marker.** The thread keeps a roadmap file (the user named it as this thread's
+   file, or this thread created it) whose first 10 lines hold `level: master`, `level: main` or
+   `level: leaf` (plain or in an HTML comment, `<!-- level: main -->`). Or the thread keeps a
+   `MASTER_ROADMAP.md`, which is always `level: master`. That level wins. A marker in a file
+   this thread does **not** keep (a child thread that only reads the parent's `ROADMAP.md`)
+   says nothing about this thread.
+2. **Has children → MAIN.** The thread opened or tracks child threads: it started other
+   threads or sessions (in this conversation, or a host tool lists sessions it started), or it
+   keeps a `ROADMAP.md` (or the project's roadmap file) whose rows other threads own.
+3. **Otherwise → LEAF.** That includes a thread nested under a main thread.
+
+"Hub" below means a MAIN thread; the roadmap thread of Step 4 is one. LEAF uses the thread
+table, MAIN the hub table, MASTER the master table.
+
+### Thread table (LEAF): exactly 3 rows
 
 ```
 | Task | Why | Status |
@@ -110,7 +132,7 @@ Always these 3 rows, in this order, never more, never fewer:
 - Same rows, same words: a row that did not change keeps its exact Task, Why and Status text from
   your last table.
 
-### Hub table: everything, grouped
+### Hub table (MAIN): everything, grouped
 
 ```
 | Task | Why | Status |
@@ -126,15 +148,45 @@ Always these 3 rows, in this order, never more, never fewer:
 | Search index | find things fast | ✅ live |
 ```
 
-- **Every** open row of `ROADMAP.md`, expanded: no row cap and no `+N more` fold. The hub
-  reply is the one place the user sees the whole picture.
+- **Every** open item nested under this thread, expanded: each open row of its roadmap file
+  (if it keeps one) and each child thread it tracks. No row cap and no `+N more` fold. The hub
+  reply is the one place the user sees that thread's whole picture.
 - Group label rows, in this order: `**Needs you**` (👉, and ⚠️/❌ that need the user's call),
   `**Running**` (🔄, and ⚠️/❌ being fixed), `**Waiting**` (⏸), `**Done**` (✅ finished since
   the last hub STATUS, at most 5). Leave out a group that has no rows. A label row has empty Why
   and Status cells.
 - Every open row has its ETA. Same rows, same words, as above.
 
-### Both tables
+### Master table (MASTER): summary, then only the critical
+
+```
+| Task | Why | Status |
+|---|---|---|
+| **Main threads** | | |
+| Core platform | the base everything runs on | 👉 9 open, 1 blocked, 2 need you |
+| Production | ship the products | 🔄 4 open, 0 blocked, 0 need you |
+| Job search | land the next job | ✅ 0 open |
+| **Critical** | | |
+| Login release | sign in from the phone | 👉 in core platform thread, ~2 min |
+| Nightly backup | don't lose data | ❌ in core platform thread, ~20 min |
+| Store listing | app can go public | ⏸ in production thread, after review |
+```
+
+- **Main threads** group: one row per main thread the master reads, in the master file's
+  order. Task = the main thread's name; Why = its goal. Status = its health emoji, then its
+  counts: `<n> open, <n> blocked, <n> need you` (open = rows that are not ✅; blocked = ⏸ rows
+  waiting on a problem, plus ⚠️ and ❌ rows; need you = 👉 rows). Health is its worst row:
+  ❌ a failure, ⚠️ blocked or stale, 👉 needs you, 🔄 work running, ⏸ only waiting, ✅ nothing
+  open (`✅ 0 open`). The counts replace the ETA on these rows. A main file the master cannot
+  read gets `⚠️ file missing`, never a guess.
+- **Critical** group: only the most urgent actions across all main threads, at most 5, in this
+  order: 👉 needs you, ❌ failed, ⚠️ blocked. Add ⏸ rows only if fewer than 5 remain, and only
+  when they block other work. Each Status names its owning thread (`👉 in <thread> thread`, a
+  link if the host has thread links) and ends with an ETA. No critical item? Leave the group out.
+- Everything else stays in its main thread: the master never lists a main thread's whole table.
+  Like the hub, it only consolidates: a step that belongs to a main or child thread stays there.
+
+### All tables
 
 - The table is always there, even when the next action is a decision or pick list.
 - **Task**: 2–4 plain words. No links, ticket or PR numbers, branch names, hashes or file paths.
@@ -148,7 +200,8 @@ Always these 3 rows, in this order, never more, never fewer:
   the row turns ✅ (for ⚠️ and ❌, the fix). Base it on something real (the last run's length, the
   CI average, the step count), round up, and when a later table shows an ETA was too short, give
   the new one; never keep a stale ETA. Never `?` or `TBD`: if no time can be given, use
-  `after <thing>`. ✅ rows, group label rows and dropped rows take no ETA.
+  `after <thing>`. ✅ rows, group label rows, dropped rows and the master's main-thread rows
+  (they carry counts) take no ETA.
 
 | Emoji | Means |
 |---|---|
@@ -205,7 +258,7 @@ every reply and makes things easy to lose.
   The parent picks up its next task, which may start a new child thread. This loop repeats until
   the work is done.
 
-### The roadmap file (hub mode)
+### The roadmap file (MAIN mode)
 
 Threads come and go; a file stays. The project's `ROADMAP.md` is the one summary of every task in
 flight, and one **hub thread** keeps it. If the user already has a roadmap thread, that thread is
@@ -239,8 +292,36 @@ Below, "hub thread" means whichever of the two it is.
   child thread owns its own merge and adopt asks and buttons. The row is enough: no "open the
   billing thread next" line under the table either. The hub's next action is only hub work (a
   new sub-task thread, a roadmap choice), or nothing.
-- **STATUS in any other thread**: the 3-row thread table about this thread's own task only; do
+- **STATUS in any other MAIN thread** (it spawned children but keeps no roadmap file): the
+  same hub table, built from the child threads it tracks (their last reports, checked live
+  where cheap).
+- **STATUS in a LEAF thread**: the 3-row thread table about this thread's own task only; do
   not summarize the roadmap.
+
+### The master file (MASTER mode)
+
+A master roadmap reads several main threads; it never runs their work.
+
+- **Where**: `MASTER_ROADMAP.md` (or any roadmap file marked `level: master`) kept by the master
+  thread. One table lists each main thread and the roadmap file it keeps:
+
+  ```
+  <!-- level: master -->
+  | Main thread | Roadmap file |
+  |---|---|
+  | Core platform | ~/code/platform/ROADMAP.md |
+  | Production | ~/code/platform/docs/PRODUCTION.md |
+  ```
+
+  A path is absolute or relative to the master file. A main thread with no file yet gets
+  `(none)` and its summary row says `⚠️ no roadmap file`.
+- **Read-only**: on STATUS, read each listed file fresh and count its rows by Status emoji. The
+  master never writes a main file, and a main thread never writes the master file's list; each
+  thread edits only its own file, and a child only its own row (as above). The master may
+  re-check a 🔄 or ❌ row live when that is one cheap call, and shows the result without
+  editing the main file.
+- **Handing back**: a main thread whose work is all done reports to the master like a child
+  reports to its hub: a message if the host has one, else its file already shows it.
 
 ## Step 5: context (compacting)
 
@@ -312,9 +393,11 @@ Good:
 Check the reply; if any answer is no, fix it first.
 
 1. Is the first line `| Task | Why | Status |`, with no prose, recap or "Next action:" above it?
-2. Right shape? Hub thread: every open row, grouped under Needs you / Running / Waiting / Done,
-   no fold. Any other thread: exactly 3 rows, ✅ last finished, then currently working, then the
-   👉 or ⏸ next step. No links, PR or ticket numbers, hashes, branch names or paths in Task?
+2. Right mode (Step 3 order: marker, then children, then LEAF) and right shape? MASTER: Main
+   threads rows with counts, then at most 5 Critical rows, each naming its owning thread. MAIN:
+   every open row, grouped under Needs you / Running / Waiting / Done, no fold. LEAF: exactly 3
+   rows, ✅ last finished, then currently working, then the 👉 or ⏸ next step. No links, PR or
+   ticket numbers, hashes, branch names or paths in Task?
 3. Does every ✅ rest on evidence you checked (Step 1.3), not on a report from a subagent or
    another thread?
 4. Below the table: nothing, or exactly one next action? No paragraph, closing line ("this is

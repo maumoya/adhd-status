@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: master-roadmap-status
+expected_outcome: |
+  The thread keeps MASTER_ROADMAP.md, so STATUS runs in MASTER mode. The reply reads both listed main roadmap files without editing them, shows a Main threads group with one row per main thread (core platform, production, job search) carrying its health and counts (open, blocked, need you; job search shows no roadmap file), then a Critical group of at most 5 rows (the login merge and the failed backup first), each naming its owning thread. It does not list every row of each main roadmap.
+context:
+  scaffold_script: place-files.sh

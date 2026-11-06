@@ -1,0 +1,4 @@
+2026-11-05 10:02 started thread "pricing-page" (task: pricing page) -> report: PR merged, live
+2026-11-05 10:05 started thread "email-digest" (task: weekly email digest) -> report: CI running, last run 10 min
+2026-11-05 10:07 started thread "csv-import" (task: CSV import) -> report: waiting on owner: pick the date format
+2026-11-05 10:09 queued "csv-export" (task: CSV export) -> not started, after CSV import

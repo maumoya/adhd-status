@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: main-by-children
+expected_outcome: |
+  No roadmap file and no level marker, but this thread started child threads (threads.log), so STATUS runs in MAIN mode: every child item expanded and grouped under Needs you, Running, Waiting, Done, each open row with an ETA, and not the 3-row thread table. The date-format pick shows as a row pointing to the CSV import thread, not as a question asked here.
+context:
+  scaffold_script: place-files.sh

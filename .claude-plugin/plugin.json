@@ -1,6 +1,6 @@
 {
   "name": "adhd-status",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Open source (MIT) ADHD-friendly status board: say STATUS and get one tiny Task | Why | Status table plus one clickable next step. Sweeps the whole conversation so nothing is forgotten, keeps one task per thread, and knows when to compact.",
   "author": {
     "name": "Mauricio Alonso Moya Tapia",

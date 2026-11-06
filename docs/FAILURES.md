@@ -42,9 +42,27 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F10 | same table sent again on a turn the user did not type (background task finished) with nothing changed | `no-repeat-table` | (eval only) |
 | F11 | finished thread ends with no archive prompt (a done report, or another thread's work still running) | `done-report-archive`, `done-child-running` | (eval only) |
 | F12 | open row with no ETA, so the user can't tell when it finishes | `pending-command-and-forgotten-item` | F12 |
-| F13 | wrong table shape: a thread table that is not exactly 3 rows (✅ last finished, now, 👉/⏸ next), or a hub table that folds rows (`+N more`) or is not grouped | `pending-command-and-forgotten-item`, `root-roadmap-status`, `long-thread-compact` | F13 |
+| F13 | wrong table shape: a thread table that is not exactly 3 rows (✅ last finished, now, 👉/⏸ next), a hub (main) table that folds rows (`+N more`) or is not grouped, or a master table without counts, with more than 5 critical rows or a critical row with no owning thread | `pending-command-and-forgotten-item`, `root-roadmap-status`, `long-thread-compact`, `leaf-under-main`, `main-by-children`, `master-roadmap-status` | F13 |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
+
+## What changed in 2.3.0
+
+- Three modes, picked by where STATUS runs (owner ask, 2026-11-05). 2.2.0 had two shapes and
+  only the one roadmap thread was the hub, so other parents with child threads got a 3-row table
+  that hid their children, and nothing summarized several hubs at once.
+- Mode order, first match wins: an explicit `level: master|main|leaf` marker in the first 10
+  lines of the roadmap file this thread keeps (or a `MASTER_ROADMAP.md`); else a thread that
+  started or tracks child threads is MAIN; else LEAF. A marker in a file the thread only reads
+  (a child reading its parent's `ROADMAP.md`) does not count. Works without session tools.
+- LEAF: the 3-row table (unchanged). MAIN: the grouped hub table, now for any parent with
+  children, also one with no roadmap file. MASTER: a `Main threads` group (one row per main
+  thread: health emoji plus `<n> open, <n> blocked, <n> need you`), then a `Critical` group of at
+  most 5 rows (needs you, failed, blocked first), each naming its owning thread.
+- `MASTER_ROADMAP.md` lists each main thread and the roadmap file it keeps; the master reads them
+  read-only and never edits them.
+- The reply linter (and the GitHub Action) learns the master shape under F13. New evals:
+  `leaf-under-main`, `main-by-children`, `master-roadmap-status`.
 
 ## What changed in 2.2.0
 

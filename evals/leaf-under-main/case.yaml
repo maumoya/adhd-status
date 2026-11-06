@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: leaf-under-main
+expected_outcome: |
+  This is a child thread (signup tests). The ROADMAP.md marker level: main belongs to the parent's file, not this thread, so STATUS runs in LEAF mode: exactly 3 rows (✅ unit tests passed, 🔄 e2e running with an ETA, then the next step), about this thread's task only, not the roadmap's other rows.
+context:
+  scaffold_script: place-files.sh

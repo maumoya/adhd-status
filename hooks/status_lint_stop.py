@@ -80,7 +80,7 @@ def decide(event):
     return {
         "decision": "block",
         "reason": "adhd-status format: " + "; ".join(problems)
-        + ". Rewrite the reply: table first, 3 rows (hub: every row, grouped), then at most one next action.",
+        + ". Rewrite the reply: table first, 3 rows (main: every row, grouped; master: summary + at most 5 critical), then at most one next action.",
     }
 
 

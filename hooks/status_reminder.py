@@ -13,7 +13,7 @@ import sys
 TRIGGER = re.compile(r"\bstatus\b|adhd|where are we|what'?s left|what do i do now", re.I)
 REMINDER = (
     "adhd-status: invoke the adhd-status skill (Skill tool) before replying. "
-    "The reply starts with the line | Task | Why | Status |, exactly 3 rows (last finished, now, next; the hub thread: every open row, grouped), then at most one next action."
+    "The reply starts with the line | Task | Why | Status |, exactly 3 rows (last finished, now, next; a main thread with children: every open row, grouped; a master roadmap: main-thread summary rows, then at most 5 critical rows), then at most one next action."
 )
 
 

@@ -1,6 +1,6 @@
 # adhd-status
 
-> Free, open source (MIT) ADHD-friendly status board skill for Claude Code and AI coding agents. Say STATUS and the agent replies with one tiny Task | Why | Status table (3 rows: last finished, now, next; the hub gets every row, grouped) and exactly one next step to click or run. Nothing forgotten.
+> Free, open source (MIT) ADHD-friendly status board skill for Claude Code and AI coding agents. Say STATUS and the agent replies with one tiny Task | Why | Status table (3 modes: a leaf thread gets 3 rows, last finished, now, next; a main thread gets every row, grouped; a master roadmap gets one row per main thread plus the top critical actions) and exactly one next step to click or run. Nothing forgotten.
 
 Author and owner: Mauricio Alonso Moya Tapia. License: MIT (OSI-approved).
 
@@ -9,10 +9,11 @@ Author and owner: Mauricio Alonso Moya Tapia. License: MIT (OSI-approved).
 - Sweeps the whole conversation (built-in completion check, nothing else to install) so no task, pending command or promise is dropped.
 - Checks results itself: reads the terminal or verifies the effect; never asks the user to paste output.
 - One task per thread; finished threads report to their parent, archive, and offer an "Archive → back to parent" button.
+- Master mode: a MASTER_ROADMAP.md lists the main threads' roadmap files; STATUS there shows each main thread's health and counts, then at most 5 critical actions, read-only.
 - Hub mode: a ROADMAP.md file summarizes every task in flight; the hub only consolidates and leaves each child thread's merge or deploy step in that thread.
 - Hard to miss (1.7.0): loads on every way the user says status and on done or hand-back reports; optional hooks make it certain. Plugin eval 2026-11-03: 0.96 with the skill vs 0.50 without.
 - Suggests compacting the context at milestones.
-- GitHub Action (2.2.0): `uses: maumoya/adhd-status@v2.2.0` checks saved status replies in CI and fails on format breaks; listed on the GitHub Marketplace as "ADHD status reply lint".
+- GitHub Action (2.3.0): `uses: maumoya/adhd-status@v2.3.0` checks saved status replies in CI and fails on format breaks; listed on the GitHub Marketplace as "ADHD status reply lint".
 
 ## Docs
 
