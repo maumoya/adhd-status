@@ -43,8 +43,18 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F11 | finished thread ends with no archive prompt (a done report, or another thread's work still running) | `done-report-archive`, `done-child-running` | (eval only) |
 | F12 | open row with no ETA, so the user can't tell when it finishes | `pending-command-and-forgotten-item` | F12 |
 | F13 | wrong table shape: a thread table that is not exactly 3 rows (✅ last finished, now, 👉/⏸ next), a hub (main) table that folds rows (`+N more`) or is not grouped, or a master table without counts, with more than 5 critical rows or a critical row with no owning thread | `pending-command-and-forgotten-item`, `root-roadmap-status`, `long-thread-compact`, `leaf-under-main`, `main-by-children`, `master-roadmap-status` | F13 |
+| F14 | 👉 row asks the user to run something (run, merge, tag) but no command block is under the table, or it points at a command "above" | `pending-command-and-forgotten-item` | F14 |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
+
+## What changed in 2.3.1
+
+- The Run block is never skipped (owner ask, 2026-11-10: replies said "run the merge above" with
+  no block, many times). In the desktop app, text written before tool calls is hidden and the
+  next-step box shows no code, so a command only counts when its block sits under the table in
+  the final reply, after `wrap_up`. New Step 6 rule and "Before you send" check 10.
+- The reply linter (and the GitHub Action) learns F14: a 👉 run/merge/tag/push/install/compact
+  row with no command block, or a pointer to a command "above".
 
 ## What changed in 2.3.0
 

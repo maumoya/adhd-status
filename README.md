@@ -169,7 +169,7 @@ status replies as Markdown files (for example from your own agent's prompts or e
 build when one breaks the format:
 
 ```yaml
-- uses: maumoya/adhd-status@v2.3.0
+- uses: maumoya/adhd-status@v2.3.1
   with:
     files: |
       replies/**/*.md
@@ -254,7 +254,7 @@ Each [release](https://github.com/maumoya/adhd-status/releases) has the skill as
 [slsa-verifier](https://github.com/slsa-framework/slsa-verifier):
 
 ```bash
-slsa-verifier verify-artifact adhd-status-v2.3.0.zip --provenance-path adhd-status-v2.3.0.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.3.0
+slsa-verifier verify-artifact adhd-status-v2.3.1.zip --provenance-path adhd-status-v2.3.1.intoto.jsonl --source-uri github.com/maumoya/adhd-status --source-tag v2.3.1
 ```
 
 ## FAQ

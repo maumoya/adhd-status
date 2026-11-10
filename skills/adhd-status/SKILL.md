@@ -355,9 +355,15 @@ sentence:
 - **Host with a next-step box** (Claude Code desktop app: `wrap_up`): call it before the reply,
   with the summary sentence as `recap`, the decision as `ask` and at most 2 `actions`, recommended
   first. The reply under it is still only the table (plus a command block if one is next).
+  The box shows only the recap and buttons, and text you wrote before tool calls is hidden from
+  the user: the command block goes in the reply **after** `wrap_up`, under the table.
 - **A command**: one fenced code block, one command, no `$` prompt, no output inside, so it can be
   run or copied in one click. Next turn, check its result yourself (Step 2) without being asked.
   Do not add a second question ("already ran it?") under the command; one action means one.
+  **The block is never skipped.** Any 👉 row the user runs (run, merge, tag, push, install,
+  compact) has its block directly under the table in this same reply, every time, also when you
+  gave it before. Never "run the command above", "the merge from earlier" or a button that says
+  "Run it" with no block: the user cannot see earlier text, so a missing block means they cannot act.
 - **A click somewhere**: one line saying exactly where to click, plus a "Done" button.
 
 **Thread's task done? Then the archive prompt from Step 4 is the action, always** (archive,
@@ -416,3 +422,6 @@ Check the reply; if any answer is no, fix it first.
    at most one line naming the change. Unchanged rows keep their order and words.
 9. Does every row that is not ✅, dropped or a group label end with an ETA (`~5 min`, `~1 h` or
    `after <thing>`), based on something real and not stale?
+10. Is the 👉 row something the user runs (run, merge, tag, push, install, compact)? Then its one
+    command block sits directly under the table in this reply (after `wrap_up` when the host has
+    it), written out in full, never "above" or "from earlier".

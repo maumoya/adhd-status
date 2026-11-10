@@ -23,6 +23,8 @@ CRITICAL_EMOJI = ("👉", "❌", "⚠️", "⏸")
 COUNTS = re.compile(r"\b\d+\s+open\b|file missing|no roadmap file", re.I)
 OWNER = re.compile(r"\bin\s+\S.*\bthread\b", re.I)
 LABEL = re.compile(r"^\*\*(.+?)\*\*$")
+RUN_ROW = re.compile(r"^👉.*\b(run|merge|tag|push|install|compact|command)\b", re.I)
+ABOVE = re.compile(r"\b(above|earlier|again from before|same command)\b", re.I)
 PASTE = re.compile(r"\bpaste\b|let me know when|tell me when|report back|\bcopy the output\b", re.I)
 
 
@@ -89,6 +91,13 @@ def lint(text):
         problems.append(f"F3 {len(prose)} lines of prose under the table (max 1 action line)")
     if prose and re.match(r"^\s*(\d+[.)]|[-*])\s", prose[0]) and len(prose) > 1:
         problems.append("F4 a list of steps instead of one next action")
+
+    run_rows = [c for c in parsed if len(c) == 3 and RUN_ROW.search(c[2])]
+    if run_rows and not blocks:
+        problems.append("F14 👉 row asks the user to run something but no command block is under the table: "
+                        + run_rows[0][2][:40])
+    if run_rows and any(ABOVE.search(c[2]) for c in run_rows) or any(ABOVE.search(l) for l in prose):
+        problems.append("F14 points at a command 'above' instead of repeating it under the table")
 
     if PASTE.search(text):
         problems.append("F5 asks the user to paste output or report back")
