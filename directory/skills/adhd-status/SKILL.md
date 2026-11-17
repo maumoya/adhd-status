@@ -221,23 +221,30 @@ every reply and makes things easy to lose.
   for it, with a one-line brief that names the task and says where it came from (this thread).
 - **Stay in your lane.** A thread works only on its own task. It does not take over, redo or edit
   what another thread is doing; at most it shows that thread's state as one ⏸ or 🔄 row.
-- **Task finished?** The thread hands back, and does as much of it itself as the host allows:
-  1. Report the result to the parent thread (a message tool if the host has one, else the hub's
-     `ROADMAP.md` row), so the parent updates its own status table.
-  2. Close this thread: archive it if the host has a tool for that. If the thread stays open for
-     later, compact it first (or tell the user the `/compact` line); do not compact a thread you
-     are archiving, that is wasted work.
-  3. End with one tiny reply: the table (its ✅ row says it is done; "closed" fits in that Status
-     cell) and exactly one action: an **Archive → back to <parent>** button that archives this thread
-     and takes the user to the parent thread, or, without buttons, the single line
-     `Archive this thread, then open <parent thread> next.` Both halves, always. Nothing else: no
-     "this thread is closed" sentence, no note on how you checked or what you could not do
-     (evidence goes in the Status cell, e.g. "per CI log"), no "you can close it".
+- **Task finished?** The thread closes itself, in this order, doing each step itself as far as
+  the host allows (a step the host blocks becomes the one 👉 action):
+  1. **CI red?** Fix it first, on this thread's own PR only. Never touch another thread's PR.
+  2. **Merge** the PR once its checks are green (read them; never merge on red or running).
+  3. **Run this skill** only now, when the thread has no further task: the sweep (Step 1) proves
+     every row before anything is reported.
+  4. **Report to the parent thread** with a message tool if the host has one (else the hub's
+     `ROADMAP.md` row): PR link, merge commit, the test result line, what is not done, and the
+     next task, so the parent can launch it without asking.
+  5. **Document** what the project's rules ask for (memory note, ADR, roadmap row). Nothing more.
+  6. **Archive** this thread if the host has a tool for that. If it stays open for later, compact
+     it first (or tell the user the `/compact` line); do not compact a thread you are archiving.
+
+  Then end with one tiny reply: the table (its ✅ row says it is done; "closed" fits in that
+  Status cell) and exactly one action: an **Archive → back to <parent>** button that archives
+  this thread and takes the user to the parent thread, or, without buttons, the single line
+  `Archive this thread, then open <parent thread> next.` Both halves, always. Nothing else: no
+  "this thread is closed" sentence, no note on how you checked or what you could not do
+  (evidence goes in the Status cell, e.g. "per CI log"), no "you can close it".
 
 - **This thread's own task done?** Every row about this thread's own work is ✅. A row that
   only shows another thread's work (a child or sibling thread still 🔄 or ⏸) does not count:
   this thread is still done. This holds for STATUS and for every done, merged or hand-back
-  report. Then run the hand-back above and make the one next action an **archive** prompt,
+  report. Then run the six steps above and make the one next action an **archive** prompt,
   recommended first: a button that archives this thread and takes the user back to the parent
   thread (`Archive → back to <parent>`). No parent (a root thread, or the parent is gone)? Send
   the user back to the roadmap (hub) thread instead. If the host can archive with no prompt and
@@ -415,7 +422,8 @@ Check the reply; if any answer is no, fix it first.
    key would do?
 6. Only this thread's task? A new task becomes a new thread.
 7. This thread's own task done (rows about other threads' work don't count), in a STATUS or a
-   done report? Then the one action is the archive prompt (back to the parent thread, or to the
+   done report? Then the Step 4 order ran: CI fixed, PR merged on green, parent got PR link,
+   merge commit, test line, not-done and next task, docs written. The one action is the archive prompt (back to the parent thread, or to the
    roadmap thread if there is no parent), with `wrap_up` an ask plus an Archive button, never a
    table alone.
 8. Did the user type this turn? If not, and no row changed since your last table, send no table:
