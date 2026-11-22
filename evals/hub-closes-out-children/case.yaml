@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: hub-closes-out-children
+expected_outcome: |
+  The hub thread is the controller. The billing child reported green and ready, so the hub closes it out itself: merge on green, `app release adopt`, archive the billing thread. It does not send the merge back to the billing thread or ask the user once per step (no "Merge?" then "Adopt?" then "Archive?"). If a step needs the user's OK here, there is one Close out button or line covering the whole chain. The dark mode pick may stay as a separate real decision.
+context:
+  scaffold_script: place-files.sh

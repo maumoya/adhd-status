@@ -1,6 +1,6 @@
 ---
 name: adhd-status
-description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "lazy adhd rule", /adhd-status, alone or in a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation so nothing is forgotten, then replies with one tiny Task | Why | Status table (leaf thread: 3 rows, last done, now, next; main thread: every open child row, grouped; master: one row per main thread plus top critical actions; ETAs) and exactly one next action the user can click or run. Checks results itself, never asks for pasted output, keeps one task per thread, and says when to compact or hand back.
+description: Zero-reading status board for ADHD brains. Invoke it BEFORE writing whenever the user says status in any form (STATUS, "status?", "lazy adhd rule", /adhd-status, alone or in a sentence, also after a compaction), says "where are we", "what's left" or "what do I do now", and for every done, merged or hand-back report. If the user's instructions say to use it on every reply, use it on every reply the user types; a turn the user did not type (a background task finished, a notification, a wake-up) gets a new table only when a row changed. A hand-made table does not count. Sweeps the whole conversation so nothing is forgotten, then replies with one tiny Task | Why | Status table (leaf: 3 rows; main: every open child row, grouped; master: one row per main thread; ETAs) and at most one next action to click or run. Done threads close out in one click or none (fix CI, merge, archive); the hub merges and archives its children. Checks results itself, never asks for pasted output, keeps one task per thread.
 license: MIT
 ---
 
@@ -121,9 +121,10 @@ Always these 3 rows, in this order, never more, never fewer:
    done)? The hand-back: `Hand back | parent sees result | ✅ reported`.
 3. **Next step**: the one next action. Status `👉` when it is the user's (it is the action under
    the table; also when it fixes a problem, never `⚠️` here), or `⏸ after <thing>` when it waits
-   on row 2 or on something else. Thread done? Row 3 is the way out:
-   `Archive → back to <parent> | fresh start | 👉 you: archive, ~1 min` (no parent: back to the
-   roadmap thread).
+   on row 2 or on something else. Thread done? Row 3 is the close-out, not a click:
+   `Close out | fresh start | ⏸ hub merges + archives, ~5 min` (child thread), or
+   `⏸ archiving now, ~1 min` (no parent). Only a blocked step makes it
+   `👉 you: Close out, ~1 min` (one click for the whole chain, Step 4).
 
 - A ❌ or ⚠️ always takes row 2 or row 3; problems are never hidden behind a win.
 - The sweep found more open items than fit (a forgotten promise, a second problem)? Never drop
@@ -184,7 +185,8 @@ Always these 3 rows, in this order, never more, never fewer:
   when they block other work. Each Status names its owning thread (`👉 in <thread> thread`, a
   link if the host has thread links) and ends with an ETA. No critical item? Leave the group out.
 - Everything else stays in its main thread: the master never lists a main thread's whole table.
-  Like the hub, it only consolidates: a step that belongs to a main or child thread stays there.
+  It only consolidates: a step that belongs to a main or child thread stays there, and that
+  main thread, as controller, closes out its own children.
 
 ### All tables
 
@@ -221,45 +223,54 @@ every reply and makes things easy to lose.
   for it, with a one-line brief that names the task and says where it came from (this thread).
 - **Stay in your lane.** A thread works only on its own task. It does not take over, redo or edit
   what another thread is doing; at most it shows that thread's state as one ⏸ or 🔄 row.
-- **Task finished?** The thread closes itself, in this order, doing each step itself as far as
-  the host allows (a step the host blocks becomes the one 👉 action):
-  1. **CI red?** Fix it first, on this thread's own PR only. Never touch another thread's PR.
-  2. **Merge** the PR once its checks are green (read them; never merge on red or running).
-  3. **Run this skill** only now, when the thread has no further task: the sweep (Step 1) proves
-     every row before anything is reported.
-  4. **Report to the parent thread** with a message tool if the host has one (else the hub's
+- **Task finished? Close it out in one go, never one ask per step.** The close-out chain is:
+  1. **CI red?** Fix it, on this thread's own PR only. Never touch another thread's PR.
+  2. **Merge** once the checks are green (read them; never merge on red or running). Where the
+     host allows, turn on auto-merge when the PR opens (`gh pr merge --auto --squash`), so green
+     checks merge it with no step at all.
+  3. **Adopt** (deploy, restart, install) if the project's rules say merged work goes live.
+  4. **Run this skill**: the sweep (Step 1) proves every row before anything is reported.
+  5. **Report to the parent thread** with a message tool if the host has one (else the hub's
      `ROADMAP.md` row): PR link, merge commit, the test result line, what is not done, and the
-     next task, so the parent can launch it without asking.
-  5. **Document** what the project's rules ask for (memory note, ADR, roadmap row). Nothing more.
-  6. **Archive** this thread if the host has a tool for that. If it stays open for later, compact
-     it first (or tell the user the `/compact` line); do not compact a thread you are archiving.
+     next task, so the parent can act without asking.
+  6. **Document** what the project's rules ask for (memory note, ADR, roadmap row). Nothing more.
+  7. **Archive** the thread. Archiving finished work never needs an ask.
 
-  Then end with one tiny reply: the table (its ✅ row says it is done; "closed" fits in that
-  Status cell) and exactly one action: an **Archive → back to <parent>** button that archives
-  this thread and takes the user to the parent thread, or, without buttons, the single line
-  `Archive this thread, then open <parent thread> next.` Both halves, always. Nothing else: no
-  "this thread is closed" sentence, no note on how you checked or what you could not do
-  (evidence goes in the Status cell, e.g. "per CI log"), no "you can close it".
+  **Who runs the chain.** A thread with a parent (hub) runs steps 1, 4, 5 and 6, then **stops**:
+  the parent is the controller and runs merge, adopt and archive for it (see "The hub is the
+  controller" below). A thread with no parent runs all seven steps itself.
+
+  **One click, the whole chain.** Run every step the host lets you run without asking. If one
+  step needs the user's OK (the host blocks merging, say), ask **once**, before the first blocked
+  step, with a single **Close out** button whose message authorizes everything left: "Fix CI,
+  merge on green, adopt, report, archive." Then do all of it on that one yes, watching CI
+  yourself, with no further asks. Never "Fix it?", then "Merge?", then "Archive?": three asks
+  for one chain waste the user's clicks and the thread's context.
+
+  **Ask only for a real stop**: a choice between options, spending money, a second person (a
+  reviewer, a signer), a public post, or a step the host refused even after the Close out yes.
+  That stop is the one 👉 row; everything else in the chain just happens.
+
+  Then end with one tiny reply: the table, its ✅ row saying it is done ("closed" fits in that
+  Status cell), and no question. Nothing else: no "this thread is closed" sentence, no note on
+  how you checked (evidence goes in the Status cell, e.g. "per CI log"), no "you can close it".
 
 - **This thread's own task done?** Every row about this thread's own work is ✅. A row that
   only shows another thread's work (a child or sibling thread still 🔄 or ⏸) does not count:
   this thread is still done. This holds for STATUS and for every done, merged or hand-back
-  report. Then run the six steps above and make the one next action an **archive** prompt,
-  recommended first: a button that archives this thread and takes the user back to the parent
-  thread (`Archive → back to <parent>`). No parent (a root thread, or the parent is gone)? Send
-  the user back to the roadmap (hub) thread instead. If the host can archive with no prompt and
-  the user already said to close it, just do it and show the same table. Never end a finished
-  thread with no way out, even when nothing else needs the user.
+  report. Then run the chain above. If the host can archive, archive it (or let the parent do
+  it) without asking. If the host cannot archive, the one action is the single line
+  `Archive this thread, then open <parent thread> next.` (no parent: the roadmap thread). Never
+  end a finished thread with no way out.
 
-  With a next-step box (`wrap_up`), always pass the ask; a recap alone draws no box and no
-  button:
+  With a next-step box (`wrap_up`) and nothing left for the user, pass the recap only: no ask,
+  no Archive button. Only when a chain step is blocked, one ask and one Close out button:
 
   ```
-  wrap_up(recap="Signup form is live; this thread's task is done.",
-          ask="Archive this thread?",
-          actions=[{label: "Archive → back to parent",
-                    message: "Archive this thread and open the Planning thread."},
-                   {label: "Keep it open"}])
+  wrap_up(recap="Signup form PR is ready; merging needs your OK.",
+          ask="Close out this thread?",
+          actions=[{label: "Close out",
+                    message: "Fix CI, merge on green, adopt, report to parent, archive."}])
   ```
 
   The parent picks up its next task, which may start a new child thread. This loop repeats until
@@ -292,13 +303,22 @@ Below, "hub thread" means whichever of the two it is.
 - **STATUS in the hub thread**: read `ROADMAP.md`, check the live state of any 🔄 row that can be
   checked cheaply, fix stale rows, then show the hub table (Step 3): every open row, expanded and
   grouped (Needs you, Running, Waiting, Done), each with its ETA. No row cap, no fold.
-- **The hub only consolidates.** It keeps the status, lists the tasks and opens sub-task threads.
-  It never brings a child thread's merge, adopt, deploy or install step over: no button, no Run
-  block, no question for it. That row's Status is just `👉 in <thread> thread` (not the step itself), with a link to that thread
-  if the host has thread links (the one link allowed in the table, and only in Status). The
-  child thread owns its own merge and adopt asks and buttons. The row is enough: no "open the
-  billing thread next" line under the table either. The hub's next action is only hub work (a
-  new sub-task thread, a roadmap choice), or nothing.
+- **The hub is the controller.** It keeps the status, lists the tasks, launches child threads,
+  tracks them and closes them out. When a child reports done and green, the hub runs the rest
+  of the chain for it with no ask: merge on green, adopt if the project's rules say so, update
+  the roadmap row, archive the child, then launch the next task. A child never waits for the
+  user to click Merge or Archive; it reports and stops. The hub's table shows the result
+  (`✅ merged + archived`), not a step for the user. If a step needs the user's OK, the hub asks
+  **once** for the whole batch (one **Close out** button covering every green child), never one
+  button per child or per step. Children with red CI fix their own PR; the hub does not.
+  If the hub cannot run the chain from here (no login, no tool), the child's row is
+  `👉 you: Close out <child>, ~N min` and the one ask covers merge, adopt and archive together;
+  never a partial ask such as `merge + adopt` or a command block for part of the chain.
+  The ask is answered here in the hub (`Say go and I close out billing: merge, adopt, archive.`),
+  never sent back to the child thread.
+  A row the user must act on in a child thread (a choice only they can make) shows
+  `👉 in <thread> thread`, with a link to that thread if the host has thread links (the one
+  link allowed in the table, and only in Status).
 - **STATUS in any other MAIN thread** (it spawned children but keeps no roadmap file): the
   same hub table, built from the child threads it tracks (their last reports, checked live
   where cheap).
@@ -373,9 +393,11 @@ sentence:
   "Run it" with no block: the user cannot see earlier text, so a missing block means they cannot act.
 - **A click somewhere**: one line saying exactly where to click, plus a "Done" button.
 
-**Thread's task done? Then the archive prompt from Step 4 is the action, always** (archive,
-then back to the parent thread, or to the roadmap thread if there is no parent). This beats the
-rule below. Otherwise, if nothing needs the user, give no button; the last row's status can say
+**Thread's task done? Then Step 4's close-out runs by itself** (fix CI, merge on green, adopt,
+report, archive; a child stops after reporting and its hub does the rest). No Archive or Merge
+button. The only action is one **Close out** button when a step is blocked, or the
+`Archive this thread, then open <parent thread> next.` line when the host cannot archive.
+Otherwise, if nothing needs the user, give no button; the last row's status can say
 "nothing for you".
 
 ## Example
@@ -416,16 +438,18 @@ Check the reply; if any answer is no, fix it first.
 4. Below the table: nothing, or exactly one next action? No paragraph, closing line ("this is
    done", "thread closed", "I checked X"), second question or list of future steps. A failure
    with one clear fix gets that fix: one command, or, if you would do it but need an OK, one
-   "Fix it" button (without buttons: one line, "Say go and I fix it."). Never a "1. I fix it /
-   2. leave it" pick list.
+   button that covers the fix **and everything after it** ("Close out": fix, merge on green,
+   adopt, report, archive; without buttons: "Say go and I close it out."). Never a "1. I fix
+   it / 2. leave it" pick list, and never a second ask later in the same chain.
 5. No ask to paste output or "let me know when done", and no typed answer where a button or one
    key would do?
 6. Only this thread's task? A new task becomes a new thread.
 7. This thread's own task done (rows about other threads' work don't count), in a STATUS or a
    done report? Then the Step 4 order ran: CI fixed, PR merged on green, parent got PR link,
-   merge commit, test line, not-done and next task, docs written. The one action is the archive prompt (back to the parent thread, or to the
-   roadmap thread if there is no parent), with `wrap_up` an ask plus an Archive button, never a
-   table alone.
+   merge commit, test line, not-done and next task, docs written, and the thread archived (by
+   itself, or by its hub). No Archive, Merge or Fix button: at most one Close out button when a
+   step is blocked, or the "Archive this thread, then open <parent> next." line when the host
+   cannot archive.
 8. Did the user type this turn? If not, and no row changed since your last table, send no table:
    at most one line naming the change. Unchanged rows keep their order and words.
 9. Does every row that is not ✅, dropped or a group label end with an ETA (`~5 min`, `~1 h` or

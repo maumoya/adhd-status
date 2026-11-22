@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: one-click-close-out
+expected_outcome: |
+  The thread's PR is done except CI is red (one lint error per ci.log) and merging needs the user's OK in this setup. The reply asks once: one Close out button (or one "Say go and I close it out." line) whose meaning covers fix CI, merge on green, report and archive. It never splits that into "Fix it?" now and "Merge?" or "Archive?" later, and offers no pick list.
+context:
+  scaffold_script: place-files.sh

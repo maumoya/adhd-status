@@ -1,0 +1,4 @@
+2026-11-22T09:01:10Z run: checks for csv-export
+2026-11-22T09:03:44Z test: 212 passed, 0 failed
+2026-11-22T09:03:51Z lint: FAIL src/export/csv.ts:14 unused import 'fs'
+2026-11-22T09:03:52Z result: 1 check failed (lint)

@@ -4,4 +4,4 @@ focus: trace
 weight: 1
 ---
 
-The reply starts with a Task | Why | Status table in which every row about this thread's own work is done (✅), including the signup form. A last 👉 row that is only the archive step (closing this thread) is fine; no other row is open.
+The reply starts with a Task | Why | Status table in which every row about this thread's own work is done (✅), including the signup form. Rows that are only close-out steps (hand back to Planning, archive this thread) may be ⏸ or 👉; no other row is open.

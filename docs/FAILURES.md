@@ -37,13 +37,14 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F5 | asks the user to paste output | `reads-terminal-not-paste` | F5 |
 | F6 | ✅ without proof | `claim-is-not-proof` | (eval only) |
 | F7 | links or numbers in Task | `done-report-no-preamble` | F7 |
-| F8 | hub thread relays a child's merge or adopt ask | `hub-no-child-merge` | (eval only) |
+| F8 | hub thread sends a green child's merge back instead of closing it out | `hub-closes-out-children` | (eval only) |
 | F9 | all rows ✅ but no archive prompt or way back to the parent (or roadmap) thread | `all-done-archive`, `nothing-pending` | (eval only) |
 | F10 | same table sent again on a turn the user did not type (background task finished) with nothing changed | `no-repeat-table` | (eval only) |
 | F11 | finished thread ends with no archive prompt (a done report, or another thread's work still running) | `done-report-archive`, `done-child-running` | (eval only) |
 | F12 | open row with no ETA, so the user can't tell when it finishes | `pending-command-and-forgotten-item` | F12 |
 | F13 | wrong table shape: a thread table that is not exactly 3 rows (✅ last finished, now, 👉/⏸ next), a hub (main) table that folds rows (`+N more`) or is not grouped, or a master table without counts, with more than 5 critical rows or a critical row with no owning thread | `pending-command-and-forgotten-item`, `root-roadmap-status`, `long-thread-compact`, `leaf-under-main`, `main-by-children`, `master-roadmap-status` | F13 |
 | F14 | 👉 row asks the user to run something (run, merge, tag) but no command block is under the table, or it points at a command "above" | `pending-command-and-forgotten-item` | F14 |
+| F15 | a finished thread asks once per close-out step ("Fix it?", then "Merge?", then "Archive?") instead of one Close out click or none | `one-click-close-out`, `hub-closes-out-children` | (eval only) |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
 
