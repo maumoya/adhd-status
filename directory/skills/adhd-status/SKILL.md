@@ -348,10 +348,27 @@ Below, "hub thread" means whichever of the two it is.
   where cheap).
 - **Live task list (every thread, hosts with a pinned task list such as `update_plan`)**: while
   working, every thread (LEAF too) keeps its own steps pinned as a checklist: short imperative
-  steps of at most 5 words, exactly one in progress, the rest pending or done, with one plain
-  sentence above it saying what it is doing right now ("Checking what the lifetime count skips").
-  Tick each step the moment it is proved, with its time (Display rules). This is the working
-  view; a STATUS reply still starts with the table.
+  steps of at most 5 words, exactly one in progress, the rest pending or done. Tick each step the
+  moment it is proved, with its time (Display rules). This is the working view; a STATUS reply
+  still starts with the table.
+  - **Headline**: one plain sentence above the list saying what is done, what is running with
+    its ETA, and what comes next, e.g. "Three scanners are installed except Jev, which was
+    blocked at step 1 after about 35 minutes; the full test suite is running now (about 10
+    minutes), and the PR opens after that."
+  - **Times on steps**: a finished step says how long it took, `Read threat model, ADR, reports
+    (took ~5m)`; a blocked step says so, `Gate run on Jev: blocked at step 1 (took ~3m)`; the
+    step in progress shows elapsed time, `Full test suite (2m so far)`. Pending steps carry no
+    time.
+  - **Never erase the list.** When the work finishes it stays as the record: never clear the
+    plan or replace it with an empty one. A new plan for new work is added after the old steps,
+    not over them.
+  - **Timings catch problems.** When a step runs well past its ETA, mark it ⚠️ in the headline
+    and as a table row, and say which it is in plain words: **over estimate** (slower than
+    planned), **stuck** (no progress since the last check), **broken** (a failing command or
+    check), or **underperforming** (a model or tool that is slow or keeps retrying). The hub
+    applies this to each child's mirrored steps too. Optional: a host that can save step timings
+    may keep a short local log (step, start, end, outcome) to compare runs; never store prompt
+    text in it.
 - **Live task list, MAIN threads**: the table is a snapshot, so also keep a live checklist under your message that mirrors each
   tracked child thread's own steps, in its words (✓ done, ◌ pending, one in progress), tagged
   with that child's session so the host shows its live state. Add the parent's own steps after
