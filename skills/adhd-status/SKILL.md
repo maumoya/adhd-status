@@ -24,15 +24,19 @@ These four rules decide what the owner sees on every reply they type.
    wait to be asked. Keep the checklist current while work runs: tick a step when it is proved.
 2. **The live checklist is the app's pinned `update_plan` list** (spinner on the current step,
    dotted circles for pending). Call it in the same message as the table, with every step and
-   sub-step of the current task. Never markdown `- [x]` boxes and never HTML tags such as `<sub>`
-   in a reply: they show as raw text.
-3. **Keep the list on screen.** The app hides the pinned list when the turn ends. While any step
-   is still running (CI, a build, a watcher), do NOT end the turn: wait in the foreground on the
-   real state (an until-loop on the PR or job, 10 min tool limit, repeat), and before each wait
-   write the current table as plain text, then refresh `update_plan`, then wait. Refresh the table
-   text only when a row changed. This holds in every thread, child threads and briefs included.
-   End the turn only when all steps are done or the owner must act. Then the table plus a
-   plain-text copy of the steps (`✅` done, `🔄` running, `⬜` pending) is the record.
+   sub-step of the current task. The headline (Live task list) is the text of that same message,
+   written just before the `update_plan` call, so it sits right above the list. The checklist is
+   only ever this native list: never a text or emoji copy of it (`✅ step · ⬜ step`), never
+   markdown `- [x]` boxes and never HTML tags such as `<sub>` in a reply.
+3. **The list stays on screen.** The pinned list does not go away when the work finishes: the
+   last `update_plan`, with every step completed and its time, is the record. So the final call
+   lists all steps done with `(took …)`, and nothing clears, empties or replaces it. While any
+   step is still running (CI, a build, a watcher), do NOT end the turn: wait in the foreground on
+   the real state (an until-loop on the PR or job, 10 min tool limit, repeat), and before each
+   wait write the current table as plain text, then refresh `update_plan` with the new elapsed
+   times, then wait. Refresh the table text only when a row changed. This holds in every thread,
+   child threads and briefs included. End the turn only when all steps are done or the owner
+   must act.
 4. **Every step shows its time** in plain parentheses at the end of its text: running
    `(6m so far)`, finished `(took 9m37s)`; the task line shows its total (`(total 42m so far)`,
    `(took 1h12m)`). Real times only (CI timestamps, `date`); `(time n/a)` if unknown. No tags.
@@ -348,10 +352,11 @@ Below, "hub thread" means whichever of the two it is.
   where cheap).
 - **Live task list (every thread, hosts with a pinned task list such as `update_plan`)**: while
   working, every thread (LEAF too) keeps its own steps pinned as a checklist: short imperative
-  steps of at most 5 words, exactly one in progress, the rest pending or done. Tick each step the
+  steps of at most 5 words (the time does not count), exactly one in progress, the rest pending or done. Tick each step the
   moment it is proved, with its time (Display rules). This is the working view; a STATUS reply
   still starts with the table.
-  - **Headline**: one plain sentence above the list saying what is done, what is running with
+  - **Headline**: one plain sentence, the message text written just before the `update_plan`
+    call (same message), so the app shows it right above the list. It says what is done, what is running with
     its ETA, and what comes next, e.g. "Three scanners are installed except Jev, which was
     blocked at step 1 after about 35 minutes; the full test suite is running now (about 10
     minutes), and the PR opens after that."
@@ -361,7 +366,7 @@ Below, "hub thread" means whichever of the two it is.
     time.
   - **Never erase the list.** When the work finishes it stays as the record: never clear the
     plan or replace it with an empty one. A new plan for new work is added after the old steps,
-    not over them.
+    not over them. The record is the native list itself, never a text or emoji copy in the reply.
   - **Timings catch problems.** When a step runs well past its ETA, mark it ⚠️ in the headline
     and as a table row, and say which it is in plain words: **over estimate** (slower than
     planned), **stuck** (no progress since the last check), **broken** (a failing command or
