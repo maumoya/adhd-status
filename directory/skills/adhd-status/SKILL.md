@@ -376,13 +376,22 @@ Below, "hub thread" means whichever of the two it is.
     applies this to each child's mirrored steps too. Optional: a host that can save step timings
     may keep a short local log (step, start, end, outcome) to compare runs; never store prompt
     text in it.
-- **Live task list, MAIN threads**: the table is a snapshot, so also keep a live checklist under your message that mirrors each
-  tracked child thread's own steps, in its words (✓ done, ◌ pending, one in progress), tagged
-  with that child's session so the host shows its live state. Add the parent's own steps after
-  (for example "Report merge to hub"). Refresh it on every STATUS and every child report: tick
-  what the child proved, never what it only claimed (Step 1.3). The table still leads the reply;
-  one line under it may say the list mirrors the child thread. When a child is done, its
-  merge, adopt and archive steps join the list as the parent's own (the hub is the controller).
+- **Live task list, parent threads (MAIN and MASTER) always show nested threads' live steps**:
+  the table is a snapshot, so the pinned list under it mirrors the nested threads too. This is
+  never optional and never waits to be asked.
+  - **MAIN** mirrors **every** step of each tracked child thread.
+  - **MASTER** mirrors, for each main thread, its **in-progress step** plus **every ⚠️ step**
+    (over estimate, stuck, broken, underperforming), since its table shows only a few rows.
+  - **How**: on every child report and every STATUS, read each nested thread's latest steps (a
+    host session-events tool such as `list_events`, or its last report) and pin them in that
+    thread's own words, tagged with its session (so the host shows its live state), with its
+    time: `(took ~Xm)` done, `(Xm so far)` in progress, none for pending. Then add the parent's
+    own steps after them (for example "Report merge to hub"). Tick only what the child proved,
+    never what it only claimed (Step 1.3).
+  - **Never clear the list**: a refresh rewrites the mirrored steps in place and keeps finished
+    ones. When a child is done, its merge, adopt and archive steps join the list as the
+    parent's own (the hub is the controller). The table still leads the reply; one line under it
+    may say the list mirrors the nested threads.
 - **STATUS in a LEAF thread**: the 3-row thread table about this thread's own task only; do
   not summarize the roadmap.
 
