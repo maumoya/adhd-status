@@ -39,7 +39,9 @@ These four rules decide what the owner sees on every reply they type.
    must act.
 4. **Every step shows its time** in plain parentheses at the end of its text: running
    `(6m so far)`, finished `(took 9m37s)`; the task line shows its total (`(total 42m so far)`,
-   `(took 1h12m)`). Real times only (CI timestamps, `date`); `(time n/a)` if unknown. No tags.
+   `(took 1h12m)`). Real times only (measured from CI timestamps or `date`); `(time n/a)` if
+   unknown. Show only the duration, never a clock time (no `03:48`, `04:07–04:16`). Keep the
+   running step's elapsed time current on every `update_plan` refresh. No tags.
    Example: `Harness runtime (took 9m37s)`.
 
 **No repeat tables.** A new table only when the owner typed this turn (status, a question, a
