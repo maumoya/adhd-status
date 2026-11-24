@@ -8,19 +8,43 @@ license: MIT
 
 The user has ADHD. Long replies get skipped, open questions get lost, and "tell me when it's done"
 means it never gets done. When they say **STATUS**, give them one tiny table and one next step.
-Nothing else: no preamble, no recap, no closing line. The value is that they can glance, click,
+Nothing else in the text: no preamble, no recap, no closing line (the pinned checklist is the app's, not text). The value is that they can glance, click,
 and move on.
 
 **The reply starts with the table.** Its first line is `| Task | Why | Status |`. A summary
 sentence ("PR merged and live") is a ✅ row, never a line above the table. This also holds when
 other instructions ask for a closing message or a recap: the table is that message.
 
-**No repeat tables.** A new table only when the user typed this turn (status, a question, a
+## Display rules (owner rules, 2026-11-24)
+
+These four rules decide what the owner sees on every reply they type.
+
+1. **Two views, always.** The table (**last done**, **working now**, **next**) with, right after
+   it, the **live checklist** of the task and its sub-steps. Never only one of them, and never
+   wait to be asked. Keep the checklist current while work runs: tick a step when it is proved.
+2. **The live checklist is the app's pinned `update_plan` list** (spinner on the current step,
+   dotted circles for pending). Call it in the same message as the table, with every step and
+   sub-step of the current task. Never markdown `- [x]` boxes and never HTML tags such as `<sub>`
+   in a reply: they show as raw text.
+3. **Keep the list on screen.** The app hides the pinned list when the turn ends. While any step
+   is still running (CI, a build, a watcher), do NOT end the turn: wait in the foreground on the
+   real state (an until-loop on the PR or job, 10 min tool limit, repeat), and before each wait
+   write the current table as plain text, then refresh `update_plan`, then wait. Refresh the table
+   text only when a row changed. This holds in every thread, child threads and briefs included.
+   End the turn only when all steps are done or the owner must act. Then the table plus a
+   plain-text copy of the steps (`✅` done, `🔄` running, `⬜` pending) is the record.
+4. **Every step shows its time** in plain parentheses at the end of its text: running
+   `(6m so far)`, finished `(took 9m37s)`; the task line shows its total (`(total 42m so far)`,
+   `(took 1h12m)`). Real times only (CI timestamps, `date`); `(time n/a)` if unknown. No tags.
+   Example: `Harness runtime (took 9m37s)`.
+
+**No repeat tables.** A new table only when the owner typed this turn (status, a question, a
 reply) or something they must see changed since your last table: a new ✅, ❌ or ⚠️, or a
-different 👉 action. A turn the user did not type (a background task or command finished, a
+different 👉 action. A turn the owner did not type (a background task or command finished, a
 task or thread notification, a scheduled wake-up, a hook sending the turn back) with no such
-change gets no table: at most one line naming what changed, or no reply at all. Rules that say
-"use it on every reply" or "every done report" mean replies to the user, not these turns.
+change gets no table: at most one line naming what changed, or no reply at all. Waits inside a
+typed turn follow rule 3, not this paragraph. Rules that say "use it on every reply" or "every
+done report" mean replies to the owner, not these turns.
 
 ## Step 1: sweep the whole conversation (silently)
 
@@ -326,8 +350,8 @@ Below, "hub thread" means whichever of the two it is.
   working, every thread (LEAF too) keeps its own steps pinned as a checklist: short imperative
   steps of at most 5 words, exactly one in progress, the rest pending or done, with one plain
   sentence above it saying what it is doing right now ("Checking what the lifetime count skips").
-  Tick each step the moment it is proved. This is the working view; a STATUS reply still starts
-  with the table.
+  Tick each step the moment it is proved, with its time (Display rules). This is the working
+  view; a STATUS reply still starts with the table.
 - **Live task list, MAIN threads**: the table is a snapshot, so also keep a live checklist under your message that mirrors each
   tracked child thread's own steps, in its words (✓ done, ◌ pending, one in progress), tagged
   with that child's session so the host shows its live state. Add the parent's own steps after
