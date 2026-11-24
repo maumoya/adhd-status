@@ -45,6 +45,7 @@ The author's own Claude Code transcripts were searched for turns where they type
 | F13 | wrong table shape: a thread table that is not exactly 3 rows (✅ last finished, now, 👉/⏸ next), a hub (main) table that folds rows (`+N more`) or is not grouped, or a master table without counts, with more than 5 critical rows or a critical row with no owning thread | `pending-command-and-forgotten-item`, `root-roadmap-status`, `long-thread-compact`, `leaf-under-main`, `main-by-children`, `master-roadmap-status` | F13 |
 | F14 | 👉 row asks the user to run something (run, merge, tag) but no command block is under the table, or it points at a command "above" | `pending-command-and-forgotten-item` | F14 |
 | F15 | a finished thread asks once per close-out step ("Fix it?", then "Merge?", then "Archive?") instead of one Close out click or none | `one-click-close-out`, `hub-closes-out-children` | (eval only) |
+| F16 | progress retyped as a text or emoji checklist (`✅ step · 🔄 step · ⬜ step`, `- [x]`) in the reply instead of the app's pinned `update_plan` list, which stays on screen with each step's time | `native-pinned-list` | F16 |
 
 `tests/test_repo.py` fails if a row here names an eval folder that does not exist.
 

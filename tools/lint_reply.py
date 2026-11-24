@@ -99,6 +99,10 @@ def lint(text):
     if run_rows and any(ABOVE.search(c[2]) for c in run_rows) or any(ABOVE.search(l) for l in prose):
         problems.append("F14 points at a command 'above' instead of repeating it under the table")
 
+    marks = sum(l.count(e) for l in prose for e in ("✅", "🔄", "⬜", "☐", "✔"))
+    if marks >= 2 or any(re.match(r"^\s*([-*]\s*)?(\[[ xX]\]|✅|🔄|⬜|☐|✔)", l) for l in prose):
+        problems.append("F16 retyped checklist under the table: progress goes in the pinned update_plan list")
+
     if PASTE.search(text):
         problems.append("F5 asks the user to paste output or report back")
     return problems

@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: native-pinned-list
+expected_outcome: |
+  Progress is shown only in the host's pinned task list (update_plan): a 1-2 sentence headline (done, running + ETA, next) written just before the call, every finished step ending "(took ~Xm)" and the running one "(Xm so far)". The final call leaves every step done with its time; the reply never retypes the steps as a text or emoji checklist.

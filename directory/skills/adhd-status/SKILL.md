@@ -355,7 +355,7 @@ Below, "hub thread" means whichever of the two it is.
   steps of at most 5 words (the time does not count), exactly one in progress, the rest pending or done. Tick each step the
   moment it is proved, with its time (Display rules). This is the working view; a STATUS reply
   still starts with the table.
-  - **Headline**: one plain sentence, the message text written just before the `update_plan`
+  - **Headline**: one or two plain sentences, the message text written just before the `update_plan`
     call (same message), so the app shows it right above the list. It says what is done, what is running with
     its ETA, and what comes next, e.g. "Three scanners are installed except Jev, which was
     blocked at step 1 after about 35 minutes; the full test suite is running now (about 10
