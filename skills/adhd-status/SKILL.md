@@ -322,6 +322,19 @@ Below, "hub thread" means whichever of the two it is.
 - **STATUS in any other MAIN thread** (it spawned children but keeps no roadmap file): the
   same hub table, built from the child threads it tracks (their last reports, checked live
   where cheap).
+- **Live task list (every thread, hosts with a pinned task list such as `update_plan`)**: while
+  working, every thread (LEAF too) keeps its own steps pinned as a checklist: short imperative
+  steps of at most 5 words, exactly one in progress, the rest pending or done, with one plain
+  sentence above it saying what it is doing right now ("Checking what the lifetime count skips").
+  Tick each step the moment it is proved. This is the working view; a STATUS reply still starts
+  with the table.
+- **Live task list, MAIN threads**: the table is a snapshot, so also keep a live checklist under your message that mirrors each
+  tracked child thread's own steps, in its words (✓ done, ◌ pending, one in progress), tagged
+  with that child's session so the host shows its live state. Add the parent's own steps after
+  (for example "Report merge to hub"). Refresh it on every STATUS and every child report: tick
+  what the child proved, never what it only claimed (Step 1.3). The table still leads the reply;
+  one line under it may say the list mirrors the child thread. When a child is done, its
+  merge, adopt and archive steps join the list as the parent's own (the hub is the controller).
 - **STATUS in a LEAF thread**: the 3-row thread table about this thread's own task only; do
   not summarize the roadmap.
 
